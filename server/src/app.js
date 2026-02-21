@@ -76,6 +76,21 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 }));
 
 // ===========================================
+// Root & Favicon Routes
+// ===========================================
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Welcome to SocialNex API',
+        version: '1.0.0',
+        docs: '/api-docs',
+        health: '/health'
+    });
+});
+
+// ===========================================
 // Health Check
 // ===========================================
 app.get('/health', (req, res) => {
