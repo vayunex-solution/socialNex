@@ -15,11 +15,8 @@ const { logger } = require('./utils/logger');
 const app = express();
 
 // ===========================================
-// Security Middleware
+// Security & CORS Middleware
 // ===========================================
-app.use(helmet());
-
-// CORS Configuration
 const allowedOrigins = [
     'http://localhost:5173',
     'https://socialnex.vayunexsolution.com',
@@ -36,8 +33,6 @@ app.use(cors({
         } else {
             // Log the blocked origin for debugging
             logger.warn(`CORS blocked request from origin: ${origin}`);
-            // To prevent blocking while debugging, you can temporarily allow all:
-            // callback(null, true);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -45,6 +40,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
+
+app.use(helmet());
+
 
 // ===========================================
 // Request Parsing
