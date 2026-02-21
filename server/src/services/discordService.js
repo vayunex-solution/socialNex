@@ -203,13 +203,11 @@ class DiscordService {
     /**
      * Send image via webhook using multipart/form-data
      */
-    async sendImage(accountId, userId, imageBuffer, caption = '') {
+    async sendImage(accountId, userId, imageBuffer, caption = '', options = {}) {
         const account = await this._getAccount(accountId, userId);
         const webhookUrl = decrypt(account.access_token);
 
         try {
-            const FormData = (await import('node-fetch')).FormData || globalThis.FormData;
-
             // Use built-in FormData (Node 18+)
             const formData = new FormData();
 
@@ -220,7 +218,7 @@ class DiscordService {
             if (caption) {
                 formData.append('payload_json', JSON.stringify({
                     content: caption.substring(0, 2000),
-                    username: 'SocialMRT'
+                    username: options.username || 'SocialMRT'
                 }));
             }
 

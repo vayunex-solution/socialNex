@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { generateCaptionFromText, generateCaptionFromImage, improveCaption } from '../services/aiCaptionService'
 import './CreatePost.css'
 
 function CreatePost() {
@@ -11,12 +12,23 @@ function CreatePost() {
     const [loadingAccounts, setLoadingAccounts] = useState(true)
     const [result, setResult] = useState(null)
     const [error, setError] = useState('')
+    const [discordBotName, setDiscordBotName] = useState('SocialMRT')
     const fileInputRef = useRef(null)
+
+    // AI Caption state
+    const [showAiPanel, setShowAiPanel] = useState(false)
+    const [aiPrompt, setAiPrompt] = useState('')
+    const [aiTone, setAiTone] = useState('professional')
+    const [aiCaptions, setAiCaptions] = useState([])
+    const [aiLoading, setAiLoading] = useState(false)
+    const [aiError, setAiError] = useState('')
+    const [aiMode, setAiMode] = useState('text') // 'text', 'image', 'improve'
 
     const PLATFORM_LIMITS = {
         bluesky: 300,
         telegram: 4096,
-        mastodon: 500
+        mastodon: 500,
+        discord: 2000
     }
 
     const PLATFORM_ICONS = {
@@ -121,6 +133,73 @@ function CreatePost() {
         }
     }
 
+    // AI Caption handlers
+    const getSelectedPlatform = () => {
+        const selected = accounts.filter(a => selectedAccounts.includes(a.id))
+        if (selected.length === 1) return selected[0].platform
+        return 'general'
+    }
+
+    const handleGenerateFromText = async () => {
+        if (!aiPrompt.trim()) { setAiError('Enter a topic or idea first.'); return }
+        setAiLoading(true)
+        setAiError('')
+        setAiCaptions([])
+        const result = await generateCaptionFromText(aiPrompt, {
+            tone: aiTone,
+            platform: getSelectedPlatform()
+        })
+        if (result.success) {
+            setAiCaptions(result.captions)
+        } else {
+            setAiError(result.error || 'Failed to generate captions.')
+        }
+        setAiLoading(false)
+    }
+
+    const handleGenerateFromImage = async () => {
+        if (images.length === 0) { setAiError('Upload an image first.'); return }
+        setAiLoading(true)
+        setAiError('')
+        setAiCaptions([])
+        const result = await generateCaptionFromImage(images[0].file, {
+            tone: aiTone,
+            platform: getSelectedPlatform()
+        })
+        if (result.success) {
+            setAiCaptions(result.captions)
+        } else {
+            setAiError(result.error || 'Failed to analyze image.')
+        }
+        setAiLoading(false)
+    }
+
+    const handleImproveText = async () => {
+        if (!postText.trim()) { setAiError('Write some text first to improve.'); return }
+        setAiLoading(true)
+        setAiError('')
+        setAiCaptions([])
+        const result = await improveCaption(postText, aiPrompt || 'Make it more engaging')
+        if (result.success) {
+            setAiCaptions([result.caption])
+        } else {
+            setAiError(result.error || 'Failed to improve text.')
+        }
+        setAiLoading(false)
+    }
+
+    const handleAiGenerate = () => {
+        if (aiMode === 'text') handleGenerateFromText()
+        else if (aiMode === 'image') handleGenerateFromImage()
+        else handleImproveText()
+    }
+
+    const useCaption = (caption) => {
+        setPostText(caption)
+        setShowAiPanel(false)
+        setAiCaptions([])
+    }
+
     const handlePost = async () => {
         if (!postText.trim()) {
             setError('Post text cannot be empty.')
@@ -146,6 +225,12 @@ function CreatePost() {
             const formData = new FormData()
             formData.append('text', postText)
             formData.append('accountIds', JSON.stringify(selectedAccounts))
+
+            // Pass Discord bot name if Discord is selected
+            const hasDiscord = accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'discord')
+            if (hasDiscord && discordBotName.trim()) {
+                formData.append('discordBotName', discordBotName.trim())
+            }
 
             images.forEach(img => {
                 formData.append('images', img.file)
@@ -267,6 +352,36 @@ function CreatePost() {
                             </div>
                         </div>
 
+                        {/* Discord Settings */}
+                        {accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'discord') && (
+                            <div className="discord-settings">
+                                <div className="discord-settings-header">
+                                    <span className="discord-logo">💬</span>
+                                    <span>Discord Settings</span>
+                                </div>
+                                <div className="discord-settings-body">
+                                    <div className="discord-preview-row">
+                                        <div className="discord-avatar">
+                                            {(discordBotName || 'S').charAt(0).toUpperCase()}
+                                        </div>
+                                        <div className="discord-name-field">
+                                            <label htmlFor="discordBotName">Bot Display Name</label>
+                                            <input
+                                                id="discordBotName"
+                                                type="text"
+                                                className="form-input discord-name-input"
+                                                value={discordBotName}
+                                                onChange={(e) => setDiscordBotName(e.target.value)}
+                                                placeholder="Enter bot name..."
+                                                maxLength={80}
+                                            />
+                                        </div>
+                                    </div>
+                                    <p className="discord-hint">This is how your posts will appear in Discord channels</p>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Text area */}
                         <div className="composer-textarea-wrapper">
                             <textarea
@@ -334,6 +449,128 @@ function CreatePost() {
                                 onChange={handleImageSelect}
                                 style={{ display: 'none' }}
                             />
+                        </div>
+
+                        {/* AI Caption Generator */}
+                        <div className="ai-section">
+                            <button
+                                className={`ai-toggle-btn ${showAiPanel ? 'active' : ''}`}
+                                onClick={() => { setShowAiPanel(!showAiPanel); setAiError(''); }}
+                                type="button"
+                            >
+                                <span className="ai-sparkle">✨</span>
+                                <span>AI Caption Generator</span>
+                                <span className="ai-badge">Gemini</span>
+                            </button>
+
+                            {showAiPanel && (
+                                <div className="ai-panel">
+                                    {/* Mode Tabs */}
+                                    <div className="ai-mode-tabs">
+                                        <button
+                                            className={`ai-mode-tab ${aiMode === 'text' ? 'active' : ''}`}
+                                            onClick={() => setAiMode('text')}
+                                        >
+                                            ✍️ From Text
+                                        </button>
+                                        <button
+                                            className={`ai-mode-tab ${aiMode === 'image' ? 'active' : ''}`}
+                                            onClick={() => setAiMode('image')}
+                                            disabled={images.length === 0}
+                                        >
+                                            🖼️ From Image
+                                        </button>
+                                        <button
+                                            className={`ai-mode-tab ${aiMode === 'improve' ? 'active' : ''}`}
+                                            onClick={() => setAiMode('improve')}
+                                            disabled={!postText.trim()}
+                                        >
+                                            🔄 Improve Text
+                                        </button>
+                                    </div>
+
+                                    {/* Prompt Input */}
+                                    {aiMode === 'text' && (
+                                        <input
+                                            type="text"
+                                            className="form-input ai-prompt-input"
+                                            placeholder="e.g. New product launch for tech startup..."
+                                            value={aiPrompt}
+                                            onChange={(e) => setAiPrompt(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleAiGenerate()}
+                                        />
+                                    )}
+
+                                    {aiMode === 'image' && (
+                                        <div className="ai-image-info">
+                                            <span>🖼️</span>
+                                            <span>Will analyze: <strong>{images[0]?.name}</strong></span>
+                                        </div>
+                                    )}
+
+                                    {aiMode === 'improve' && (
+                                        <input
+                                            type="text"
+                                            className="form-input ai-prompt-input"
+                                            placeholder="How to improve? e.g. Make it funnier, Add urgency..."
+                                            value={aiPrompt}
+                                            onChange={(e) => setAiPrompt(e.target.value)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleAiGenerate()}
+                                        />
+                                    )}
+
+                                    {/* Tone Selector */}
+                                    <div className="ai-controls">
+                                        <div className="ai-tone-selector">
+                                            <label>Tone:</label>
+                                            <select
+                                                value={aiTone}
+                                                onChange={(e) => setAiTone(e.target.value)}
+                                                className="ai-tone-select"
+                                            >
+                                                <option value="professional">💼 Professional</option>
+                                                <option value="casual">😎 Casual</option>
+                                                <option value="funny">😂 Funny</option>
+                                                <option value="inspirational">🌟 Inspirational</option>
+                                                <option value="urgent">🔥 Urgent/FOMO</option>
+                                                <option value="storytelling">📖 Storytelling</option>
+                                            </select>
+                                        </div>
+                                        <button
+                                            className="btn btn-ai"
+                                            onClick={handleAiGenerate}
+                                            disabled={aiLoading}
+                                        >
+                                            {aiLoading ? (
+                                                <><span className="ai-spinner"></span> Generating...</>
+                                            ) : (
+                                                <>✨ Generate</>
+                                            )}
+                                        </button>
+                                    </div>
+
+                                    {/* AI Error */}
+                                    {aiError && <div className="alert alert-error" style={{ marginTop: '12px' }}>{aiError}</div>}
+
+                                    {/* Generated Captions */}
+                                    {aiCaptions.length > 0 && (
+                                        <div className="ai-results">
+                                            <p className="ai-results-label">Click to use:</p>
+                                            {aiCaptions.map((caption, i) => (
+                                                <div
+                                                    key={i}
+                                                    className="ai-caption-card"
+                                                    onClick={() => useCaption(caption)}
+                                                >
+                                                    <span className="ai-caption-num">{i + 1}</span>
+                                                    <p className="ai-caption-text">{caption}</p>
+                                                    <span className="ai-use-btn">Use →</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* Error */}

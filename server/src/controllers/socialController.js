@@ -405,7 +405,7 @@ const disconnectTelegram = asyncHandler(async (req, res) => {
  */
 const publishPost = asyncHandler(async (req, res) => {
     const userId = req.user.id;
-    const { text } = req.body;
+    const { text, discordBotName } = req.body;
 
     let accountIds;
     try {
@@ -469,13 +469,14 @@ const publishPost = asyncHandler(async (req, res) => {
                     account.id, userId, blueskyText, images
                 );
             } else if (account.platform === 'discord') {
+                const discordOpts = { username: discordBotName || 'SocialMRT' };
                 if (images.length > 0) {
                     postResult = await discordService.sendImage(
-                        account.id, userId, images[0].data, text.trim()
+                        account.id, userId, images[0].data, text.trim(), discordOpts
                     );
                 } else {
                     postResult = await discordService.sendMessage(
-                        account.id, userId, text.trim()
+                        account.id, userId, text.trim(), discordOpts
                     );
                 }
             }
