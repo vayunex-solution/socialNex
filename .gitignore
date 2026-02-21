@@ -33,7 +33,7 @@ desktop.ini
 # Build
 dist/
 build/
-client/dist/
+# client/dist/ is tracked for cPanel deployment
 
 # Uploads
 server/uploads/*
