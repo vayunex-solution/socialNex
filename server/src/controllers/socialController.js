@@ -469,7 +469,7 @@ const publishPost = asyncHandler(async (req, res) => {
                     account.id, userId, blueskyText, images
                 );
             } else if (account.platform === 'discord') {
-                const discordOpts = { username: discordBotName || 'SocialMRT' };
+                const discordOpts = { username: discordBotName || 'SocialNex' };
                 if (images.length > 0) {
                     postResult = await discordService.sendImage(
                         account.id, userId, images[0].data, text.trim(), discordOpts

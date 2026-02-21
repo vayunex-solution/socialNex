@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import API_URL from '../config/api'
 import './ConnectBluesky.css'
 
 function ConnectTelegram({ onSuccess, onClose }) {
@@ -22,7 +23,7 @@ function ConnectTelegram({ onSuccess, onClose }) {
 
         try {
             const token = localStorage.getItem('accessToken')
-            const response = await fetch('http://localhost:5000/api/v1/social/telegram/connect', {
+            const response = await fetch(`${API_URL}/social/telegram/connect`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ function ConnectTelegram({ onSuccess, onClose }) {
                 <div className="connect-header">
                     <span className="platform-icon">📱</span>
                     <h2>Connect Telegram</h2>
-                    <p>Connect a Telegram channel or group to post messages from SocialMRT</p>
+                    <p>Connect a Telegram channel or group to post messages from SocialNex</p>
                 </div>
 
                 {error && <div className="alert alert-error">{error}</div>}
@@ -103,8 +104,8 @@ function ConnectTelegram({ onSuccess, onClose }) {
                             <ol>
                                 <li>Open Telegram and search for <strong>@BotFather</strong></li>
                                 <li>Send <code>/newbot</code></li>
-                                <li>Choose a name (e.g., "My SocialMRT Bot")</li>
-                                <li>Choose a username ending in "bot" (e.g., <code>mysocialmrt_bot</code>)</li>
+                                <li>Choose a name (e.g., "My SocialNex Bot")</li>
+                                <li>Choose a username ending in "bot" (e.g., <code>mySocialNex_bot</code>)</li>
                                 <li>Copy the <strong>token</strong> and paste above</li>
                             </ol>
 

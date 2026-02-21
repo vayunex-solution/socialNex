@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import API_URL from '../config/api'
 import './ConnectBluesky.css'
 
 function ConnectBluesky({ onSuccess, onClose }) {
@@ -22,7 +23,7 @@ function ConnectBluesky({ onSuccess, onClose }) {
 
         try {
             const token = localStorage.getItem('accessToken')
-            const response = await fetch('http://localhost:5000/api/v1/social/bluesky/connect', {
+            const response = await fetch(`${API_URL}/social/bluesky/connect`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ function ConnectBluesky({ onSuccess, onClose }) {
                 <div className="connect-header">
                     <span className="platform-icon">🦋</span>
                     <h2>Connect Bluesky</h2>
-                    <p>Link your Bluesky account to post directly from SocialMRT</p>
+                    <p>Link your Bluesky account to post directly from SocialNex</p>
                 </div>
 
                 {error && <div className="alert alert-error">{error}</div>}
@@ -104,7 +105,7 @@ function ConnectBluesky({ onSuccess, onClose }) {
                                 <li>Open <a href="https://bsky.app/settings/app-passwords" target="_blank" rel="noopener noreferrer">Bluesky Settings</a></li>
                                 <li>Go to <strong>Settings → App Passwords</strong></li>
                                 <li>Click <strong>"Add App Password"</strong></li>
-                                <li>Name it "SocialMRT" and click Create</li>
+                                <li>Name it "SocialNex" and click Create</li>
                                 <li>Copy the password (xxxx-xxxx-xxxx-xxxx) and paste above</li>
                             </ol>
                             <p className="warning-text">⚠️ Never use your main password! App passwords are safer.</p>

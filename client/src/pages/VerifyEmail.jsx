@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './Auth.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'
+import API_URL from '../config/api'
 
 function VerifyEmail() {
     const navigate = useNavigate()
@@ -127,7 +127,7 @@ function VerifyEmail() {
                             <div className="checkmark">✓</div>
                         </div>
                         <h1 className="auth-title">Email Verified! 🎉</h1>
-                        <p className="auth-subtitle">Welcome to SocialMRT! Your account is now active.</p>
+                        <p className="auth-subtitle">Welcome to SocialNex! Your account is now active.</p>
                         <div className="loading-bar"></div>
                         <p className="redirect-text">Redirecting to dashboard...</p>
                     </div>
@@ -144,7 +144,7 @@ function VerifyEmail() {
                     <div className="auth-logo">
                         <Link to="/">
                             <span className="logo-icon">🚀</span>
-                            <span className="logo-text">Social<span className="text-gradient">MRT</span></span>
+                            <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                         </Link>
                     </div>
 

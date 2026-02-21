@@ -55,7 +55,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     .swagger-ui .topbar { display: none }
     .swagger-ui .info { margin: 20px 0 }
   `,
-    customSiteTitle: 'SocialMRT API Documentation'
+    customSiteTitle: 'SocialNex API Documentation'
 }));
 
 // ===========================================
@@ -64,7 +64,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
 app.get('/health', (req, res) => {
     res.status(200).json({
         success: true,
-        message: 'SocialMRT API is running!',
+        message: 'SocialNex API is running!',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV
     });

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import './Auth.css'
 
@@ -14,7 +15,7 @@ function ForgotPassword() {
         setLoading(true)
 
         try {
-            const response = await fetch('http://localhost:5000/api/v1/auth/forgot-password', {
+            const response = await fetch(`${API_URL}/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email })
@@ -67,7 +68,7 @@ function ForgotPassword() {
                     <div className="auth-header">
                         <Link to="/" className="auth-logo">
                             <span className="logo-icon">🚀</span>
-                            <span className="logo-text">Social<span className="text-gradient">MRT</span></span>
+                            <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                         </Link>
                         <h1>Forgot Password?</h1>
                         <p>No worries, we'll send you reset instructions.</p>

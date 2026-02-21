@@ -16,7 +16,7 @@ const crypto = require('crypto');
 
 // Encryption
 const ALGORITHM = 'aes-256-gcm';
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'socialmrt-encryption-key-32char';
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'SocialNex-encryption-key-32char';
 
 function encrypt(text) {
     const iv = crypto.randomBytes(16);
@@ -51,7 +51,7 @@ class TelegramService {
      * Connect a Telegram bot + channel
      * @param {string} botToken - Bot token from @BotFather
      * @param {string} chatId - Channel/group chat ID (e.g., @channelname or -1001234567890)
-     * @param {number} userId - SocialMRT user ID
+     * @param {number} userId - SocialNex user ID
      */
     async connect(botToken, chatId, userId) {
         try {

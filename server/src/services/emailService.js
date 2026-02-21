@@ -47,12 +47,12 @@ class EmailService {
             logger.warn(`Template ${templateName}.html not found, using fallback`);
             return handlebars.compile(`
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #6366F1;">SocialMRT</h1>
+          <h1 style="color: #6366F1;">SocialNex</h1>
           {{#if userName}}<p>Hello {{userName}},</p>{{/if}}
           {{#if otpCode}}<p>Your verification code: <strong>{{otpCode}}</strong></p>{{/if}}
           {{#if verificationLink}}<p><a href="{{verificationLink}}">Click here to verify</a></p>{{/if}}
           {{#if resetLink}}<p><a href="{{resetLink}}">Click here to reset password</a></p>{{/if}}
-          <p>Thanks,<br>SocialMRT Team</p>
+          <p>Thanks,<br>SocialNex Team</p>
         </div>
       `);
         }
@@ -75,7 +75,7 @@ class EmailService {
 
         await this.sendMail({
             to: user.email,
-            subject: '🔐 Verify Your Email - SocialMRT',
+            subject: '🔐 Verify Your Email - SocialNex',
             html: html
         });
 
@@ -97,7 +97,7 @@ class EmailService {
 
         await this.sendMail({
             to: user.email,
-            subject: '🎉 Welcome to SocialMRT!',
+            subject: '🎉 Welcome to SocialNex!',
             html: html
         });
 
@@ -120,7 +120,7 @@ class EmailService {
 
         await this.sendMail({
             to: user.email,
-            subject: '🔑 Reset Your Password - SocialMRT',
+            subject: '🔑 Reset Your Password - SocialNex',
             html: html
         });
 
@@ -133,7 +133,7 @@ class EmailService {
     async sendMail({ to, subject, html, text }) {
         try {
             const info = await this.transporter.sendMail({
-                from: `"SocialMRT" <${process.env.SMTP_USER}>`,
+                from: `"SocialNex" <${process.env.SMTP_USER}>`,
                 to,
                 subject,
                 html,

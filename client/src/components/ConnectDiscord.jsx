@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import API_URL from '../config/api'
 
 function ConnectDiscord({ onSuccess, onClose }) {
     const [webhookUrl, setWebhookUrl] = useState('')
@@ -26,7 +27,7 @@ function ConnectDiscord({ onSuccess, onClose }) {
 
         try {
             const token = localStorage.getItem('accessToken')
-            const response = await fetch('http://localhost:5000/api/v1/social/discord/connect', {
+            const response = await fetch(`${API_URL}/social/discord/connect`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ function ConnectDiscord({ onSuccess, onClose }) {
                                 Click <strong>"Webhooks"</strong> → <strong>"New Webhook"</strong>
                             </li>
                             <li>
-                                Give it a name (e.g. "SocialMRT Bot")
+                                Give it a name (e.g. "SocialNex Bot")
                             </li>
                             <li>
                                 Click <strong>"Copy Webhook URL"</strong>
@@ -85,7 +86,7 @@ function ConnectDiscord({ onSuccess, onClose }) {
                         </ol>
                         <div className="info-box">
                             <span className="info-icon">💡</span>
-                            <p>Webhooks let SocialMRT post messages to your channel. No bot or OAuth needed!</p>
+                            <p>Webhooks let SocialNex post messages to your channel. No bot or OAuth needed!</p>
                         </div>
                         <button className="btn btn-primary" onClick={() => setStep(2)} style={{ width: '100%', marginTop: '16px' }}>
                             I have my Webhook URL →
@@ -116,7 +117,7 @@ function ConnectDiscord({ onSuccess, onClose }) {
                                 onChange={(e) => setChannelName(e.target.value)}
                                 className="form-input"
                             />
-                            <small className="form-hint">A friendly name to identify this channel in SocialMRT</small>
+                            <small className="form-hint">A friendly name to identify this channel in SocialNex</small>
                         </div>
 
                         {error && <div className="alert alert-error">{error}</div>}

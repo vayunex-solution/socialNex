@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import { generateCaptionFromText, generateCaptionFromImage, improveCaption } from '../services/aiCaptionService'
 import './CreatePost.css'
@@ -12,7 +13,7 @@ function CreatePost() {
     const [loadingAccounts, setLoadingAccounts] = useState(true)
     const [result, setResult] = useState(null)
     const [error, setError] = useState('')
-    const [discordBotName, setDiscordBotName] = useState('SocialMRT')
+    const [discordBotName, setDiscordBotName] = useState('SocialNex')
     const fileInputRef = useRef(null)
 
     // AI Caption state
@@ -45,7 +46,7 @@ function CreatePost() {
     const fetchAccounts = async () => {
         try {
             const token = localStorage.getItem('accessToken')
-            const response = await fetch('http://localhost:5000/api/v1/social/accounts', {
+            const response = await fetch(`${API_URL}/social/accounts`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             const data = await response.json()
@@ -236,7 +237,7 @@ function CreatePost() {
                 formData.append('images', img.file)
             })
 
-            const response = await fetch('http://localhost:5000/api/v1/social/publish', {
+            const response = await fetch(`${API_URL}/social/publish`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -273,7 +274,7 @@ function CreatePost() {
                 <div className="sidebar-logo">
                     <Link to="/">
                         <span className="logo-icon">🚀</span>
-                        <span className="logo-text">Social<span className="text-gradient">MRT</span></span>
+                        <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                     </Link>
                 </div>
                 <nav className="sidebar-nav">

@@ -8,10 +8,10 @@ const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'SocialMRT API',
+            title: 'SocialNex API',
             version: '1.0.0',
             description: `
-# SocialMRT - Social Media Management Platform API
+# SocialNex - Social Media Management Platform API
 
 A comprehensive API for managing social media accounts, posts, campaigns, and analytics.
 
@@ -26,8 +26,8 @@ Authorization: Bearer <your_token>
 - 20 requests per 15 minutes for unauthenticated endpoints
       `,
             contact: {
-                name: 'SocialMRT Support',
-                email: 'support@socialmrt.com'
+                name: 'SocialNex Support',
+                email: 'support@SocialNex.com'
             },
             license: {
                 name: 'MIT',

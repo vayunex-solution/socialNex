@@ -68,13 +68,13 @@ const steps = [
     {
         number: '04',
         title: 'Schedule & Publish',
-        description: 'Set your posting schedule and let SocialMRT handle the rest.'
+        description: 'Set your posting schedule and let SocialNex handle the rest.'
     },
 ]
 
 const faqs = [
     {
-        question: 'Is SocialMRT really free?',
+        question: 'Is SocialNex really free?',
         answer: 'Yes! We offer a generous free tier that includes all core features. Premium plans will be available for power users who need more.'
     },
     {
@@ -118,7 +118,7 @@ function LandingPage() {
                 <div className="container navbar-content">
                     <Link to="/" className="logo">
                         <span className="logo-icon">🚀</span>
-                        <span className="logo-text">Social<span className="text-gradient">MRT</span></span>
+                        <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                     </Link>
                     <div className="nav-links">
                         <a href="#features">Features</a>
@@ -314,7 +314,7 @@ function LandingPage() {
                             Ready to <span className="text-gradient">Transform</span> Your Social Media?
                         </h2>
                         <p className="cta-subtitle">
-                            Join thousands of creators and businesses using SocialMRT to grow their online presence.
+                            Join thousands of creators and businesses using SocialNex to grow their online presence.
                         </p>
                         <div className="cta-actions">
                             <Link to="/register" className="btn btn-primary btn-lg">
@@ -363,7 +363,7 @@ function LandingPage() {
                         <div className="footer-brand">
                             <Link to="/" className="logo">
                                 <span className="logo-icon">🚀</span>
-                                <span className="logo-text">Social<span className="text-gradient">MRT</span></span>
+                                <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                             </Link>
                             <p className="footer-tagline">
                                 Your all-in-one social media management platform. Post smarter, grow faster.
@@ -397,7 +397,7 @@ function LandingPage() {
                         </div>
                     </div>
                     <div className="footer-bottom">
-                        <p>&copy; 2026 SocialMRT. All rights reserved.</p>
+                        <p>&copy; 2026 SocialNex. All rights reserved.</p>
                         <p className="powered-text">
                             Powered by <a href="https://www.vayunexsolution.com" target="_blank" rel="noopener noreferrer" className="vayunex-inline">Vayunex Solution</a> 💜
                         </p>

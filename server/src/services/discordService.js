@@ -4,7 +4,7 @@
  * 
  * How it works:
  * 1. User creates a Webhook in their Discord channel settings
- * 2. User provides the webhook URL to SocialMRT
+ * 2. User provides the webhook URL to SocialNex
  * 3. We use the webhook to post messages, embeds, and images
  * 
  * No bot needed, no OAuth - just a simple webhook URL!
@@ -16,7 +16,7 @@ const crypto = require('crypto');
 
 // Encryption (same as telegramService)
 const ALGORITHM = 'aes-256-gcm';
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'socialmrt-encryption-key-32char';
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'SocialNex-encryption-key-32char';
 
 function encrypt(text) {
     const iv = crypto.randomBytes(16);
@@ -51,7 +51,7 @@ class DiscordService {
      * Connect a Discord webhook
      * @param {string} webhookUrl - Discord webhook URL
      * @param {string} channelName - Friendly name for the channel
-     * @param {number} userId - SocialMRT user ID
+     * @param {number} userId - SocialNex user ID
      */
     async connect(webhookUrl, channelName, userId) {
         try {
@@ -138,7 +138,7 @@ class DiscordService {
         try {
             const payload = {
                 content: content.substring(0, 2000), // Discord 2000 char limit
-                username: options.username || 'SocialMRT',
+                username: options.username || 'SocialNex',
                 avatar_url: options.avatarUrl || undefined
             };
 
@@ -175,14 +175,14 @@ class DiscordService {
         const webhookUrl = decrypt(account.access_token);
 
         const payload = {
-            username: 'SocialMRT',
+            username: 'SocialNex',
             embeds: [{
                 title: embedData.title || '',
                 description: embedData.description || '',
                 color: embedData.color || 5814783, // Purple default
                 thumbnail: embedData.thumbnail ? { url: embedData.thumbnail } : undefined,
                 image: embedData.image ? { url: embedData.image } : undefined,
-                footer: { text: 'Posted via SocialMRT' },
+                footer: { text: 'Posted via SocialNex' },
                 timestamp: new Date().toISOString()
             }]
         };
@@ -218,7 +218,7 @@ class DiscordService {
             if (caption) {
                 formData.append('payload_json', JSON.stringify({
                     content: caption.substring(0, 2000),
-                    username: options.username || 'SocialMRT'
+                    username: options.username || 'SocialNex'
                 }));
             }
 

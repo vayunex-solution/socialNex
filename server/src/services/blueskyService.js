@@ -10,7 +10,7 @@ const crypto = require('crypto');
 
 // Encryption for storing tokens
 const ALGORITHM = 'aes-256-gcm';
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'socialmrt-encryption-key-32char';
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'SocialNex-encryption-key-32char';
 
 function encrypt(text) {
     const iv = crypto.randomBytes(16);
@@ -62,7 +62,7 @@ class BlueskyService {
      * Connect/authenticate a Bluesky account
      * @param {string} handle - Bluesky handle (e.g., user.bsky.social)
      * @param {string} appPassword - App password from Bluesky settings
-     * @param {number} userId - SocialMRT user ID
+     * @param {number} userId - SocialNex user ID
      */
     async connect(handle, appPassword, userId) {
         const agent = this.createAgent();

@@ -18,7 +18,7 @@ router.use('/social', socialRoutes);
 router.get('/', (req, res) => {
     res.json({
         success: true,
-        message: 'Welcome to SocialMRT API',
+        message: 'Welcome to SocialNex API',
         version: 'v1',
         endpoints: {
             auth: '/api/v1/auth',

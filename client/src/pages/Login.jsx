@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import './Auth.css'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1'
+import API_URL from '../config/api'
 
 function Login() {
     const navigate = useNavigate()
@@ -54,7 +54,7 @@ function Login() {
                     <div className="auth-logo">
                         <Link to="/">
                             <span className="logo-icon">🚀</span>
-                            <span className="logo-text">Social<span className="text-gradient">MRT</span></span>
+                            <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                         </Link>
                     </div>
 

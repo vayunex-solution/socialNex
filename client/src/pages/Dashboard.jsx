@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
@@ -22,7 +23,7 @@ function Dashboard() {
     const fetchAccounts = async () => {
         try {
             const token = localStorage.getItem('accessToken')
-            const response = await fetch('http://localhost:5000/api/v1/social/accounts', {
+            const response = await fetch(`${API_URL}/social/accounts`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
             const data = await response.json()
@@ -56,7 +57,7 @@ function Dashboard() {
 
         try {
             const token = localStorage.getItem('accessToken')
-            await fetch(`http://localhost:5000/api/v1/social/${platform}/${accountId}`, {
+            await fetch(`${API_URL}/social/${platform}/${accountId}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             })
@@ -80,7 +81,7 @@ function Dashboard() {
                 <div className="sidebar-logo">
                     <Link to="/">
                         <span className="logo-icon">🚀</span>
-                        <span className="logo-text">Social<span className="text-gradient">MRT</span></span>
+                        <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                     </Link>
                 </div>
 
@@ -257,7 +258,7 @@ function Dashboard() {
                         <div className="action-card glass-card">
                             <div className="action-icon">📚</div>
                             <h3>Read Guide</h3>
-                            <p>Learn how to use SocialMRT effectively</p>
+                            <p>Learn how to use SocialNex effectively</p>
                             <button className="btn btn-secondary btn-sm">Read</button>
                         </div>
                     </div>

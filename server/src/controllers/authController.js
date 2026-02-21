@@ -384,7 +384,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
     res.json({
         success: true,
-        message: 'Email verified successfully! Welcome to SocialMRT!'
+        message: 'Email verified successfully! Welcome to SocialNex!'
     });
 });
 

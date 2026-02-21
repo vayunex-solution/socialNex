@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import API_URL from '../config/api'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import './Auth.css'
 
@@ -45,7 +46,7 @@ function ResetPassword() {
         setLoading(true)
 
         try {
-            const response = await fetch('http://localhost:5000/api/v1/auth/reset-password', {
+            const response = await fetch(`${API_URL}/auth/reset-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -103,7 +104,7 @@ function ResetPassword() {
                     <div className="auth-header">
                         <Link to="/" className="auth-logo">
                             <span className="logo-icon">🚀</span>
-                            <span className="logo-text">Social<span className="text-gradient">MRT</span></span>
+                            <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                         </Link>
                         <h1>Reset Password</h1>
                         <p>Enter your new password below.</p>

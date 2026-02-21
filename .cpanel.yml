@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - /bin/cp -Rf server/. /home/vayunexs/api.socialnex.vayunexsolution.com/
+    - /bin/cp -Rf client/dist/. /home/vayunexs/socialnex.vayunexsolution.com/
