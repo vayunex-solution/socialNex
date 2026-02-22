@@ -630,7 +630,11 @@ const connectLinkedIn = asyncHandler(async (req, res) => {
     }
 
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    const finalRedirectUri = redirectUri || `${frontendUrl}/dashboard`;
+    // Ensure no trailing slash on frontendUrl
+    const cleanFrontendUrl = frontendUrl.replace(/\/+$/, '');
+    const finalRedirectUri = redirectUri || `${cleanFrontendUrl}/dashboard`;
+
+    logger.info(`LinkedIn Connect attempt: POST code=${code}, redirectUri=${finalRedirectUri}, envFrontend=${frontendUrl}`);
 
     const result = await linkedinService.connect(code, finalRedirectUri, userId);
 

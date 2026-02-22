@@ -7,6 +7,7 @@
 const { logger } = require('../utils/logger');
 const { query } = require('../config/database');
 const crypto = require('crypto');
+const axios = require('axios');
 
 // Encryption (same pattern as blueskyService)
 const ALGORITHM = 'aes-256-gcm';
@@ -70,38 +71,40 @@ class LinkedInService {
      */
     async connect(code, redirectUri, userId) {
         // 1. Exchange code for access token
-        const tokenResponse = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: redirectUri,
-                client_id: this.clientId,
-                client_secret: this.clientSecret
-            }).toString()
-        });
-
-        if (!tokenResponse.ok) {
-            const error = await tokenResponse.json();
-            logger.error('LinkedIn token exchange failed:', error);
-            throw new Error(error.error_description || 'Failed to get LinkedIn access token');
+        let tokenData;
+        try {
+            const tokenResponse = await axios.post('https://www.linkedin.com/oauth/v2/accessToken',
+                new URLSearchParams({
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri: redirectUri,
+                    client_id: this.clientId,
+                    client_secret: this.clientSecret
+                }).toString(),
+                {
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                }
+            );
+            tokenData = tokenResponse.data;
+        } catch (err) {
+            logger.error('LinkedIn token exchange failed:', err.response?.data || err.message);
+            throw new Error(err.response?.data?.error_description || 'Failed to get LinkedIn access token');
         }
 
-        const tokenData = await tokenResponse.json();
         const accessToken = tokenData.access_token;
         const expiresIn = tokenData.expires_in; // seconds (usually 5184000 = 60 days)
 
         // 2. Fetch user profile using /v2/userinfo (OpenID Connect)
-        const profileResponse = await fetch('https://api.linkedin.com/v2/userinfo', {
-            headers: { 'Authorization': `Bearer ${accessToken}` }
-        });
-
-        if (!profileResponse.ok) {
+        let profile;
+        try {
+            const profileResponse = await axios.get('https://api.linkedin.com/v2/userinfo', {
+                headers: { 'Authorization': `Bearer ${accessToken}` }
+            });
+            profile = profileResponse.data;
+        } catch (err) {
+            logger.error('LinkedIn profile fetch failed:', err.response?.data || err.message);
             throw new Error('Failed to fetch LinkedIn profile');
         }
-
-        const profile = await profileResponse.json();
         // profile has: sub, name, given_name, family_name, email, picture, email_verified
 
         const linkedinId = profile.sub; // Unique LinkedIn member ID
@@ -189,23 +192,21 @@ class LinkedInService {
             }
         };
 
-        const response = await fetch('https://api.linkedin.com/v2/ugcPosts', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-                'X-Restli-Protocol-Version': '2.0.0'
-            },
-            body: JSON.stringify(postBody)
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            logger.error('LinkedIn post failed:', error);
-            throw new Error(error.message || `LinkedIn post failed (HTTP ${response.status})`);
+        let result;
+        try {
+            const response = await axios.post('https://api.linkedin.com/v2/ugcPosts', postBody, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    'X-Restli-Protocol-Version': '2.0.0'
+                }
+            });
+            result = response.data;
+        } catch (err) {
+            logger.error('LinkedIn post failed:', err.response?.data || err.message);
+            throw new Error(err.response?.data?.message || `LinkedIn post failed (HTTP ${err.response?.status || 500})`);
         }
 
-        const result = await response.json();
         logger.info(`LinkedIn post created: ${result.id}`);
 
         return {
