@@ -79,7 +79,7 @@ class LinkedInService {
                 redirect_uri: redirectUri,
                 client_id: this.clientId,
                 client_secret: this.clientSecret
-            })
+            }).toString()
         });
 
         if (!tokenResponse.ok) {
