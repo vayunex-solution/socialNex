@@ -5,10 +5,12 @@
 
 const { ApiError, asyncHandler } = require('../middleware/errorHandler');
 const blueskyService = require('../services/blueskyService');
+const linkedinService = require('../services/linkedinService');
 const telegramService = require('../services/telegramService');
 const discordService = require('../services/discordService');
 const { query } = require('../config/database');
 const { logger } = require('../utils/logger');
+const crypto = require('crypto');
 
 /**
  * @swagger
@@ -479,6 +481,10 @@ const publishPost = asyncHandler(async (req, res) => {
                         account.id, userId, text.trim(), discordOpts
                     );
                 }
+            } else if (account.platform === 'linkedin') {
+                postResult = await linkedinService.createPost(
+                    account.id, userId, text.trim()
+                );
             }
 
             results.push({
@@ -580,6 +586,75 @@ const disconnectDiscord = asyncHandler(async (req, res) => {
     });
 });
 
+// =============================================
+// LINKEDIN ENDPOINTS
+// =============================================
+
+/**
+ * @swagger
+ * /social/linkedin/auth-url:
+ *   get:
+ *     tags: [Social]
+ *     summary: Get LinkedIn OAuth authorization URL
+ *     security:
+ *       - bearerAuth: []
+ */
+const getLinkedInAuthUrl = asyncHandler(async (req, res) => {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const redirectUri = `${frontendUrl}/dashboard`;
+    const state = 'linkedin_' + crypto.randomBytes(16).toString('hex');
+
+    const authUrl = linkedinService.getAuthUrl(redirectUri, state);
+
+    res.json({
+        success: true,
+        data: { authUrl, state }
+    });
+});
+
+/**
+ * @swagger
+ * /social/linkedin/connect:
+ *   post:
+ *     tags: [Social]
+ *     summary: Connect LinkedIn account using OAuth code
+ *     security:
+ *       - bearerAuth: []
+ */
+const connectLinkedIn = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const { code, redirectUri } = req.body;
+
+    if (!code) {
+        throw new ApiError(400, 'Authorization code is required.');
+    }
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const finalRedirectUri = redirectUri || `${frontendUrl}/dashboard`;
+
+    const result = await linkedinService.connect(code, finalRedirectUri, userId);
+
+    res.json({
+        success: true,
+        message: result.reconnected
+            ? 'LinkedIn reconnected successfully!'
+            : 'LinkedIn connected successfully!',
+        data: result
+    });
+});
+
+const disconnectLinkedIn = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const { accountId } = req.params;
+
+    await linkedinService.disconnect(parseInt(accountId), userId);
+
+    res.json({
+        success: true,
+        message: 'LinkedIn disconnected.'
+    });
+});
+
 module.exports = {
     getConnectedAccounts,
     connectBluesky,
@@ -594,5 +669,8 @@ module.exports = {
     publishPost,
     connectDiscord,
     sendDiscordMessage,
-    disconnectDiscord
+    disconnectDiscord,
+    getLinkedInAuthUrl,
+    connectLinkedIn,
+    disconnectLinkedIn
 };

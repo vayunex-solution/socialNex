@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
 import ConnectDiscord from '../components/ConnectDiscord'
+import ConnectLinkedIn from '../components/ConnectLinkedIn'
 import '../components/ConnectBluesky.css'
 import './Dashboard.css'
 
@@ -12,12 +13,21 @@ function Dashboard() {
     const [showConnectBluesky, setShowConnectBluesky] = useState(false)
     const [showConnectTelegram, setShowConnectTelegram] = useState(false)
     const [showConnectDiscord, setShowConnectDiscord] = useState(false)
+    const [showConnectLinkedIn, setShowConnectLinkedIn] = useState(false)
     const [accounts, setAccounts] = useState([])
     const [loading, setLoading] = useState(true)
 
     // Fetch connected accounts
     useEffect(() => {
         fetchAccounts()
+
+        // Check for LinkedIn OAuth callback
+        const urlParams = new URLSearchParams(window.location.search)
+        const code = urlParams.get('code')
+        const state = urlParams.get('state')
+        if (code && state && state.startsWith('linkedin_')) {
+            setShowConnectLinkedIn(true)
+        }
     }, [])
 
     const fetchAccounts = async () => {
@@ -49,6 +59,11 @@ function Dashboard() {
 
     const handleDiscordConnected = (newAccount) => {
         setShowConnectDiscord(false)
+        fetchAccounts()
+    }
+
+    const handleLinkedInConnected = (newAccount) => {
+        setShowConnectLinkedIn(false)
         fetchAccounts()
     }
 
@@ -180,7 +195,7 @@ function Dashboard() {
                                             <img src={acc.avatar} alt={acc.name} className="account-avatar" />
                                         ) : (
                                             <div className="account-avatar-placeholder">
-                                                {acc.platform === 'bluesky' ? '🦋' : '📱'}
+                                                {acc.platform === 'bluesky' ? '🦋' : acc.platform === 'linkedin' ? '🔵' : '📱'}
                                             </div>
                                         )}
                                         <div className="account-details">
@@ -230,6 +245,14 @@ function Dashboard() {
                         >
                             <span className="platform-icon">💬</span>
                             <span>Connect Discord</span>
+                        </button>
+                        <button
+                            className="connect-platform-btn linkedin"
+                            onClick={() => setShowConnectLinkedIn(true)}
+                            style={{ background: 'linear-gradient(135deg, rgba(0,119,181,0.15), rgba(0,160,220,0.15))', borderColor: 'rgba(0,119,181,0.4)' }}
+                        >
+                            <span className="platform-icon">🔵</span>
+                            <span>Connect LinkedIn</span>
                         </button>
                     </div>
                 </section>
@@ -286,6 +309,14 @@ function Dashboard() {
                 <ConnectDiscord
                     onSuccess={handleDiscordConnected}
                     onClose={() => setShowConnectDiscord(false)}
+                />
+            )}
+
+            {/* Connect LinkedIn Modal */}
+            {showConnectLinkedIn && (
+                <ConnectLinkedIn
+                    onSuccess={handleLinkedInConnected}
+                    onClose={() => setShowConnectLinkedIn(false)}
                 />
             )}
         </div>
