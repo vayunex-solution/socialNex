@@ -102,7 +102,7 @@ class LinkedInService {
             });
             profile = profileResponse.data;
         } catch (err) {
-            logger.error('LinkedIn profile fetch failed:', err.response?.data || err.message);
+            logger.error(`LinkedIn profile fetch failed: ${JSON.stringify(err.response?.data || err.message)}`);
             throw new Error('Failed to fetch LinkedIn profile');
         }
         // profile has: sub, name, given_name, family_name, email, picture, email_verified

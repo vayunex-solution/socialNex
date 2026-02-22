@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import API_URL from '../config/api'
 
 function ConnectLinkedIn({ onSuccess, onClose }) {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [callbackProcessing, setCallbackProcessing] = useState(false)
+    const callbackAttempted = useRef(false)
 
     // Check if we landed back from LinkedIn with a code
     useEffect(() => {
@@ -13,6 +14,9 @@ function ConnectLinkedIn({ onSuccess, onClose }) {
         const state = urlParams.get('state')
 
         if (code && state && state.startsWith('linkedin_')) {
+            if (callbackAttempted.current) return;
+            callbackAttempted.current = true;
+
             setCallbackProcessing(true)
             handleCallback(code)
         }
