@@ -184,23 +184,28 @@ class LinkedInService {
             shareMediaCategory = 'IMAGE';
 
             for (const img of images) {
-                // Step 1: Register Upload
-                const registerUrl = 'https://api.linkedin.com/v2/assets?action=registerUpload';
-                const registerBody = {
-                    registerUploadRequest: {
-                        recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
-                        owner: `urn:li:person:${account.account_id}`,
-                        serviceRelationships: [
-                            {
-                                relationshipType: 'OWNER',
-                                identifier: 'urn:li:userGeneratedContent'
-                            }
-                        ]
-                    }
-                };
-
                 let registerOutput;
                 try {
+                    const registerUrl = 'https://api.linkedin.com/v2/assets?action=registerUpload';
+
+                    if (!account || !account.account_id) {
+                        throw new Error(`Invalid account object: ${JSON.stringify(account)}`);
+                    }
+
+                    const registerBody = {
+                        registerUploadRequest: {
+                            recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+                            owner: `urn:li:person:${account.account_id}`,
+                            serviceRelationships: [
+                                {
+                                    relationshipType: 'OWNER',
+                                    identifier: 'urn:li:userGeneratedContent'
+                                }
+                            ]
+                        }
+                    };
+
+                    logger.info(`LinkedIn registerAsset body: ${JSON.stringify(registerBody)}`);
                     const regRes = await axios.post(registerUrl, registerBody, {
                         headers: {
                             'Authorization': `Bearer ${accessToken}`,
@@ -210,7 +215,14 @@ class LinkedInService {
                     });
                     registerOutput = regRes.data;
                 } catch (err) {
-                    logger.error(`LinkedIn registerAsset failed: ${JSON.stringify(err.response?.data || err.message)}`);
+                    const fullError = {
+                        status: err.response?.status,
+                        data: err.response?.data,
+                        headers: err.response?.headers,
+                        msg: err.message,
+                        stack: err.stack
+                    };
+                    logger.error(`LinkedIn registerAsset failed: ${JSON.stringify(fullError, null, 2)}`);
                     throw new Error('Failed to register LinkedIn image upload.');
                 }
 
