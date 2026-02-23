@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import API_URL from '../config/api'
 import { Link, useNavigate } from 'react-router-dom'
-import { Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin } from 'lucide-react'
+import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin } from 'lucide-react'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
 import ConnectDiscord from '../components/ConnectDiscord'
