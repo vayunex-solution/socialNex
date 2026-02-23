@@ -270,9 +270,9 @@ function CreatePost() {
     }
 
     return (
-        <div className="dashboard-page">
+        <>
             {/* Main Content */}
-            <main className="dashboard-main w-full">
+            < main className="dashboard-main w-full" >
                 <header className="dashboard-header">
                     <div>
                         <h1>Create Post</h1>
@@ -608,8 +608,8 @@ function CreatePost() {
                         </div>
                     </div>
                 </div>
-            </main>
-        </div>
+            </main >
+        </>
     )
 }
 

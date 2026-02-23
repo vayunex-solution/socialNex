@@ -93,12 +93,12 @@ function Dashboard() {
     }
 
     return (
-        <div className="dashboard-page">
+        <>
             {/* Main Content */}
             <main className="dashboard-main w-full">
                 <header className="dashboard-header">
                     <div>
-                        <h1>Welcome back, {user.fullName || 'User'}!</h1>
+                        <h1 className="flex-center gap-2"><LayoutDashboard size={28} /> Dashboard</h1>
                         <p>Here's what's happening with your social media.</p>
                     </div>
                     <button className="btn btn-primary" onClick={() => navigate('/create-post')}>
@@ -220,23 +220,12 @@ function Dashboard() {
                 </section>
 
                 {/* Quick Actions */}
-                <section className="quick-actions">
-                    <h2>Get Started</h2>
+                <section className="quick-actions mt-4">
+                    <h2>🚀 Quick Actions</h2>
                     <div className="actions-grid">
                         <div className="action-card glass-card">
-                            <div className="action-icon">🔗</div>
-                            <h3>Connect Account</h3>
-                            <p>Link your social media accounts to start posting</p>
-                            <button
-                                className="btn btn-secondary btn-sm"
-                                onClick={() => setShowConnectBluesky(true)}
-                            >
-                                Connect
-                            </button>
-                        </div>
-                        <div className="action-card glass-card">
                             <div className="action-icon">✍️</div>
-                            <h3>Create Post</h3>
+                            <h3>Draft Post</h3>
                             <p>Write and schedule your first post</p>
                             <button className="btn btn-secondary btn-sm">Create</button>
                         </div>
@@ -281,7 +270,7 @@ function Dashboard() {
                     onClose={() => setShowConnectLinkedIn(false)}
                 />
             )}
-        </div>
+        </>
     )
 }
 
