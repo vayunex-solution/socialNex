@@ -8,6 +8,10 @@ const { logger } = require('../utils/logger');
 const { query } = require('../config/database');
 const crypto = require('crypto');
 const axios = require('axios');
+const https = require('https');
+
+// Force IPv4 for LinkedIn API due to Node.js IPv6 AggregateError on certain Indian ISPs
+const httpsAgent = new https.Agent({ family: 4, keepAlive: true });
 
 // Encryption (same pattern as blueskyService)
 const ALGORITHM = 'aes-256-gcm';
@@ -82,7 +86,8 @@ class LinkedInService {
                     client_secret: this.clientSecret
                 }).toString(),
                 {
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    httpsAgent
                 }
             );
             tokenData = tokenResponse.data;
@@ -98,7 +103,8 @@ class LinkedInService {
         let profile;
         try {
             const profileResponse = await axios.get('https://api.linkedin.com/v2/userinfo', {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
+                headers: { 'Authorization': `Bearer ${accessToken}` },
+                httpsAgent
             });
             profile = profileResponse.data;
         } catch (err) {
@@ -211,7 +217,8 @@ class LinkedInService {
                             'Authorization': `Bearer ${accessToken}`,
                             'Content-Type': 'application/json',
                             'X-Restli-Protocol-Version': '2.0.0'
-                        }
+                        },
+                        httpsAgent
                     });
                     registerOutput = regRes.data;
                 } catch (err) {
@@ -239,7 +246,8 @@ class LinkedInService {
                             'X-Restli-Protocol-Version': '2.0.0'
                         },
                         maxBodyLength: Infinity,
-                        maxContentLength: Infinity
+                        maxContentLength: Infinity,
+                        httpsAgent
                     });
                 } catch (err) {
                     logger.error(`LinkedIn image binary upload failed: ${JSON.stringify(err.response?.data || err.message)}`);
@@ -285,7 +293,8 @@ class LinkedInService {
                     'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json',
                     'X-Restli-Protocol-Version': '2.0.0'
-                }
+                },
+                httpsAgent
             });
             result = response.data;
         } catch (err) {
