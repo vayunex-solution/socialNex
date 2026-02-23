@@ -210,7 +210,7 @@ class LinkedInService {
                     });
                     registerOutput = regRes.data;
                 } catch (err) {
-                    logger.error('LinkedIn registerAsset failed:', err.response?.data || err.message);
+                    logger.error(`LinkedIn registerAsset failed: ${JSON.stringify(err.response?.data || err.message)}`);
                     throw new Error('Failed to register LinkedIn image upload.');
                 }
 
@@ -230,7 +230,7 @@ class LinkedInService {
                         maxContentLength: Infinity
                     });
                 } catch (err) {
-                    logger.error('LinkedIn image binary upload failed:', err.response?.data || err.message);
+                    logger.error(`LinkedIn image binary upload failed: ${JSON.stringify(err.response?.data || err.message)}`);
                     throw new Error('Failed to upload image to LinkedIn servers.');
                 }
 

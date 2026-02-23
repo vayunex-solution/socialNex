@@ -508,9 +508,9 @@ const publishPost = asyncHandler(async (req, res) => {
     // Log the post
     try {
         await query(
-            `INSERT INTO posts (user_id, content, platforms, status, created_at) 
+            `INSERT INTO posts (user_id, content, metadata, status, created_at) 
              VALUES (?, ?, ?, 'published', NOW())`,
-            [userId, text.trim(), JSON.stringify(results.map(r => r.platform))]
+            [userId, text.trim(), JSON.stringify({ platforms: results.map(r => r.platform) })]
         );
     } catch (logErr) {
         // Don't fail if logging fails (table might not exist yet)
