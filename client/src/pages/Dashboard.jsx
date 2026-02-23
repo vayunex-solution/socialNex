@@ -142,7 +142,7 @@ function Dashboard() {
                 {/* Connected Accounts */}
                 <section className="accounts-section">
                     <div className="section-header">
-                        <h2>📱 Connected Accounts</h2>
+                        <h2 className="flex-center gap-2"><Smartphone size={24} /> Connected Accounts</h2>
                     </div>
 
                     {loading ? (
@@ -164,7 +164,9 @@ function Dashboard() {
                                         )}
                                         <div className="account-details">
                                             <span className="account-name">{acc.name}</span>
-                                            <span className="account-username">@{acc.username}</span>
+                                            <span className="account-username">
+                                                {acc.username.startsWith('@') ? acc.username : `@${acc.username}`}
+                                            </span>
                                             <span className="account-platform">{acc.platform}</span>
                                         </div>
                                     </div>

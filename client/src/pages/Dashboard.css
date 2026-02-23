@@ -213,17 +213,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: var(--space-md);
 }
 
 .account-info {
     display: flex;
     align-items: center;
     gap: var(--space-md);
+    min-width: 0;
+    flex: 1;
 }
 
 .account-avatar {
     width: 48px;
     height: 48px;
+    min-width: 48px;
     border-radius: var(--radius-full);
     object-fit: cover;
 }
@@ -231,6 +235,7 @@
 .account-avatar-placeholder {
     width: 48px;
     height: 48px;
+    min-width: 48px;
     border-radius: var(--radius-full);
     background: var(--gradient-primary);
     display: flex;
@@ -242,16 +247,23 @@
 .account-details {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .account-name {
     font-weight: var(--font-semibold);
     color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .account-username {
     font-size: var(--text-sm);
     color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .account-platform {
