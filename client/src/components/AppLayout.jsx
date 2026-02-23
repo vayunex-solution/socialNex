@@ -62,21 +62,48 @@ function AppLayout({ children }) {
                 {children}
             </main>
 
-            {/* Mobile Bottom Navigation */}
+            {/* Mobile Bottom Navigation - Premium */}
             <nav className="mobile-bottom-nav mobile-only">
-                {navItems.map(item => {
-                    const Icon = item.icon
-                    return (
-                        <Link
-                            key={item.label}
-                            to={item.path}
-                            className={`mobile-nav-item ${path === item.path ? 'active' : ''}`}
-                        >
-                            <Icon size={24} />
-                            <span className="mobile-nav-label">{item.label}</span>
-                        </Link>
-                    )
-                })}
+                {/* Left side nav items */}
+                <Link to="/dashboard" className={`mobile-nav-item ${path === '/dashboard' ? 'active' : ''}`}>
+                    <span className="mobile-nav-icon-wrap">
+                        <LayoutDashboard size={22} />
+                    </span>
+                    <span className="mobile-nav-label">Home</span>
+                    {path === '/dashboard' && <span className="mobile-nav-dot"></span>}
+                </Link>
+
+                <Link to="#" className={`mobile-nav-item ${path === '/calendar' ? 'active' : ''}`}>
+                    <span className="mobile-nav-icon-wrap">
+                        <CalendarDays size={22} />
+                    </span>
+                    <span className="mobile-nav-label">Calendar</span>
+                    {path === '/calendar' && <span className="mobile-nav-dot"></span>}
+                </Link>
+
+                {/* Center Floating Create Button */}
+                <Link to="/create-post" className="mobile-nav-fab">
+                    <span className="mobile-nav-fab-inner">
+                        <PenSquare size={22} />
+                    </span>
+                    <span className="mobile-nav-fab-label">Create</span>
+                </Link>
+
+                <Link to="#" className={`mobile-nav-item ${path === '/analytics' ? 'active' : ''}`}>
+                    <span className="mobile-nav-icon-wrap">
+                        <BarChart3 size={22} />
+                    </span>
+                    <span className="mobile-nav-label">Analytics</span>
+                    {path === '/analytics' && <span className="mobile-nav-dot"></span>}
+                </Link>
+
+                <Link to="#" className={`mobile-nav-item ${path === '/settings' ? 'active' : ''}`}>
+                    <span className="mobile-nav-icon-wrap">
+                        <Settings size={22} />
+                    </span>
+                    <span className="mobile-nav-label">Settings</span>
+                    {path === '/settings' && <span className="mobile-nav-dot"></span>}
+                </Link>
             </nav>
         </div>
     )
