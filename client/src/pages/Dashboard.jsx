@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import API_URL from '../config/api'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin } from 'lucide-react'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
 import ConnectDiscord from '../components/ConnectDiscord'
@@ -82,6 +83,8 @@ function Dashboard() {
         }
     }
 
+    const navigate = useNavigate()
+
     const handleLogout = () => {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('refreshToken')
@@ -91,86 +94,44 @@ function Dashboard() {
 
     return (
         <div className="dashboard-page">
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="sidebar-logo">
-                    <Link to="/">
-                        <span className="logo-icon">🚀</span>
-                        <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
-                    </Link>
-                </div>
-
-                <nav className="sidebar-nav">
-                    <a href="#" className="nav-item active">
-                        <span className="nav-icon">📊</span>
-                        <span>Dashboard</span>
-                    </a>
-                    <Link to="/create-post" className="nav-item">
-                        <span className="nav-icon">✍️</span>
-                        <span>Create Post</span>
-                    </Link>
-                    <a href="#" className="nav-item">
-                        <span className="nav-icon">📅</span>
-                        <span>Calendar</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <span className="nav-icon">📱</span>
-                        <span>Accounts</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <span className="nav-icon">📈</span>
-                        <span>Analytics</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <span className="nav-icon">⚙️</span>
-                        <span>Settings</span>
-                    </a>
-                </nav>
-
-                <div className="sidebar-footer">
-                    <button className="btn btn-secondary btn-sm" onClick={handleLogout}>
-                        Logout
-                    </button>
-                </div>
-            </aside>
-
             {/* Main Content */}
-            <main className="dashboard-main">
+            <main className="dashboard-main w-full">
                 <header className="dashboard-header">
                     <div>
-                        <h1>Welcome back, {user.fullName || 'User'}! 👋</h1>
+                        <h1>Welcome back, {user.fullName || 'User'}!</h1>
                         <p>Here's what's happening with your social media.</p>
                     </div>
-                    <button className="btn btn-primary">
-                        Create Post ✍️
+                    <button className="btn btn-primary" onClick={() => navigate('/create-post')}>
+                        <PenSquare size={18} style={{ marginRight: '6px' }} />
+                        Create Post
                     </button>
                 </header>
 
                 {/* Stats Grid */}
                 <div className="stats-grid">
                     <div className="stat-card glass-card">
-                        <div className="stat-icon">📱</div>
+                        <div className="stat-icon"><Smartphone size={24} /></div>
                         <div className="stat-info">
                             <span className="stat-value">{accounts.length}</span>
                             <span className="stat-label">Connected Accounts</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
-                        <div className="stat-icon">📝</div>
+                        <div className="stat-icon"><PenSquare size={24} /></div>
                         <div className="stat-info">
                             <span className="stat-value">0</span>
                             <span className="stat-label">Posts Created</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
-                        <div className="stat-icon">📅</div>
+                        <div className="stat-icon"><CalendarDays size={24} /></div>
                         <div className="stat-info">
                             <span className="stat-value">0</span>
                             <span className="stat-label">Scheduled</span>
                         </div>
                     </div>
                     <div className="stat-card glass-card">
-                        <div className="stat-icon">📈</div>
+                        <div className="stat-icon"><BarChart3 size={24} /></div>
                         <div className="stat-info">
                             <span className="stat-value">0</span>
                             <span className="stat-label">Total Reach</span>
@@ -194,8 +155,11 @@ function Dashboard() {
                                         {acc.avatar ? (
                                             <img src={acc.avatar} alt={acc.name} className="account-avatar" />
                                         ) : (
-                                            <div className="account-avatar-placeholder">
-                                                {acc.platform === 'bluesky' ? '🦋' : acc.platform === 'linkedin' ? '🔵' : '📱'}
+                                            <div className="account-avatar-placeholder flex-center">
+                                                {acc.platform === 'bluesky' ? <MessageCircle size={24} /> :
+                                                    acc.platform === 'linkedin' ? <Linkedin size={24} /> :
+                                                        acc.platform === 'telegram' ? <Send size={24} /> :
+                                                            <Smartphone size={24} />}
                                             </div>
                                         )}
                                         <div className="account-details">
@@ -225,25 +189,21 @@ function Dashboard() {
                             className="connect-platform-btn bluesky"
                             onClick={() => setShowConnectBluesky(true)}
                         >
-                            <span className="platform-icon">🦋</span>
+                            <span className="platform-icon"><MessageCircle size={20} /></span>
                             <span>Connect Bluesky</span>
-                        </button>
-                        <button className="connect-platform-btn mastodon" disabled>
-                            <span className="platform-icon">🐘</span>
-                            <span>Mastodon (Coming Soon)</span>
                         </button>
                         <button
                             className="connect-platform-btn telegram"
                             onClick={() => setShowConnectTelegram(true)}
                         >
-                            <span className="platform-icon">📱</span>
+                            <span className="platform-icon"><Send size={20} /></span>
                             <span>Connect Telegram</span>
                         </button>
                         <button
                             className="connect-platform-btn discord"
                             onClick={() => setShowConnectDiscord(true)}
                         >
-                            <span className="platform-icon">💬</span>
+                            <span className="platform-icon"><MessageCircle size={20} /></span>
                             <span>Connect Discord</span>
                         </button>
                         <button
@@ -251,7 +211,7 @@ function Dashboard() {
                             onClick={() => setShowConnectLinkedIn(true)}
                             style={{ background: 'linear-gradient(135deg, rgba(0,119,181,0.15), rgba(0,160,220,0.15))', borderColor: 'rgba(0,119,181,0.4)' }}
                         >
-                            <span className="platform-icon">🔵</span>
+                            <span className="platform-icon"><Linkedin size={20} /></span>
                             <span>Connect LinkedIn</span>
                         </button>
                     </div>

@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './components/LandingPage'
+import AppLayout from './components/AppLayout'
 import { Login, Register, VerifyEmail, Dashboard, ForgotPassword, ResetPassword, CreatePost } from './pages'
 
 // Protected Route Component
@@ -52,7 +53,9 @@ function App() {
         path="/dashboard"
         element={
           <ProtectedRoute>
-            <Dashboard />
+            <AppLayout>
+              <Dashboard />
+            </AppLayout>
           </ProtectedRoute>
         }
       />
@@ -60,7 +63,9 @@ function App() {
         path="/create-post"
         element={
           <ProtectedRoute>
-            <CreatePost />
+            <AppLayout>
+              <CreatePost />
+            </AppLayout>
           </ProtectedRoute>
         }
       />

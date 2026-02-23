@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import { generateCaptionFromText, generateCaptionFromImage, improveCaption } from '../services/aiCaptionService'
+import { MessageCircle, Send, Linkedin, Image as ImageIcon, Sparkles, Edit3, ImagePlus, RefreshCw, SendHorizontal, Rocket, CheckCircle2, AlertCircle } from 'lucide-react'
 import './CreatePost.css'
 
 function CreatePost() {
@@ -33,10 +34,11 @@ function CreatePost() {
     }
 
     const PLATFORM_ICONS = {
-        bluesky: '🦋',
-        telegram: '📱',
-        mastodon: '🐘',
-        discord: '💬'
+        bluesky: <MessageCircle size={16} />,
+        telegram: <Send size={16} />,
+        mastodon: <MessageCircle size={16} />,
+        discord: <MessageCircle size={16} />,
+        linkedin: <Linkedin size={16} />
     }
 
     useEffect(() => {
@@ -269,55 +271,11 @@ function CreatePost() {
 
     return (
         <div className="dashboard-page">
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="sidebar-logo">
-                    <Link to="/">
-                        <span className="logo-icon">🚀</span>
-                        <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
-                    </Link>
-                </div>
-                <nav className="sidebar-nav">
-                    <Link to="/dashboard" className="nav-item">
-                        <span className="nav-icon">📊</span>
-                        <span>Dashboard</span>
-                    </Link>
-                    <Link to="/create-post" className="nav-item active">
-                        <span className="nav-icon">✍️</span>
-                        <span>Create Post</span>
-                    </Link>
-                    <a href="#" className="nav-item">
-                        <span className="nav-icon">📅</span>
-                        <span>Calendar</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <span className="nav-icon">📱</span>
-                        <span>Accounts</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <span className="nav-icon">📈</span>
-                        <span>Analytics</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <span className="nav-icon">⚙️</span>
-                        <span>Settings</span>
-                    </a>
-                </nav>
-                <div className="sidebar-footer">
-                    <button className="btn btn-secondary btn-sm" onClick={() => {
-                        localStorage.clear()
-                        window.location.href = '/'
-                    }}>
-                        Logout
-                    </button>
-                </div>
-            </aside>
-
             {/* Main Content */}
-            <main className="dashboard-main">
+            <main className="dashboard-main w-full">
                 <header className="dashboard-header">
                     <div>
-                        <h1>Create Post ✍️</h1>
+                        <h1>Create Post</h1>
                         <p>Compose and publish to your connected platforms</p>
                     </div>
                 </header>
@@ -344,9 +302,9 @@ function CreatePost() {
                                             className={`platform-chip ${selectedAccounts.includes(acc.id) ? 'selected' : ''}`}
                                             onClick={() => toggleAccount(acc.id)}
                                         >
-                                            <span className="chip-icon">{PLATFORM_ICONS[acc.platform] || '📱'}</span>
+                                            <span className="chip-icon flex-center">{PLATFORM_ICONS[acc.platform] || <SendHorizontal size={16} />}</span>
                                             <span className="chip-name">{acc.name}</span>
-                                            {selectedAccounts.includes(acc.id) && <span className="chip-check">✓</span>}
+                                            {selectedAccounts.includes(acc.id) && <span className="chip-check"><CheckCircle2 size={14} /></span>}
                                         </button>
                                     ))
                                 )}
@@ -357,7 +315,7 @@ function CreatePost() {
                         {accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'discord') && (
                             <div className="discord-settings">
                                 <div className="discord-settings-header">
-                                    <span className="discord-logo">💬</span>
+                                    <span className="discord-logo"><MessageCircle size={18} /></span>
                                     <span>Discord Settings</span>
                                 </div>
                                 <div className="discord-settings-body">
@@ -437,7 +395,7 @@ function CreatePost() {
                                     className="upload-placeholder"
                                     onClick={() => fileInputRef.current?.click()}
                                 >
-                                    <span className="upload-icon">🖼️</span>
+                                    <span className="upload-icon flex-center" style={{ marginBottom: '10px' }}><ImagePlus size={32} /></span>
                                     <p>Drag & drop images here or <strong>click to browse</strong></p>
                                     <small>JPEG, PNG, GIF, WebP • Max 5MB • Up to 4 images</small>
                                 </div>
@@ -459,7 +417,7 @@ function CreatePost() {
                                 onClick={() => { setShowAiPanel(!showAiPanel); setAiError(''); }}
                                 type="button"
                             >
-                                <span className="ai-sparkle">✨</span>
+                                <span className="ai-sparkle"><Sparkles size={16} /></span>
                                 <span>AI Caption Generator</span>
                                 <span className="ai-badge">Gemini</span>
                             </button>
@@ -469,24 +427,24 @@ function CreatePost() {
                                     {/* Mode Tabs */}
                                     <div className="ai-mode-tabs">
                                         <button
-                                            className={`ai-mode-tab ${aiMode === 'text' ? 'active' : ''}`}
+                                            className={`ai-mode-tab flex-center gap-2 ${aiMode === 'text' ? 'active' : ''}`}
                                             onClick={() => setAiMode('text')}
                                         >
-                                            ✍️ From Text
+                                            <Edit3 size={16} /> From Text
                                         </button>
                                         <button
-                                            className={`ai-mode-tab ${aiMode === 'image' ? 'active' : ''}`}
+                                            className={`ai-mode-tab flex-center gap-2 ${aiMode === 'image' ? 'active' : ''}`}
                                             onClick={() => setAiMode('image')}
                                             disabled={images.length === 0}
                                         >
-                                            🖼️ From Image
+                                            <ImageIcon size={16} /> From Image
                                         </button>
                                         <button
-                                            className={`ai-mode-tab ${aiMode === 'improve' ? 'active' : ''}`}
+                                            className={`ai-mode-tab flex-center gap-2 ${aiMode === 'improve' ? 'active' : ''}`}
                                             onClick={() => setAiMode('improve')}
                                             disabled={!postText.trim()}
                                         >
-                                            🔄 Improve Text
+                                            <RefreshCw size={16} /> Improve Text
                                         </button>
                                     </div>
 
@@ -503,8 +461,8 @@ function CreatePost() {
                                     )}
 
                                     {aiMode === 'image' && (
-                                        <div className="ai-image-info">
-                                            <span>🖼️</span>
+                                        <div className="ai-image-info flex-center gap-2">
+                                            <ImageIcon size={16} />
                                             <span>Will analyze: <strong>{images[0]?.name}</strong></span>
                                         </div>
                                     )}
@@ -538,14 +496,14 @@ function CreatePost() {
                                             </select>
                                         </div>
                                         <button
-                                            className="btn btn-ai"
+                                            className="btn btn-ai flex-center gap-2"
                                             onClick={handleAiGenerate}
                                             disabled={aiLoading}
                                         >
                                             {aiLoading ? (
                                                 <><span className="ai-spinner"></span> Generating...</>
                                             ) : (
-                                                <>✨ Generate</>
+                                                <><Sparkles size={16} /> Generate</>
                                             )}
                                         </button>
                                     </div>
@@ -582,10 +540,10 @@ function CreatePost() {
                             <div className="post-results">
                                 {result.map((r, i) => (
                                     <div key={i} className={`result-item ${r.success ? 'success' : 'failed'}`}>
-                                        <span>{PLATFORM_ICONS[r.platform]}</span>
+                                        <span className="flex-center">{PLATFORM_ICONS[r.platform]}</span>
                                         <span className="result-name">{r.name}</span>
-                                        <span className={`result-status ${r.success ? 'text-success' : 'text-error'}`}>
-                                            {r.success ? '✅ Published!' : `❌ ${r.error || 'Failed'}`}
+                                        <span className={`result-status flex-center gap-1 ${r.success ? 'text-success' : 'text-error'}`}>
+                                            {r.success ? <><CheckCircle2 size={16} /> Published!</> : <><AlertCircle size={16} /> {r.error || 'Failed'}</>}
                                         </span>
                                     </div>
                                 ))}
@@ -602,7 +560,7 @@ function CreatePost() {
                                 {loading ? (
                                     <span className="loading-spinner"></span>
                                 ) : (
-                                    <>🚀 Publish {images.length > 0 ? `(${images.length} image${images.length > 1 ? 's' : ''})` : 'Now'}</>
+                                    <><Rocket size={20} style={{ marginRight: '8px' }} /> Publish {images.length > 0 ? `(${images.length} image${images.length > 1 ? 's' : ''})` : 'Now'}</>
                                 )}
                             </button>
                         </div>
@@ -631,21 +589,21 @@ function CreatePost() {
                                 )}
                             </div>
                             <div className="preview-meta">
-                                <span>📏 {postText.length} chars</span>
-                                <span>🖼️ {images.length} image{images.length !== 1 ? 's' : ''}</span>
-                                <span>📱 {selectedAccounts.length} platform{selectedAccounts.length !== 1 ? 's' : ''}</span>
+                                <span><Edit3 size={14} style={{ marginRight: '4px', display: 'inline' }} /> {postText.length} chars</span>
+                                <span><ImageIcon size={14} style={{ marginRight: '4px', display: 'inline' }} /> {images.length} image{images.length !== 1 ? 's' : ''}</span>
+                                <span><SendHorizontal size={14} style={{ marginRight: '4px', display: 'inline' }} /> {selectedAccounts.length} platform{selectedAccounts.length !== 1 ? 's' : ''}</span>
                             </div>
                         </div>
 
                         {/* Tips */}
                         <div className="tips-card glass-card">
-                            <h3>💡 Tips</h3>
+                            <h3 className="flex-center gap-2"><Sparkles size={18} /> Tips</h3>
                             <ul className="tips-list">
-                                <li>🦋 <strong>Bluesky:</strong> 300 chars, 4 images (1MB each)</li>
-                                <li>📱 <strong>Telegram:</strong> 4096 chars, HTML formatting</li>
-                                <li>🖼️ Images auto-sent as photo posts on Telegram</li>
+                                <li><MessageCircle size={14} /> <strong>Bluesky:</strong> 300 chars, 4 images (1MB each)</li>
+                                <li><Send size={14} /> <strong>Telegram:</strong> 4096 chars, HTML formatting</li>
+                                <li><ImageIcon size={14} /> Images auto-sent as photo posts on Telegram</li>
                                 <li>Use <code>&lt;b&gt;bold&lt;/b&gt;</code> for Telegram</li>
-                                <li>📊 Best time: 9-11 AM or 7-9 PM</li>
+                                <li><BarChart3 size={14} /> Best time: 9-11 AM or 7-9 PM</li>
                             </ul>
                         </div>
                     </div>

@@ -838,3 +838,30 @@
 .ai-caption-card:hover .ai-use-btn {
     opacity: 1;
 }
+
+/* ==========================================================
+   MOBILE RESPONSIVENESS
+   ========================================================== */
+@media (max-width: 768px) {
+    .create-post-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .composer-section {
+        padding: var(--space-lg);
+    }
+
+    .platform-chips {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .platform-chip {
+        justify-content: center;
+        padding: var(--space-sm);
+    }
+
+    .ai-mode-tabs {
+        flex-direction: column;
+    }
+}
