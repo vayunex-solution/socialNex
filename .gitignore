@@ -11,7 +11,7 @@ server/node_modules/
 .env.*.local
 server/.env
 client/.env
-client/.env.production
+# client/.env.production is tracked for cPanel deployment
 
 # Logs
 logs/
@@ -32,8 +32,8 @@ desktop.ini
 
 # Build
 dist/
+!client/dist/
 build/
-# client/dist/ is tracked for cPanel deployment
 
 # Uploads
 server/uploads/*
