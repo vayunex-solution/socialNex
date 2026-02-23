@@ -241,7 +241,6 @@ class LinkedInService {
                 try {
                     await axios.put(uploadUrl, img.data, {
                         headers: {
-                            'Authorization': `Bearer ${accessToken}`,
                             'Content-Type': img.mimetype,
                             'X-Restli-Protocol-Version': '2.0.0'
                         },
