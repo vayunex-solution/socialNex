@@ -157,12 +157,13 @@ class LinkedInService {
     }
 
     /**
-     * Create a text post on LinkedIn
+     * Create a text or text+image post on LinkedIn
      * @param {number} accountId - social_accounts ID
      * @param {number} userId - SocialNex user ID
      * @param {string} text - Post content
+     * @param {Array} images - Array of image objects { buffer, mimetype }
      */
-    async createPost(accountId, userId, text) {
+    async createPost(accountId, userId, text, images = []) {
         const account = await this._getAccount(accountId, userId);
         const accessToken = decrypt(account.access_token);
 
@@ -175,7 +176,76 @@ class LinkedInService {
             throw new Error('LinkedIn token expired. Please reconnect your account.');
         }
 
-        // LinkedIn API v2 - Create a share (UGC Post)
+        // Handle Media Upload if images are present
+        let mediaAssets = [];
+        let shareMediaCategory = 'NONE';
+
+        if (images && images.length > 0) {
+            shareMediaCategory = 'IMAGE';
+
+            for (const img of images) {
+                // Step 1: Register Upload
+                const registerUrl = 'https://api.linkedin.com/v2/assets?action=registerUpload';
+                const registerBody = {
+                    registerUploadRequest: {
+                        recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+                        owner: `urn:li:person:${account.account_id}`,
+                        serviceRelationships: [
+                            {
+                                relationshipType: 'OWNER',
+                                identifier: 'urn:li:userGeneratedContent'
+                            }
+                        ]
+                    }
+                };
+
+                let registerOutput;
+                try {
+                    const regRes = await axios.post(registerUrl, registerBody, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': 'application/json',
+                            'X-Restli-Protocol-Version': '2.0.0'
+                        }
+                    });
+                    registerOutput = regRes.data;
+                } catch (err) {
+                    logger.error('LinkedIn registerAsset failed:', err.response?.data || err.message);
+                    throw new Error('Failed to register LinkedIn image upload.');
+                }
+
+                const uploadMechanism = registerOutput.value.uploadMechanism['com.linkedin.digitalmedia.uploading.MediaUploadHttpRequest'];
+                const uploadUrl = uploadMechanism.uploadUrl;
+                const assetUrn = registerOutput.value.asset;
+
+                // Step 2: Upload Binary Image
+                try {
+                    await axios.put(uploadUrl, img.data, {
+                        headers: {
+                            'Authorization': `Bearer ${accessToken}`,
+                            'Content-Type': img.mimetype,
+                            'X-Restli-Protocol-Version': '2.0.0'
+                        },
+                        maxBodyLength: Infinity,
+                        maxContentLength: Infinity
+                    });
+                } catch (err) {
+                    logger.error('LinkedIn image binary upload failed:', err.response?.data || err.message);
+                    throw new Error('Failed to upload image to LinkedIn servers.');
+                }
+
+                // Push to media array
+                mediaAssets.push({
+                    status: 'READY',
+                    media: assetUrn,
+                    title: {
+                        text: 'SocialNex Image Upload'
+                    }
+                });
+            }
+        }
+
+        // Step 3: Create a share (UGC Post)
         const postBody = {
             author: `urn:li:person:${account.account_id}`,
             lifecycleState: 'PUBLISHED',
@@ -184,13 +254,17 @@ class LinkedInService {
                     shareCommentary: {
                         text: text
                     },
-                    shareMediaCategory: 'NONE'
+                    shareMediaCategory: shareMediaCategory
                 }
             },
             visibility: {
                 'com.linkedin.ugc.MemberNetworkVisibility': 'PUBLIC'
             }
         };
+
+        if (mediaAssets.length > 0) {
+            postBody.specificContent['com.linkedin.ugc.ShareContent'].media = mediaAssets;
+        }
 
         let result;
         try {

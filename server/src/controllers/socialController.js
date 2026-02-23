@@ -483,7 +483,7 @@ const publishPost = asyncHandler(async (req, res) => {
                 }
             } else if (account.platform === 'linkedin') {
                 postResult = await linkedinService.createPost(
-                    account.id, userId, text.trim()
+                    account.id, userId, text.trim(), images
                 );
             }
 
