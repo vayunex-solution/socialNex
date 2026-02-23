@@ -182,7 +182,7 @@
 }
 
 /* ============================================
-   Connected Accounts Section
+   Connected Accounts Section - Premium
    ============================================ */
 
 .accounts-section {
@@ -201,6 +201,17 @@
     font-weight: var(--font-semibold);
 }
 
+.accounts-count {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    background: var(--glass-bg);
+    padding: 4px 14px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--glass-border);
+    font-weight: var(--font-medium);
+}
+
+/* Connected Accounts Grid */
 .accounts-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -214,7 +225,23 @@
     justify-content: space-between;
     align-items: center;
     gap: var(--space-md);
+    position: relative;
+    overflow: hidden;
 }
+
+.account-card-stripe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+}
+
+.platform-bluesky .account-card-stripe { background: linear-gradient(90deg, #0085FF, #00C2FF); }
+.platform-telegram .account-card-stripe { background: linear-gradient(90deg, #0088CC, #26D0F2); }
+.platform-discord .account-card-stripe { background: linear-gradient(90deg, #5865F2, #7B8BFF); }
+.platform-linkedin .account-card-stripe { background: linear-gradient(90deg, #0077B5, #00A0DC); }
 
 .account-info {
     display: flex;
@@ -225,134 +252,249 @@
 }
 
 .account-avatar {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     border-radius: var(--radius-full);
     object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .account-avatar-placeholder {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     border-radius: var(--radius-full);
-    background: var(--gradient-primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--text-xl);
 }
+
+.platform-bg-bluesky { background: linear-gradient(135deg, rgba(0,133,255,0.2), rgba(0,194,255,0.2)); color: #00C2FF; }
+.platform-bg-telegram { background: linear-gradient(135deg, rgba(0,136,204,0.2), rgba(38,208,242,0.2)); color: #26D0F2; }
+.platform-bg-discord { background: linear-gradient(135deg, rgba(88,101,242,0.2), rgba(123,139,255,0.2)); color: #7B8BFF; }
+.platform-bg-linkedin { background: linear-gradient(135deg, rgba(0,119,181,0.2), rgba(0,160,220,0.2)); color: #00A0DC; }
 
 .account-details {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    gap: 2px;
 }
 
 .account-name {
     font-weight: var(--font-semibold);
     color: var(--text-primary);
+    font-size: var(--text-sm);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .account-username {
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--text-secondary);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.account-platform {
+.account-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1px 8px;
+    border-radius: var(--radius-full);
+    width: fit-content;
+}
+
+.platform-badge-bluesky { background: rgba(0,133,255,0.15); color: #66BBFF; }
+.platform-badge-telegram { background: rgba(0,136,204,0.15); color: #5DD8F5; }
+.platform-badge-discord { background: rgba(88,101,242,0.15); color: #9BA4F9; }
+.platform-badge-linkedin { background: rgba(0,119,181,0.15); color: #5CB8E0; }
+
+.btn-disconnect {
     font-size: var(--text-xs);
-    color: var(--accent-primary);
-    text-transform: capitalize;
+    font-weight: var(--font-medium);
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #F87171;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
 }
 
-.empty-state {
-    padding: var(--space-2xl);
+.btn-disconnect:hover {
+    background: rgba(239, 68, 68, 0.18);
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.15);
+}
+
+/* Empty State */
+.empty-state-card {
+    padding: var(--space-2xl) var(--space-xl);
     text-align: center;
-    color: var(--text-muted);
+    margin-bottom: var(--space-lg);
 }
 
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-md);
+    opacity: 0.8;
+}
+
+.empty-state-card h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.empty-state-card p {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: var(--leading-relaxed);
+}
+
+/* Loading State */
 .loading-state {
     padding: var(--space-2xl);
     text-align: center;
     color: var(--text-muted);
+    margin-bottom: var(--space-lg);
 }
 
-/* Connect Platform Buttons */
-.connect-buttons {
+.loading-spinner-wrap {
     display: flex;
-    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: var(--space-md);
+}
+
+.loading-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    animation: loadingBounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dot:nth-child(1) { animation-delay: -0.32s; }
+.loading-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes loadingBounce {
+    0%, 80%, 100% { transform: scale(0.4); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* ============================================
+   Connect Platform Cards - Premium
+   ============================================ */
+
+.connect-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-md);
 }
 
-.connect-platform-btn {
+.connect-card {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-md) var(--space-xl);
-    border-radius: var(--radius-md);
-    font-weight: var(--font-medium);
-    cursor: pointer;
-    transition: all var(--transition-fast);
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: var(--radius-lg);
     border: 1px solid var(--glass-border);
-    background: var(--surface-secondary);
+    background: var(--glass-bg);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
     color: var(--text-primary);
 }
 
-.connect-platform-btn:hover:not(:disabled) {
-    background: var(--surface-primary);
+.connect-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
 
-.connect-platform-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.connect-card.bluesky:hover { border-color: rgba(0,133,255,0.4); background: rgba(0,133,255,0.06); }
+.connect-card.telegram:hover { border-color: rgba(0,136,204,0.4); background: rgba(0,136,204,0.06); }
+.connect-card.discord:hover { border-color: rgba(88,101,242,0.4); background: rgba(88,101,242,0.06); }
+.connect-card.linkedin:hover { border-color: rgba(0,119,181,0.4); background: rgba(0,119,181,0.06); }
+
+.connect-card-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
 }
 
-.connect-platform-btn .platform-icon {
-    font-size: var(--text-xl);
+.bluesky-icon { background: linear-gradient(135deg, rgba(0,133,255,0.15), rgba(0,194,255,0.15)); color: #00C2FF; }
+.telegram-icon { background: linear-gradient(135deg, rgba(0,136,204,0.15), rgba(38,208,242,0.15)); color: #26D0F2; }
+.discord-icon { background: linear-gradient(135deg, rgba(88,101,242,0.15), rgba(123,139,255,0.15)); color: #7B8BFF; }
+.linkedin-icon { background: linear-gradient(135deg, rgba(0,119,181,0.15), rgba(0,160,220,0.15)); color: #00A0DC; }
+
+.connect-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.connect-platform-btn.bluesky {
-    border-color: rgba(0, 133, 255, 0.3);
+.connect-card-name {
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
 }
 
-.connect-platform-btn.bluesky:hover:not(:disabled) {
-    background: rgba(0, 133, 255, 0.1);
-    border-color: rgba(0, 133, 255, 0.5);
+.connect-card-desc {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
 }
 
-.connect-platform-btn.mastodon {
-    border-color: rgba(103, 100, 209, 0.3);
+.connect-card-arrow {
+    font-size: var(--text-lg);
+    color: var(--text-muted);
+    transition: all 0.2s ease;
 }
 
-.connect-platform-btn.telegram {
-    border-color: rgba(36, 161, 222, 0.3);
+.connect-card:hover .connect-card-arrow {
+    color: var(--text-primary);
+    transform: translateX(3px);
 }
 
-.connect-platform-btn.discord {
-    border-color: rgba(88, 101, 242, 0.3);
+/* Responsive */
+@media (max-width: 768px) {
+    .connect-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-sm);
+    }
+
+    .connect-card {
+        flex-direction: column;
+        text-align: center;
+        padding: var(--space-md);
+        gap: var(--space-sm);
+    }
+
+    .connect-card-arrow {
+        display: none;
+    }
+
+    .accounts-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.connect-platform-btn.discord:hover {
-    border-color: rgba(88, 101, 242, 0.6);
-    background: rgba(88, 101, 242, 0.1);
-}
-
-/* Danger Button */
-.btn-danger {
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #FCA5A5;
-}
-
-.btn-danger:hover {
-    background: rgba(239, 68, 68, 0.3);
+@media (max-width: 480px) {
+    .connect-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }

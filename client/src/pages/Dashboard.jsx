@@ -143,23 +143,32 @@ function Dashboard() {
                 <section className="accounts-section">
                     <div className="section-header">
                         <h2 className="flex-center gap-2"><Smartphone size={24} /> Connected Accounts</h2>
+                        <span className="accounts-count">{accounts.length} connected</span>
                     </div>
 
                     {loading ? (
-                        <div className="loading-state">Loading...</div>
+                        <div className="loading-state glass-card">
+                            <div className="loading-spinner-wrap">
+                                <span className="loading-dot"></span>
+                                <span className="loading-dot"></span>
+                                <span className="loading-dot"></span>
+                            </div>
+                            <p>Loading your accounts...</p>
+                        </div>
                     ) : accounts.length > 0 ? (
                         <div className="accounts-grid">
                             {accounts.map(acc => (
-                                <div key={acc.id} className="account-card glass-card">
+                                <div key={acc.id} className={`account-card glass-card platform-${acc.platform}`}>
+                                    <div className="account-card-stripe"></div>
                                     <div className="account-info">
                                         {acc.avatar ? (
                                             <img src={acc.avatar} alt={acc.name} className="account-avatar" />
                                         ) : (
-                                            <div className="account-avatar-placeholder flex-center">
-                                                {acc.platform === 'bluesky' ? <MessageCircle size={24} /> :
-                                                    acc.platform === 'linkedin' ? <Linkedin size={24} /> :
-                                                        acc.platform === 'telegram' ? <Send size={24} /> :
-                                                            <Smartphone size={24} />}
+                                            <div className={`account-avatar-placeholder platform-bg-${acc.platform}`}>
+                                                {acc.platform === 'bluesky' ? <MessageCircle size={22} /> :
+                                                    acc.platform === 'linkedin' ? <Linkedin size={22} /> :
+                                                        acc.platform === 'telegram' ? <Send size={22} /> :
+                                                            <MessageCircle size={22} />}
                                             </div>
                                         )}
                                         <div className="account-details">
@@ -167,12 +176,13 @@ function Dashboard() {
                                             <span className="account-username">
                                                 {acc.username.startsWith('@') ? acc.username : `@${acc.username}`}
                                             </span>
-                                            <span className="account-platform">{acc.platform}</span>
+                                            <span className={`account-badge platform-badge-${acc.platform}`}>{acc.platform}</span>
                                         </div>
                                     </div>
                                     <button
-                                        className="btn btn-danger btn-sm"
+                                        className="btn-disconnect"
                                         onClick={() => handleDisconnect(acc.id, acc.platform)}
+                                        title="Disconnect account"
                                     >
                                         Disconnect
                                     </button>
@@ -180,41 +190,57 @@ function Dashboard() {
                             ))}
                         </div>
                     ) : (
-                        <div className="empty-state glass-card">
-                            <p>No accounts connected yet.</p>
+                        <div className="empty-state-card glass-card">
+                            <div className="empty-state-icon">🔗</div>
+                            <h3>No accounts connected yet</h3>
+                            <p>Connect your social media accounts below to start publishing content across all your platforms at once.</p>
                         </div>
                     )}
 
-                    {/* Connect Buttons */}
-                    <div className="connect-buttons">
-                        <button
-                            className="connect-platform-btn bluesky"
-                            onClick={() => setShowConnectBluesky(true)}
-                        >
-                            <span className="platform-icon"><MessageCircle size={20} /></span>
-                            <span>Connect Bluesky</span>
+                    {/* Connect Platform Cards */}
+                    <div className="connect-grid">
+                        <button className="connect-card bluesky" onClick={() => setShowConnectBluesky(true)}>
+                            <div className="connect-card-icon bluesky-icon">
+                                <MessageCircle size={24} />
+                            </div>
+                            <div className="connect-card-info">
+                                <span className="connect-card-name">Bluesky</span>
+                                <span className="connect-card-desc">Decentralized social</span>
+                            </div>
+                            <span className="connect-card-arrow">→</span>
                         </button>
-                        <button
-                            className="connect-platform-btn telegram"
-                            onClick={() => setShowConnectTelegram(true)}
-                        >
-                            <span className="platform-icon"><Send size={20} /></span>
-                            <span>Connect Telegram</span>
+
+                        <button className="connect-card telegram" onClick={() => setShowConnectTelegram(true)}>
+                            <div className="connect-card-icon telegram-icon">
+                                <Send size={24} />
+                            </div>
+                            <div className="connect-card-info">
+                                <span className="connect-card-name">Telegram</span>
+                                <span className="connect-card-desc">Channels & groups</span>
+                            </div>
+                            <span className="connect-card-arrow">→</span>
                         </button>
-                        <button
-                            className="connect-platform-btn discord"
-                            onClick={() => setShowConnectDiscord(true)}
-                        >
-                            <span className="platform-icon"><MessageCircle size={20} /></span>
-                            <span>Connect Discord</span>
+
+                        <button className="connect-card discord" onClick={() => setShowConnectDiscord(true)}>
+                            <div className="connect-card-icon discord-icon">
+                                <MessageCircle size={24} />
+                            </div>
+                            <div className="connect-card-info">
+                                <span className="connect-card-name">Discord</span>
+                                <span className="connect-card-desc">Server webhooks</span>
+                            </div>
+                            <span className="connect-card-arrow">→</span>
                         </button>
-                        <button
-                            className="connect-platform-btn linkedin"
-                            onClick={() => setShowConnectLinkedIn(true)}
-                            style={{ background: 'linear-gradient(135deg, rgba(0,119,181,0.15), rgba(0,160,220,0.15))', borderColor: 'rgba(0,119,181,0.4)' }}
-                        >
-                            <span className="platform-icon"><Linkedin size={20} /></span>
-                            <span>Connect LinkedIn</span>
+
+                        <button className="connect-card linkedin" onClick={() => setShowConnectLinkedIn(true)}>
+                            <div className="connect-card-icon linkedin-icon">
+                                <Linkedin size={24} />
+                            </div>
+                            <div className="connect-card-info">
+                                <span className="connect-card-name">LinkedIn</span>
+                                <span className="connect-card-desc">Professional network</span>
+                            </div>
+                            <span className="connect-card-arrow">→</span>
                         </button>
                     </div>
                 </section>
