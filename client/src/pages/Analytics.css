@@ -1,39 +1,45 @@
 /* ============================================
-   Analytics Dashboard Styles
+   Analytics Dashboard — Premium Cosmic Purple
    ============================================ */
 
-/* Period Toggle */
+/* Period Toggle — Pill shape */
 .analytics-period-toggle {
     display: flex;
-    gap: 4px;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    gap: 3px;
+    background: rgba(255,255,255,0.03);
+    border: 1.5px solid rgba(255,255,255,0.06);
     border-radius: var(--radius-full);
     padding: 3px;
 }
 
 .period-btn {
-    padding: 6px 16px;
+    padding: 7px 18px;
     border-radius: var(--radius-full);
     border: none;
     background: transparent;
     color: var(--text-muted);
-    font-size: var(--text-xs);
-    font-weight: var(--font-semibold);
+    font-size: 0.65rem;
+    font-weight: var(--font-bold);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .period-btn:hover {
     color: var(--text-primary);
+    background: rgba(255,255,255,0.05);
 }
 
 .period-btn.active {
-    background: var(--accent-primary);
+    background: var(--gradient-primary);
     color: white;
+    box-shadow: 0 2px 12px rgba(99,102,241,0.35);
 }
 
-/* Stats Grid */
+/* =============================================
+   Stats Grid — Premium Glow Cards
+   ============================================= */
 .analytics-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -45,9 +51,15 @@
     display: flex;
     align-items: center;
     gap: var(--space-md);
-    padding: var(--space-lg);
+    padding: var(--space-xl);
     position: relative;
     overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.1);
 }
 
 .stat-card::before {
@@ -60,25 +72,36 @@
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
-.stat-total::before { background: linear-gradient(90deg, #8B5CF6, #A78BFA); }
-.stat-success::before { background: linear-gradient(90deg, #22C55E, #4ADE80); }
+/* Individual card accent gradients */
+.stat-total::before { background: linear-gradient(90deg, #6366F1, #8B5CF6); }
+.stat-success::before { background: linear-gradient(90deg, #10B981, #34D399); }
 .stat-week::before { background: linear-gradient(90deg, #3B82F6, #60A5FA); }
 .stat-platform::before { background: linear-gradient(90deg, #F97316, #FB923C); }
 
+.stat-total:hover { box-shadow: 0 8px 30px rgba(99,102,241,0.15); }
+.stat-success:hover { box-shadow: 0 8px 30px rgba(16,185,129,0.15); }
+.stat-week:hover { box-shadow: 0 8px 30px rgba(59,130,246,0.15); }
+.stat-platform:hover { box-shadow: 0 8px 30px rgba(249,115,22,0.15); }
+
 .stat-icon {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    transition: transform 0.3s;
 }
 
-.stat-total .stat-icon { background: rgba(139,92,246,0.15); color: #A78BFA; }
-.stat-success .stat-icon { background: rgba(34,197,94,0.15); color: #4ADE80; }
-.stat-week .stat-icon { background: rgba(59,130,246,0.15); color: #60A5FA; }
-.stat-platform .stat-icon { background: rgba(249,115,22,0.15); color: #FB923C; }
+.stat-card:hover .stat-icon {
+    transform: scale(1.1);
+}
+
+.stat-total .stat-icon { background: rgba(99,102,241,0.12); color: #818CF8; }
+.stat-success .stat-icon { background: rgba(16,185,129,0.12); color: #34D399; }
+.stat-week .stat-icon { background: rgba(59,130,246,0.12); color: #60A5FA; }
+.stat-platform .stat-icon { background: rgba(249,115,22,0.12); color: #FB923C; }
 
 .stat-info {
     display: flex;
@@ -86,19 +109,24 @@
 }
 
 .stat-value {
-    font-size: var(--text-xl);
+    font-size: var(--text-2xl);
     font-weight: var(--font-bold);
     color: var(--text-primary);
-    line-height: 1.2;
+    line-height: 1.1;
 }
 
 .stat-label {
-    font-size: var(--text-xs);
+    font-size: 0.6rem;
     color: var(--text-muted);
-    margin-top: 2px;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: var(--font-semibold);
 }
 
-/* Charts Grid */
+/* =============================================
+   Charts Grid
+   ============================================= */
 .analytics-charts-grid {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
@@ -108,11 +136,31 @@
 
 .chart-card {
     padding: var(--space-xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.analytics-charts-grid .chart-card:first-child::before {
+    background: var(--gradient-primary);
+}
+
+.analytics-charts-grid .chart-card:last-child::before {
+    background: linear-gradient(90deg, #EC4899, #8B5CF6);
 }
 
 .chart-card h3 {
     font-size: var(--text-base);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-bold);
     margin-bottom: var(--space-lg);
     display: flex;
     align-items: center;
@@ -120,15 +168,19 @@
 }
 
 .chart-period {
-    font-size: var(--text-xs);
+    font-size: 0.6rem;
     color: var(--text-muted);
     font-weight: var(--font-regular);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
 .chart-container {
     width: 100%;
     height: 200px;
     position: relative;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.01);
 }
 
 .chart-container-sm {
@@ -148,10 +200,10 @@
     font-size: var(--text-sm);
 }
 
-/* Platform Stats List */
+/* Platform Stats Bars — Premium */
 .platform-stats-list {
     margin-top: var(--space-lg);
-    border-top: 1px solid var(--glass-border);
+    border-top: 1px solid rgba(255,255,255,0.05);
     padding-top: var(--space-md);
 }
 
@@ -159,45 +211,82 @@
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    padding: 8px 0;
+    padding: 10px 0;
+    transition: all 0.2s;
+    border-radius: var(--radius-sm);
+}
+
+.platform-stat-row:hover {
+    background: rgba(255,255,255,0.02);
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .platform-stat-icon {
     font-size: 16px;
     width: 24px;
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.15));
 }
 
 .platform-stat-name {
-    font-size: var(--text-xs);
+    font-size: 0.65rem;
     color: var(--text-secondary);
     width: 70px;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: var(--font-semibold);
 }
 
 .platform-stat-bar-wrap {
     flex: 1;
     height: 6px;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.04);
     overflow: hidden;
 }
 
 .platform-stat-bar {
     height: 100%;
-    border-radius: 3px;
-    transition: width 0.5s ease;
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.platform-stat-bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2));
+    border-radius: 4px;
 }
 
 .platform-stat-count {
-    font-size: var(--text-xs);
+    font-size: 0.65rem;
     color: var(--text-muted);
-    width: 40px;
+    width: 45px;
     text-align: right;
+    font-weight: var(--font-semibold);
+    font-variant-numeric: tabular-nums;
 }
 
-/* Recent Posts Table */
+/* =============================================
+   Recent Posts Table — Premium
+   ============================================= */
 .recent-posts-card {
     margin-bottom: var(--space-2xl);
+    position: relative;
+    overflow: hidden;
+}
+
+.recent-posts-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6366F1, #EC4899, #8B5CF6);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .recent-posts-card h3 {
@@ -205,6 +294,7 @@
     align-items: center;
     gap: var(--space-sm);
     font-size: var(--text-base);
+    font-weight: var(--font-bold);
     margin-bottom: var(--space-lg);
 }
 
@@ -219,33 +309,38 @@
 
 .recent-posts-table th {
     text-align: left;
-    padding: 10px 12px;
-    font-size: var(--text-xs);
+    padding: 12px 14px;
+    font-size: 0.6rem;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid var(--glass-border);
-    font-weight: var(--font-semibold);
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-weight: var(--font-bold);
     white-space: nowrap;
 }
 
 .recent-posts-table td {
-    padding: 10px 12px;
+    padding: 12px 14px;
     font-size: var(--text-sm);
     color: var(--text-secondary);
-    border-bottom: 1px solid rgba(255,255,255,0.03);
+    border-bottom: 1px solid rgba(255,255,255,0.02);
     vertical-align: middle;
 }
 
-.recent-posts-table tr:hover td {
-    background: rgba(255,255,255,0.02);
+.recent-posts-table tbody tr {
+    transition: all 0.2s;
+}
+
+.recent-posts-table tbody tr:hover td {
+    background: rgba(99,102,241,0.03);
 }
 
 .recent-platform {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     white-space: nowrap;
+    font-weight: var(--font-medium);
 }
 
 .recent-content {
@@ -253,38 +348,53 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--text-muted);
 }
 
 .recent-type {
-    font-size: var(--text-xs);
-    padding: 2px 8px;
+    font-size: 0.6rem;
+    padding: 3px 10px;
     border-radius: var(--radius-full);
-    text-transform: capitalize;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: var(--font-semibold);
 }
 
-.type-instant { background: rgba(96,165,250,0.12); color: #60A5FA; }
-.type-scheduled { background: rgba(251,191,36,0.12); color: #FBBF24; }
+.type-instant { background: rgba(59,130,246,0.1); color: #60A5FA; }
+.type-scheduled { background: rgba(245,158,11,0.1); color: #FBBF24; }
 
 .recent-status {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    font-size: var(--text-xs);
-    padding: 2px 8px;
+    font-size: 0.6rem;
+    padding: 3px 10px;
     border-radius: var(--radius-full);
-    text-transform: capitalize;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: var(--font-bold);
 }
 
-.recent-status.status-success { background: rgba(74,222,128,0.12); color: #4ADE80; }
-.recent-status.status-failed { background: rgba(248,113,113,0.12); color: #F87171; }
+.recent-status.status-success {
+    background: rgba(16,185,129,0.1);
+    color: #34D399;
+}
+
+.recent-status.status-failed {
+    background: rgba(239,68,68,0.1);
+    color: #F87171;
+}
 
 .recent-time {
-    font-size: var(--text-xs);
+    font-size: 0.65rem;
     color: var(--text-muted);
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
 
-/* Loading */
+/* =============================================
+   Loading State
+   ============================================= */
 .analytics-loading {
     display: flex;
     flex-direction: column;
@@ -295,18 +405,28 @@
     color: var(--text-muted);
 }
 
-/* Responsive */
-@media (max-width: 900px) {
+/* Inline icon helper */
+.inline-icon {
+    display: inline;
+    vertical-align: middle;
+}
+
+/* =============================================
+   Responsive
+   ============================================= */
+@media (max-width: 1100px) {
     .analytics-stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+}
 
+@media (max-width: 900px) {
     .analytics-charts-grid {
         grid-template-columns: 1fr;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .analytics-stats-grid {
         grid-template-columns: 1fr;
     }
@@ -321,5 +441,15 @@
 
     .recent-content {
         max-width: 120px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+
+    .analytics-period-toggle {
+        align-self: flex-start;
     }
 }
