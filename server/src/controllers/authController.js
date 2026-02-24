@@ -9,6 +9,8 @@ const crypto = require('crypto');
 const { query, callProcedure } = require('../config/database');
 const { ApiError, asyncHandler } = require('../middleware/errorHandler');
 const emailService = require('../services/emailService');
+const { logActivity, ACTIONS } = require('../services/activityLogger');
+const { sendLoginSuccessAlert, sendLoginFailAlert } = require('../services/emailAlertService');
 const { logger } = require('../utils/logger');
 
 // Generate UUID using crypto
@@ -106,6 +108,14 @@ const register = asyncHandler(async (req, res) => {
     );
 
     const userId = result.insertId;
+
+    // Create default notification settings for new user
+    try {
+        await query(`INSERT IGNORE INTO notification_settings (user_id) VALUES (?)`, [userId]);
+    } catch (e) { /* Table may not be created yet on fresh installs */ }
+
+    // Log activity
+    logActivity(userId, ACTIONS.EMAIL_VERIFIED, null, null, { event: 'register' });
 
     // Generate verification token
     const verificationToken = generateUUID();
@@ -233,6 +243,12 @@ const login = asyncHandler(async (req, res) => {
 
     // Update last login
     await query('UPDATE users SET last_login = NOW() WHERE id = ?', [user.id]);
+
+    // Activity log + optional email alert
+    const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'Unknown';
+    const ua = req.headers['user-agent'] || '';
+    logActivity(user.id, ACTIONS.LOGIN_SUCCESS, null, null, { ip, ua: ua.substring(0, 100) });
+    sendLoginSuccessAlert(user.id, ip, ua).catch(() => { });
 
     res.json({
         success: true,

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, PenSquare, CalendarDays, Clock, BarChart3, Settings, LogOut, Rocket } from 'lucide-react'
+import { LayoutDashboard, PenSquare, CalendarDays, Clock, BarChart3, Settings, LogOut, Rocket, Activity } from 'lucide-react'
 import './AppLayout.css'
 
 function AppLayout({ children }) {
@@ -19,7 +19,8 @@ function AppLayout({ children }) {
         { path: '/scheduler', icon: Clock, label: 'Scheduler' },
         { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
         { path: '/analytics', icon: BarChart3, label: 'Analytics' },
-        { path: '#', icon: Settings, label: 'Settings' }
+        { path: '/logs', icon: Activity, label: 'Activity Logs' },
+        { path: '/settings', icon: Settings, label: 'Settings' },
     ]
 
     return (
@@ -97,7 +98,7 @@ function AppLayout({ children }) {
                     {path === '/analytics' && <span className="mobile-nav-dot"></span>}
                 </Link>
 
-                <Link to="#" className={`mobile-nav-item ${path === '/settings' ? 'active' : ''}`}>
+                <Link to="/settings" className={`mobile-nav-item ${path === '/settings' ? 'active' : ''}`}>
                     <span className="mobile-nav-icon-wrap">
                         <Settings size={22} />
                     </span>

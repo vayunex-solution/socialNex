@@ -8,6 +8,7 @@ require('dotenv').config();
 const app = require('./src/app');
 const { logger } = require('./src/utils/logger');
 const { startScheduler } = require('./src/services/schedulerService');
+const { startHolidayReminder } = require('./src/services/holidayReminderService');
 
 const PORT = process.env.PORT || 5000;
 
@@ -19,6 +20,8 @@ const server = app.listen(PORT, () => {
 
     // Start the scheduled posts cron job
     startScheduler();
+    // Start the holiday reminder cron job (9 AM and 5 PM IST daily)
+    startHolidayReminder();
 });
 
 // Graceful shutdown
