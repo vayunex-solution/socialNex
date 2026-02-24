@@ -20,6 +20,7 @@ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 // Holiday mode options
 const HOLIDAY_MODES = [
     { key: 'OFF', label: 'Off', emoji: null },
+    { key: 'ALL', label: 'All 🌐', emoji: '🌐' },
     { key: 'IN', label: 'India 🇮🇳', emoji: '🇮🇳' },
     { key: 'HINDU', label: 'Hindu 🕉️', emoji: '🕉️' },
     { key: 'GLOBAL', label: 'Global 🌏', emoji: '🌏' },
@@ -295,6 +296,18 @@ function Calendar() {
                         map[h.date] = h.localName || h.name
                     }
                 }
+            } else if (holidayMode === 'ALL') {
+                // All = India + Hindu + Global combined
+                for (const [date, name] of Object.entries(INDIA_FESTIVALS)) {
+                    if (date.startsWith(String(year))) map[date] = name
+                }
+                for (const [date, name] of Object.entries(HINDU_PANCHANG)) {
+                    if (date.startsWith(String(year)) && !map[date]) map[date] = name
+                }
+                const apiIN = await fetchHolidays('IN', year)
+                for (const h of apiIN) { if (!map[h.date]) map[h.date] = h.localName || h.name }
+                const [usa, uk] = await Promise.all([fetchHolidays('US', year), fetchHolidays('GB', year)])
+                for (const h of [...usa, ...uk]) { if (!map[h.date]) map[h.date] = h.localName || h.name }
             }
 
             setHolidays(map)
@@ -431,7 +444,7 @@ function Calendar() {
                                             {holiday && (
                                                 <div className="cal-holiday-badge">
                                                     <span className="cal-holiday-icon">
-                                                    {holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : '🌏'}
+                                                    {holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : holidayMode === 'ALL' ? '🌐' : '🌏'}
                                                     </span>
                                                     <span className="cal-holiday-name">{holiday}</span>
                                                 </div>
@@ -466,7 +479,7 @@ function Calendar() {
                         <span className="cal-legend-item"><span className="cal-dot dot-failed" /> Failed</span>
                         {holidayMode !== 'OFF' && (
                             <span className="cal-legend-item">
-                                <span className="cal-holiday-dot">{holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : '🌏'}</span>
+                                <span className="cal-holiday-dot">{holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : holidayMode === 'ALL' ? '🌐' : '🌏'}</span>
                                 Holiday
                             </span>
                         )}
@@ -484,7 +497,7 @@ function Calendar() {
                             {/* Holiday banner in sidebar */}
                             {selectedHoliday && (
                                 <div className="cal-detail-holiday">
-                                    <span>{holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : '🌏'}</span>
+                                    <span>{holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : holidayMode === 'ALL' ? '🌐' : '🌏'}</span>
                                     <div>
                                         <p className="cal-detail-holiday-label">Public Holiday</p>
                                         <p className="cal-detail-holiday-name">{selectedHoliday}</p>
