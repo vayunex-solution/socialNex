@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import logoImg from '../assets/logo.png'
+import logoIcon from '../assets/logo-icon.png'
 import './Auth.css'
 
 import API_URL from '../config/api'
@@ -144,7 +144,8 @@ function VerifyEmail() {
                     {/* Logo */}
                     <div className="auth-logo">
                         <Link to="/">
-                            <img src={logoImg} alt="SocialNex" style={{ height: '36px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
+                            <img src={logoIcon} alt="SocialNex" style={{ width: '32px', height: '32px', objectFit: 'contain', borderRadius: '6px' }} />
+                            <span className="logo-text"><span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span></span>
                         </Link>
                     </div>
 

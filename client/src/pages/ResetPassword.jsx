@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import API_URL from '../config/api'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import logoImg from '../assets/logo.png'
+import logoIcon from '../assets/logo-icon.png'
 import './Auth.css'
 
 function ResetPassword() {
@@ -104,7 +104,8 @@ function ResetPassword() {
                 <div className="auth-card glass-card">
                     <div className="auth-header">
                         <Link to="/" className="auth-logo">
-                            <img src={logoImg} alt="SocialNex" style={{ height: '36px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
+                            <img src={logoIcon} alt="SocialNex" style={{ width: '32px', height: '32px', objectFit: 'contain', borderRadius: '6px' }} />
+                            <span className="logo-text"><span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span></span>
                         </Link>
                         <h1>Reset Password</h1>
                         <p>Enter your new password below.</p>

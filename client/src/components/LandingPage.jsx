@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import logoImg from '../assets/logo.png'
+import logoIcon from '../assets/logo-icon.png'
+import FloatingSupport from './FloatingSupport'
 import '../App.css'
 
 // Platform data
@@ -153,7 +154,8 @@ function LandingPage() {
             <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
                 <div className="container navbar-content">
                     <Link to="/" className="logo">
-                        <img src={logoImg} alt="SocialNex" style={{ height: '30px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
+                        <img src={logoIcon} alt="SocialNex" style={{ width: '28px', height: '28px', objectFit: 'contain', borderRadius: '6px' }} />
+                        <span className="logo-text"><span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span></span>
                     </Link>
                     <div className="nav-links">
                         <a href="#features">Features</a>
@@ -528,13 +530,48 @@ function LandingPage() {
                 </div>
             </section>
 
+            {/* About Us */}
+            <section className="section" id="about" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="container">
+                    <h2 className="section-title">About Us</h2>
+                    <p className="section-subtitle">The team behind your social media success</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginTop: '40px' }}>
+                        <div className="glass-card" style={{ padding: '32px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                                <img src={logoIcon} alt="SocialNex" style={{ width: '36px', height: '36px', borderRadius: '8px' }} />
+                                <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700 }}>
+                                    <span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span>
+                                </h3>
+                            </div>
+                            <p style={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, margin: 0, fontSize: '14px' }}>
+                                SocialNex is a next-generation social media management platform designed for creators, startups, and businesses who want to manage their entire social presence from one powerful dashboard. Schedule posts across Bluesky, Telegram, Discord & LinkedIn, track real-time analytics, get smart Indian festival alerts, and grow your audience — all completely free.
+                            </p>
+                        </div>
+                        <div className="glass-card" style={{ padding: '32px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                                <span style={{ fontSize: '28px' }}>🌐</span>
+                                <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700, background: 'linear-gradient(135deg, #6366f1, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>VayuNex Solution</h3>
+                            </div>
+                            <p style={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, margin: 0, fontSize: '14px' }}>
+                                VayuNex Solution is an innovative technology company building next-generation SaaS tools and digital solutions. From full-stack web development to AI-powered platforms, we craft software that transforms how businesses operate. SocialNex is our flagship social media product, reflecting our commitment to building premium, accessible technology for everyone.
+                            </p>
+                            <div style={{ marginTop: '16px', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                                <a href="https://www.vayunexsolution.com" target="_blank" rel="noopener noreferrer" style={{ color: '#818cf8', fontSize: '13px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>🔗 vayunexsolution.com</a>
+                                <a href="mailto:support@vayunexsolution.com" style={{ color: '#f472b6', fontSize: '13px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>📧 support@vayunexsolution.com</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Footer */}
             <footer className="footer">
                 <div className="container">
                     <div className="footer-content">
                         <div className="footer-brand">
                             <Link to="/" className="logo">
-                                <img src={logoImg} alt="SocialNex" style={{ height: '28px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
+                                <img src={logoIcon} alt="SocialNex" style={{ width: '24px', height: '24px', objectFit: 'contain', borderRadius: '5px' }} />
+                                <span className="logo-text"><span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span></span>
                             </Link>
                             <p className="footer-tagline">
                                 Your all-in-one social media management platform. Post smarter, grow faster.
@@ -575,6 +612,9 @@ function LandingPage() {
                     </div>
                 </div>
             </footer>
+
+            {/* Floating Support Widget */}
+            <FloatingSupport />
         </div>
     )
 }
