@@ -104,8 +104,7 @@ function ResetPassword() {
                 <div className="auth-card glass-card">
                     <div className="auth-header">
                         <Link to="/" className="auth-logo">
-                            <img src={logoImg} alt="SocialNex" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
-                            <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
+                            <img src={logoImg} alt="SocialNex" style={{ height: '36px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                         </Link>
                         <h1>Reset Password</h1>
                         <p>Enter your new password below.</p>

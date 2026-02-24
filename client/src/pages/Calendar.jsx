@@ -21,6 +21,7 @@ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const HOLIDAY_MODES = [
     { key: 'OFF', label: 'Off', emoji: null },
     { key: 'IN', label: 'India 🇮🇳', emoji: '🇮🇳' },
+    { key: 'HINDU', label: 'Hindu 🕉️', emoji: '🕉️' },
     { key: 'GLOBAL', label: 'Global 🌏', emoji: '🌏' },
 ]
 
@@ -104,6 +105,84 @@ const INDIA_FESTIVALS = {
     '2027-08-15': 'Independence Day',
     '2027-10-02': 'Gandhi Jayanti',
     '2027-10-29': 'Diwali',
+}
+
+// =====================================================
+// Hindu Panchang Calendar – Ekadashi, Purnima, Amavasya
+// and major Hindu observances for 2026
+// =====================================================
+const HINDU_PANCHANG = {
+    // --- Purnima (Full Moon) ---
+    '2026-01-03': '🌕 Pausha Purnima',
+    '2026-02-01': '🌕 Magha Purnima',
+    '2026-03-03': '🌕 Phalguna Purnima',
+    '2026-04-02': '🌕 Chaitra Purnima (Hanuman Jayanti)',
+    '2026-05-01': '🌕 Vaishakha Purnima',
+    '2026-05-31': '🌕 Adhika Purnima',
+    '2026-06-29': '🌕 Jyeshtha Purnima',
+    '2026-07-29': '🌕 Guru Purnima',
+    '2026-08-28': '🌕 Shravana Purnima',
+    '2026-09-26': '🌕 Bhadrapada Purnima',
+    '2026-10-26': '🌕 Sharad Purnima',
+    '2026-11-24': '🌕 Kartika Purnima',
+    '2026-12-23': '🌕 Margashirsha Purnima',
+    // --- Amavasya (New Moon) ---
+    '2026-01-18': '🌑 Mauni Amavasya',
+    '2026-02-17': '🌑 Phalguna Amavasya',
+    '2026-03-19': '🌑 Chaitra Amavasya',
+    '2026-04-17': '🌑 Vaishakha Amavasya',
+    '2026-05-16': '🌑 Jyeshtha Amavasya (Shani Jayanti)',
+    '2026-06-15': '🌑 Adhik Amavasya',
+    '2026-07-14': '🌑 Ashadha Amavasya',
+    '2026-08-12': '🌑 Hariyali Amavasya',
+    '2026-09-11': '🌑 Bhadrapada Amavasya',
+    '2026-10-10': '🌑 Mahalaya Amavasya (Pitru Paksha End)',
+    '2026-11-08': '🌑 Kartika Amavasya (Diwali)',
+    '2026-12-08': '🌑 Margashirsha Amavasya',
+    // --- Ekadashi (Fasting Days) ---
+    '2026-01-14': '🙏 Shattila Ekadashi',
+    '2026-01-29': '🙏 Jaya Ekadashi',
+    '2026-02-13': '🙏 Vijaya Ekadashi',
+    '2026-02-27': '🙏 Amalaki Ekadashi',
+    '2026-03-15': '🙏 Papamochani Ekadashi',
+    '2026-03-29': '🙏 Kamada Ekadashi',
+    '2026-04-13': '🙏 Varuthini Ekadashi',
+    '2026-04-27': '🙏 Mohini Ekadashi',
+    '2026-05-13': '🙏 Apara Ekadashi',
+    '2026-05-27': '🙏 Padmini Ekadashi',
+    '2026-06-11': '🙏 Parama Ekadashi',
+    '2026-06-25': '🙏 Nirjala Ekadashi',
+    '2026-07-10': '🙏 Yogini Ekadashi',
+    '2026-07-25': '🙏 Devshayani Ekadashi',
+    '2026-08-09': '🙏 Kamika Ekadashi',
+    '2026-08-23': '🙏 Putrada Ekadashi',
+    '2026-09-07': '🙏 Aja Ekadashi',
+    '2026-09-22': '🙏 Parsva Ekadashi',
+    '2026-10-06': '🙏 Indira Ekadashi',
+    '2026-10-22': '🙏 Pasankusa Ekadashi',
+    '2026-11-05': '🙏 Rama Ekadashi',
+    '2026-11-20': '🙏 Devutthana Ekadashi',
+    '2026-12-04': '🙏 Utpanna Ekadashi',
+    '2026-12-20': '🙏 Mokshada Ekadashi',
+    // --- Major Hindu Festivals ---
+    '2026-02-15': '🔱 Maha Shivratri',
+    '2026-03-04': '🎨 Holi (Rangwali)',
+    '2026-03-22': '🏳️ Hindu Nav Varsh (Ugadi)',
+    '2026-03-27': '🏹 Ram Navami',
+    '2026-04-30': '🧘 Buddha Purnima (Vesak)',
+    '2026-06-17': '🛕 Rath Yatra',
+    '2026-08-08': '🧵 Raksha Bandhan',
+    '2026-08-17': '🦚 Janmashtami',
+    '2026-09-04': '🐘 Ganesh Chaturthi',
+    '2026-10-12': '🔱 Navratri Start',
+    '2026-10-17': '🙏 Durga Puja',
+    '2026-10-20': '🏹 Dussehra (Vijayadasami)',
+    '2026-11-06': '✨ Dhanteras',
+    '2026-11-07': '🌑 Naraka Chaturdasi',
+    '2026-11-08': '🪔 Diwali (Lakshmi Puja)',
+    '2026-11-09': '⛰️ Govardhan Puja',
+    '2026-11-10': '👫 Bhai Dooj',
+    '2026-11-13': '☀️ Chhath Puja',
 }
 
 // Holiday cache: { "US-2026": [...] }
@@ -190,6 +269,13 @@ function Calendar() {
                 for (const h of apiHolidays) {
                     if (!map[h.date]) {
                         map[h.date] = h.localName || h.name
+                    }
+                }
+            } else if (holidayMode === 'HINDU') {
+                // Hindu Panchang calendar
+                for (const [date, name] of Object.entries(HINDU_PANCHANG)) {
+                    if (date.startsWith(String(year))) {
+                        map[date] = name
                     }
                 }
             } else if (holidayMode === 'GLOBAL') {
@@ -345,7 +431,7 @@ function Calendar() {
                                             {holiday && (
                                                 <div className="cal-holiday-badge">
                                                     <span className="cal-holiday-icon">
-                                                        {holidayMode === 'IN' ? '🇮🇳' : '🌏'}
+                                                    {holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : '🌏'}
                                                     </span>
                                                     <span className="cal-holiday-name">{holiday}</span>
                                                 </div>
@@ -380,7 +466,7 @@ function Calendar() {
                         <span className="cal-legend-item"><span className="cal-dot dot-failed" /> Failed</span>
                         {holidayMode !== 'OFF' && (
                             <span className="cal-legend-item">
-                                <span className="cal-holiday-dot">{holidayMode === 'IN' ? '🇮🇳' : '🌏'}</span>
+                                <span className="cal-holiday-dot">{holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : '🌏'}</span>
                                 Holiday
                             </span>
                         )}
@@ -398,7 +484,7 @@ function Calendar() {
                             {/* Holiday banner in sidebar */}
                             {selectedHoliday && (
                                 <div className="cal-detail-holiday">
-                                    <span>{holidayMode === 'IN' ? '🇮🇳' : '🌏'}</span>
+                                    <span>{holidayMode === 'IN' ? '🇮🇳' : holidayMode === 'HINDU' ? '🕉️' : '🌏'}</span>
                                     <div>
                                         <p className="cal-detail-holiday-label">Public Holiday</p>
                                         <p className="cal-detail-holiday-name">{selectedHoliday}</p>

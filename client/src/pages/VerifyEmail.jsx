@@ -144,8 +144,7 @@ function VerifyEmail() {
                     {/* Logo */}
                     <div className="auth-logo">
                         <Link to="/">
-                            <img src={logoImg} alt="SocialNex" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
-                            <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
+                            <img src={logoImg} alt="SocialNex" style={{ height: '36px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                         </Link>
                     </div>
 

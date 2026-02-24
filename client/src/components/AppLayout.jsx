@@ -30,8 +30,7 @@ function AppLayout({ children }) {
             <aside className="sidebar desktop-only">
                 <div className="sidebar-logo">
                     <Link to="/dashboard">
-                        <img src={logoImg} alt="SocialNex" className="logo-icon-img" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
-                        <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
+                        <img src={logoImg} alt="SocialNex" style={{ height: '30px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                     </Link>
                 </div>
 

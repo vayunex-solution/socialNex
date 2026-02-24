@@ -153,8 +153,7 @@ function LandingPage() {
             <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
                 <div className="container navbar-content">
                     <Link to="/" className="logo">
-                        <img src={logoImg} alt="SocialNex" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
-                        <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
+                        <img src={logoImg} alt="SocialNex" style={{ height: '30px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                     </Link>
                     <div className="nav-links">
                         <a href="#features">Features</a>
@@ -535,8 +534,7 @@ function LandingPage() {
                     <div className="footer-content">
                         <div className="footer-brand">
                             <Link to="/" className="logo">
-                                <img src={logoImg} alt="SocialNex" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
-                                <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
+                                <img src={logoImg} alt="SocialNex" style={{ height: '28px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                             </Link>
                             <p className="footer-tagline">
                                 Your all-in-one social media management platform. Post smarter, grow faster.
