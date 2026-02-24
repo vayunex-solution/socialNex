@@ -154,7 +154,7 @@ function LandingPage() {
             <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
                 <div className="container navbar-content">
                     <Link to="/" className="logo">
-                        <img src={logoIcon} alt="SocialNex" style={{ width: '28px', height: '28px', objectFit: 'contain', borderRadius: '6px' }} />
+                        <img src={logoIcon} alt="SocialNex" style={{ width: '34px', height: '34px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                         <span className="logo-text"><span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span></span>
                     </Link>
                     <div className="nav-links">
@@ -538,7 +538,7 @@ function LandingPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginTop: '40px' }}>
                         <div className="glass-card" style={{ padding: '32px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                                <img src={logoIcon} alt="SocialNex" style={{ width: '36px', height: '36px', borderRadius: '8px' }} />
+                                <img src={logoIcon} alt="SocialNex" style={{ width: '40px', height: '40px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                                 <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700 }}>
                                     <span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span>
                                 </h3>
@@ -570,7 +570,7 @@ function LandingPage() {
                     <div className="footer-content">
                         <div className="footer-brand">
                             <Link to="/" className="logo">
-                                <img src={logoIcon} alt="SocialNex" style={{ width: '24px', height: '24px', objectFit: 'contain', borderRadius: '5px' }} />
+                                <img src={logoIcon} alt="SocialNex" style={{ width: '28px', height: '28px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                                 <span className="logo-text"><span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span></span>
                             </Link>
                             <p className="footer-tagline">

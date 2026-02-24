@@ -54,7 +54,7 @@ function Login() {
                     {/* Logo */}
                     <div className="auth-logo">
                         <Link to="/">
-                            <img src={logoIcon} alt="SocialNex" style={{ width: '32px', height: '32px', objectFit: 'contain', borderRadius: '6px' }} />
+                            <img src={logoIcon} alt="SocialNex" style={{ width: '36px', height: '36px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                             <span className="logo-text"><span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span></span>
                         </Link>
                     </div>

@@ -31,7 +31,7 @@ function AppLayout({ children }) {
             <aside className="sidebar desktop-only">
                 <div className="sidebar-logo">
                     <Link to="/dashboard">
-                        <img src={logoIcon} alt="SocialNex" style={{ width: '28px', height: '28px', objectFit: 'contain', borderRadius: '6px' }} />
+                        <img src={logoIcon} alt="SocialNex" style={{ width: '34px', height: '34px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
                         <span className="logo-text"><span style={{ background: 'linear-gradient(135deg, #60a5fa, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Social</span><span style={{ background: 'linear-gradient(135deg, #c084fc, #f472b6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Nex</span></span>
                     </Link>
                 </div>
