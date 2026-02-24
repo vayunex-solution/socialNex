@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './components/LandingPage'
 import AppLayout from './components/AppLayout'
-import { Login, Register, VerifyEmail, Dashboard, ForgotPassword, ResetPassword, CreatePost } from './pages'
+import { Login, Register, VerifyEmail, Dashboard, ForgotPassword, ResetPassword, CreatePost, Scheduler, Calendar, Analytics } from './pages'
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -65,6 +65,36 @@ function App() {
           <ProtectedRoute>
             <AppLayout>
               <CreatePost />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/scheduler"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Scheduler />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Calendar />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Analytics />
             </AppLayout>
           </ProtectedRoute>
         }

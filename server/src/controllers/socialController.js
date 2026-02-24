@@ -505,7 +505,41 @@ const publishPost = asyncHandler(async (req, res) => {
         }
     }
 
-    // Log the post
+    // Log results to post_results table (for analytics)
+    const { logPostResult, updateDailyAnalytics } = require('../services/schedulerService');
+    for (const r of results) {
+        const matchedAccount = accounts.find(a => a.platform === r.platform);
+        if (matchedAccount) {
+            try {
+                await query(
+                    `INSERT INTO post_results 
+                     (user_id, platform, account_id, account_name, content, post_type, status, platform_post_id, error_message, published_at)
+                     VALUES (?, ?, ?, ?, ?, 'instant', ?, ?, ?, NOW())`,
+                    [
+                        userId,
+                        r.platform,
+                        matchedAccount.id,
+                        r.name,
+                        text.trim(),
+                        r.success ? 'success' : 'failed',
+                        r.data?.uri || r.data?.messageId || null,
+                        r.error || null
+                    ]
+                );
+            } catch (logErr) {
+                logger.warn('Post result logging skipped:', logErr.message);
+            }
+        }
+    }
+
+    // Update daily analytics
+    try {
+        await updateDailyAnalytics(userId, results);
+    } catch (analyticsErr) {
+        logger.warn('Analytics update skipped:', analyticsErr.message);
+    }
+
+    // Legacy posts table logging
     try {
         await query(
             `INSERT INTO posts (user_id, content, metadata, status, created_at) 
@@ -513,7 +547,6 @@ const publishPost = asyncHandler(async (req, res) => {
             [userId, text.trim(), JSON.stringify({ platforms: results.map(r => r.platform) })]
         );
     } catch (logErr) {
-        // Don't fail if logging fails (table might not exist yet)
         logger.warn('Post logging skipped:', logErr.message);
     }
 

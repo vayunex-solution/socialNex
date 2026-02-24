@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, PenSquare, CalendarDays, Smartphone, BarChart3, Settings, LogOut, Rocket } from 'lucide-react'
+import { LayoutDashboard, PenSquare, CalendarDays, Clock, BarChart3, Settings, LogOut, Rocket } from 'lucide-react'
 import './AppLayout.css'
 
 function AppLayout({ children }) {
@@ -16,9 +16,9 @@ function AppLayout({ children }) {
     const navItems = [
         { path: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/create-post', icon: PenSquare, label: 'Create Post' },
-        { path: '#', icon: CalendarDays, label: 'Calendar' },
-        { path: '#', icon: Smartphone, label: 'Accounts' },
-        { path: '#', icon: BarChart3, label: 'Analytics' },
+        { path: '/scheduler', icon: Clock, label: 'Scheduler' },
+        { path: '/calendar', icon: CalendarDays, label: 'Calendar' },
+        { path: '/analytics', icon: BarChart3, label: 'Analytics' },
         { path: '#', icon: Settings, label: 'Settings' }
     ]
 
@@ -73,7 +73,7 @@ function AppLayout({ children }) {
                     {path === '/dashboard' && <span className="mobile-nav-dot"></span>}
                 </Link>
 
-                <Link to="#" className={`mobile-nav-item ${path === '/calendar' ? 'active' : ''}`}>
+                <Link to="/calendar" className={`mobile-nav-item ${path === '/calendar' ? 'active' : ''}`}>
                     <span className="mobile-nav-icon-wrap">
                         <CalendarDays size={22} />
                     </span>
@@ -89,7 +89,7 @@ function AppLayout({ children }) {
                     <span className="mobile-nav-fab-label">Create</span>
                 </Link>
 
-                <Link to="#" className={`mobile-nav-item ${path === '/analytics' ? 'active' : ''}`}>
+                <Link to="/analytics" className={`mobile-nav-item ${path === '/analytics' ? 'active' : ''}`}>
                     <span className="mobile-nav-icon-wrap">
                         <BarChart3 size={22} />
                     </span>

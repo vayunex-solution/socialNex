@@ -7,14 +7,18 @@
 require('dotenv').config();
 const app = require('./src/app');
 const { logger } = require('./src/utils/logger');
+const { startScheduler } = require('./src/services/schedulerService');
 
 const PORT = process.env.PORT || 5000;
 
 // Start server
 const server = app.listen(PORT, () => {
-    logger.info(`🚀 SocialMRT Server running on port ${PORT}`);
+    logger.info(`🚀 SocialNex Server running on port ${PORT}`);
     logger.info(`📚 API Docs: http://localhost:${PORT}/api-docs`);
     logger.info(`🌍 Environment: ${process.env.NODE_ENV}`);
+
+    // Start the scheduled posts cron job
+    startScheduler();
 });
 
 // Graceful shutdown
