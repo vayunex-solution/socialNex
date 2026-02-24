@@ -1,125 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Your Email - SocialNex</title>
-    <!--[if mso]>
-  <noscript>
-    <xml>
-      <o:OfficeDocumentSettings>
-        <o:PixelsPerInch>96</o:PixelsPerInch>
-      </o:OfficeDocumentSettings>
-    </xml>
-  </noscript>
-  <![endif]-->
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no">
+<title>Verify Your Email – SocialNex</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  * { box-sizing: border-box; }
+  body { margin: 0 !important; padding: 0 !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+  img { border: 0; outline: none; }
+  table { border-collapse: collapse !important; }
+  @media only screen and (max-width: 620px) {
+    .wrap { width: 100% !important; }
+    .pad { padding: 28px 20px !important; }
+    .pad-sm { padding: 20px !important; }
+    .btn { padding: 14px 28px !important; font-size: 15px !important; }
+    .otp-code { font-size: 36px !important; letter-spacing: 8px !important; }
+  }
+</style>
 </head>
+<body style="background-color:#08080F;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;margin:0;padding:0;">
 
-<body
-    style="margin: 0; padding: 0; background-color: #0F0F1A; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
-        style="background-color: #0F0F1A; padding: 40px 20px;">
-        <tr>
+<!-- Preheader -->
+<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">Your SocialNex verification code is {{otpCode}}&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;</div>
+
+<!-- Background -->
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#08080F;background-image:radial-gradient(ellipse 80% 50% at 50% -20%, rgba(52,211,153,0.14), transparent);min-height:100vh;">
+<tr><td align="center" style="padding:48px 12px 60px;">
+
+  <!-- Logo -->
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;width:100%;margin-bottom:24px;">
+    <tr>
+      <td align="center">
+        <a href="{{verificationLink}}" style="text-decoration:none;display:inline-block;">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td style="padding:10px 18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;">
+                <span style="font-size:15px;font-weight:700;color:#fff;letter-spacing:-0.3px;">&#9889;&nbsp;Social<span style="color:#34D399;">Nex</span></span>
+              </td>
+            </tr>
+          </table>
+        </a>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Card -->
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;width:100%;background:#0E0E1A;border-radius:20px;border:1px solid rgba(255,255,255,0.07);overflow:hidden;">
+    <tr>
+      <td class="pad" style="padding:40px 44px;">
+
+        <!-- Hero -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-bottom:32px;">
+          <tr>
             <td align="center">
-                <table role="presentation" width="600" cellspacing="0" cellpadding="0"
-                    style="max-width: 600px; background-color: #1A1A2E; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
-
-                    <!-- Header -->
-                    <tr>
-                        <td
-                            style="background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%); padding: 40px 30px; text-align: center;">
-                            <h1 style="margin: 0; color: #FFFFFF; font-size: 28px; font-weight: 700;">🚀 SocialNex</h1>
-                            <p style="margin: 10px 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">Social Media
-                                Management Platform</p>
-                        </td>
-                    </tr>
-
-                    <!-- Body -->
-                    <tr>
-                        <td style="padding: 40px 30px;">
-                            <h2 style="margin: 0 0 20px; color: #FFFFFF; font-size: 24px; font-weight: 600;">Verify Your
-                                Email 🔐</h2>
-
-                            <p style="margin: 0 0 20px; color: #B8B8D1; font-size: 16px; line-height: 1.6;">
-                                Hello <strong style="color: #FFFFFF;">{{userName}}</strong>,
-                            </p>
-
-                            <p style="margin: 0 0 30px; color: #B8B8D1; font-size: 16px; line-height: 1.6;">
-                                Welcome to SocialNex! Please verify your email address to get started. Use the code
-                                below or click the button.
-                            </p>
-
-                            <!-- OTP Box -->
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
-                                style="margin: 30px 0;">
-                                <tr>
-                                    <td align="center">
-                                        <div
-                                            style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1)); border: 2px dashed #6366F1; border-radius: 12px; padding: 30px; display: inline-block;">
-                                            <p
-                                                style="margin: 0 0 10px; color: #6366F1; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;">
-                                                Your Verification Code</p>
-                                            <p
-                                                style="margin: 0; color: #FFFFFF; font-size: 36px; font-weight: 700; letter-spacing: 8px; font-family: 'Courier New', monospace;">
-                                                {{otpCode}}</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <p style="margin: 20px 0; color: #6B6B80; font-size: 14px; text-align: center;">— OR —</p>
-
-                            <!-- CTA Button -->
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td align="center" style="padding: 20px 0;">
-                                        <a href="{{verificationLink}}"
-                                            style="display: inline-block; background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%); color: #FFFFFF; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);">
-                                            Verify Email Address ✨
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-
-                            <p style="margin: 30px 0 10px; color: #B8B8D1; font-size: 14px; line-height: 1.6;">
-                                This verification code expires in <strong
-                                    style="color: #EC4899;">{{expiresIn}}</strong>.
-                            </p>
-
-                            <p style="margin: 0; color: #6B6B80; font-size: 14px; line-height: 1.6;">
-                                If you didn't create an account with SocialNex, please ignore this email.
-                            </p>
-                        </td>
-                    </tr>
-
-                    <!-- Divider -->
-                    <tr>
-                        <td style="padding: 0 30px;">
-                            <div
-                                style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);">
-                            </div>
-                        </td>
-                    </tr>
-
-                    <!-- Footer -->
-                    <tr>
-                        <td style="padding: 30px; text-align: center;">
-                            <p style="margin: 0 0 10px; color: #6B6B80; font-size: 12px;">
-                                © {{year}} SocialNex. All rights reserved.
-                            </p>
-                            <p style="margin: 0; color: #6B6B80; font-size: 12px;">
-                                Powered by <a href="https://www.vayunexsolution.com"
-                                    style="color: #6366F1; text-decoration: none; font-weight: 600;">Vayunex
-                                    Solution</a> 💜
-                            </p>
-                        </td>
-                    </tr>
-
-                </table>
+              <div style="width:72px;height:72px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.25);border-radius:18px;font-size:32px;line-height:72px;text-align:center;display:inline-block;margin-bottom:20px;">🛡️</div>
+              <h1 style="margin:0 0 10px;font-size:28px;font-weight:800;color:#FFFFFF;letter-spacing:-0.7px;line-height:1.2;">Verify your email</h1>
+              <p style="margin:0;font-size:16px;color:#8B8BA7;line-height:1.5;">Hi <strong style="color:#fff;">{{userName}}</strong>, welcome to SocialNex!</p>
             </td>
-        </tr>
-    </table>
-</body>
+          </tr>
+        </table>
 
+        <p style="margin:0 0 32px;font-size:15px;color:#8B8BA7;line-height:1.6;text-align:center;">
+          Enter the code below in the verification screen to activate your account. The code expires in <strong style="color:#E4E4E7;">{{expiresIn}}</strong>.
+        </p>
+
+        <!-- OTP Block -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:0 0 32px;">
+          <tr>
+            <td align="center">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="padding:4px;background:linear-gradient(135deg,rgba(52,211,153,0.5),rgba(99,102,241,0.5));border-radius:18px;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                      <tr>
+                        <td style="background:#0E0E1A;border-radius:14px;padding:24px 40px;text-align:center;">
+                          <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#34D399;">Verification Code</p>
+                          <p class="otp-code" style="margin:0;font-size:44px;font-weight:800;letter-spacing:12px;color:#fff;font-family:'Courier New',monospace;text-shadow:0 0 30px rgba(52,211,153,0.4);">{{otpCode}}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <p style="margin:0 0 20px;font-size:14px;color:#5B5B78;text-align:center;">— or verify with one click —</p>
+
+        <!-- CTA Button -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto;">
+          <tr>
+            <td align="center" style="border-radius:100px;background:linear-gradient(135deg,#34D399,#059669);box-shadow:0 8px 32px -8px rgba(52,211,153,0.4);">
+              <a href="{{verificationLink}}" class="btn" style="display:inline-block;padding:16px 40px;font-size:16px;font-weight:700;color:#fff;text-decoration:none;letter-spacing:0.2px;border-radius:100px;">
+                Verify My Email →
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Security note -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top:32px;">
+          <tr>
+            <td style="padding:14px 18px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);border-radius:10px;font-size:13px;color:#FCA5A5;line-height:1.5;text-align:center;">
+              🔒&nbsp; If you did not create a SocialNex account, you can safely ignore this email.
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+
+    <!-- Divider -->
+    <tr><td style="font-size:0;line-height:0;border-top:1px solid rgba(255,255,255,0.05);">&nbsp;</td></tr>
+
+    <!-- Footer -->
+    <tr>
+      <td align="center" class="pad-sm" style="padding:24px 44px 32px;">
+        <p style="margin:0 0 10px;font-size:13px;color:#4B4B63;line-height:1.6;">
+          Need help? Reply to this email and our team will assist you.
+        </p>
+        <p style="margin:0;font-size:12px;color:#33333F;">
+          <a href="{{verificationLink}}" style="color:#34D399;text-decoration:none;font-weight:500;">SocialNex</a>
+          &nbsp;&bull;&nbsp;
+          <span>&copy; {{year}} Vayunex Solution. All rights reserved.</span>
+        </p>
+      </td>
+    </tr>
+  </table>
+
+</td></tr>
+</table>
+</body>
 </html>
