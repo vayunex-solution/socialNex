@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import API_URL from '../config/api'
-import { ChevronLeft, ChevronRight, CalendarDays, Clock, CheckCircle2, Globe, Flag } from 'lucide-react'
+import { ChevronLeft, ChevronRight, CalendarDays, Clock, CheckCircle2 } from 'lucide-react'
 import './Calendar.css'
 
 const PLATFORM_ICONS = {
@@ -24,7 +24,79 @@ const HOLIDAY_MODES = [
     { key: 'GLOBAL', label: 'Global 🌏', emoji: '🌏' },
 ]
 
-// Holiday cache: { "IN-2026": [...] }
+// =====================================================
+// Hardcoded curated Indian festivals (Nager.Date only
+// covers 3 gazette public holidays for India).
+// These dates are accurate for 2025 and 2026.
+// =====================================================
+const INDIA_FESTIVALS = {
+    // 2025
+    '2025-01-14': 'Makar Sankranti / Pongal',
+    '2025-01-23': 'Netaji Subhas Chandra Bose Jayanti',
+    '2025-01-26': 'Republic Day',
+    '2025-02-19': 'Chhatrapati Shivaji Maharaj Jayanti',
+    '2025-02-26': 'Maha Shivratri',
+    '2025-03-14': 'Holi (Dhulandi)',
+    '2025-03-13': 'Holika Dahan',
+    '2025-03-30': 'Ugadi / Gudi Padwa',
+    '2025-03-31': 'Eid ul-Fitr',
+    '2025-04-06': 'Ram Navami',
+    '2025-04-10': 'Mahavir Jayanti',
+    '2025-04-14': 'Dr. Ambedkar Jayanti / Tamil New Year',
+    '2025-04-18': 'Good Friday',
+    '2025-05-12': 'Buddha Purnima',
+    '2025-06-07': 'Eid al-Adha (Bakrid)',
+    '2025-07-06': 'Muharram',
+    '2025-08-09': 'Raksha Bandhan',
+    '2025-08-15': 'Independence Day',
+    '2025-08-16': 'Janmashtami',
+    '2025-09-05': 'Ganesh Chaturthi',
+    '2025-10-02': 'Gandhi Jayanti',
+    '2025-10-02': 'Gandhi Jayanti / Navratri Start',
+    '2025-10-02': 'Dussehra (Vijayadasami)',
+    '2025-10-13': 'Dussehra',
+    '2025-10-20': 'Diwali (Lakshmi Puja)',
+    '2025-10-21': 'Diwali (Govardhan Puja)',
+    '2025-10-22': 'Bhai Dooj',
+    '2025-11-05': 'Guru Nanak Jayanti',
+    '2025-11-10': 'Chhath Puja',
+    '2025-12-25': 'Christmas',
+    // 2026
+    '2026-01-14': 'Makar Sankranti / Pongal',
+    '2026-01-26': 'Republic Day',
+    '2026-02-17': 'Maha Shivratri',
+    '2026-03-21': 'Holika Dahan',
+    '2026-03-22': 'Holi (Dhulandi)',
+    '2026-03-20': 'Eid ul-Fitr',
+    '2026-03-30': 'Ugadi / Gudi Padwa',
+    '2026-04-03': 'Good Friday',
+    '2026-04-08': 'Mahavir Jayanti',
+    '2026-04-14': 'Dr. Ambedkar Jayanti / Baisakhi',
+    '2026-04-18': 'Ram Navami',
+    '2026-04-30': 'Buddha Purnima',
+    '2026-05-27': 'Eid al-Adha (Bakrid)',
+    '2026-07-29': 'Raksha Bandhan',
+    '2026-08-06': 'Janmashtami',
+    '2026-08-15': 'Independence Day',
+    '2026-08-25': 'Ganesh Chaturthi',
+    '2026-10-02': 'Gandhi Jayanti',
+    '2026-10-01': 'Dussehra (Vijayadasami)',
+    '2026-10-09': 'Diwali (Lakshmi Puja)',
+    '2026-10-10': 'Govardhan Puja',
+    '2026-10-11': 'Bhai Dooj',
+    '2026-10-14': 'Chhath Puja',
+    '2026-11-24': 'Guru Nanak Jayanti',
+    '2026-12-25': 'Christmas',
+    // 2027 (upcoming)
+    '2027-01-14': 'Makar Sankranti',
+    '2027-01-26': 'Republic Day',
+    '2027-03-11': 'Maha Shivratri',
+    '2027-08-15': 'Independence Day',
+    '2027-10-02': 'Gandhi Jayanti',
+    '2027-10-29': 'Diwali',
+}
+
+// Holiday cache: { "US-2026": [...] }
 const holidayCache = {}
 
 async function fetchHolidays(countryCode, year) {
@@ -94,40 +166,41 @@ function Calendar() {
     const loadHolidays = async () => {
         setHolidaysLoading(true)
         try {
-            let allHolidays = []
+            const map = {}
 
             if (holidayMode === 'IN') {
-                allHolidays = await fetchHolidays('IN', year)
+                // 1. Curated Indian festivals (covers Diwali, Holi, Eid, etc.)
+                for (const [date, name] of Object.entries(INDIA_FESTIVALS)) {
+                    if (date.startsWith(String(year))) {
+                        map[date] = name
+                    }
+                }
+                // 2. Also fetch Nager.Date API for any additional official holidays
+                const apiHolidays = await fetchHolidays('IN', year)
+                for (const h of apiHolidays) {
+                    if (!map[h.date]) {
+                        map[h.date] = h.localName || h.name
+                    }
+                }
             } else if (holidayMode === 'GLOBAL') {
-                // Fetch India + USA + UK as "global" mix, de-dup by date
-                const [india, usa, uk] = await Promise.all([
-                    fetchHolidays('IN', year),
+                // Fetch US + UK from Nager (reliable global coverage)
+                const [usa, uk] = await Promise.all([
                     fetchHolidays('US', year),
                     fetchHolidays('GB', year),
                 ])
-                const seen = new Set()
-                for (const h of [...india, ...usa, ...uk]) {
-                    if (!seen.has(h.date)) {
-                        seen.add(h.date)
-                        allHolidays.push(h)
+                // Add curated Indian ones too for Global mode
+                for (const [date, name] of Object.entries(INDIA_FESTIVALS)) {
+                    if (date.startsWith(String(year)) && !map[date]) {
+                        map[date] = name
                     }
                 }
-            }
-
-            // Build a map: { "YYYY-MM-DD": "Holiday Name" }
-            const map = {}
-            for (const h of allHolidays) {
-                // Only keep holidays for current year
-                if (h.date.startsWith(String(year))) {
-                    if (map[h.date]) {
-                        // Multiple holidays on same day: comma-separated, max 2
-                        const names = map[h.date].split(', ')
-                        if (names.length < 2) map[h.date] += ', ' + (h.localName || h.name)
-                    } else {
+                for (const h of [...usa, ...uk]) {
+                    if (!map[h.date]) {
                         map[h.date] = h.localName || h.name
                     }
                 }
             }
+
             setHolidays(map)
         } catch {
             setHolidays({})
