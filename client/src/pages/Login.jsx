@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import logoImg from '../assets/logo.png'
 import './Auth.css'
 
 import API_URL from '../config/api'
@@ -53,7 +54,7 @@ function Login() {
                     {/* Logo */}
                     <div className="auth-logo">
                         <Link to="/">
-                            <span className="logo-icon">🚀</span>
+                            <img src={logoImg} alt="SocialNex" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
                             <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                         </Link>
                     </div>

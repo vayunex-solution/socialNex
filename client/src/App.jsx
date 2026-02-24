@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './components/LandingPage'
 import AppLayout from './components/AppLayout'
-import { Login, Register, VerifyEmail, Dashboard, ForgotPassword, ResetPassword, CreatePost, Scheduler, Calendar, Analytics, Settings, ActivityLogs } from './pages'
+import { Login, Register, VerifyEmail, Dashboard, ForgotPassword, ResetPassword, CreatePost, Scheduler, Calendar, Analytics, Settings, ActivityLogs, Guide } from './pages'
 
 // Protected Route Component
 function ProtectedRoute({ children }) {
@@ -115,6 +115,16 @@ function App() {
           <ProtectedRoute>
             <AppLayout>
               <ActivityLogs />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/guide"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Guide />
             </AppLayout>
           </ProtectedRoute>
         }

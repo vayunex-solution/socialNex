@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, PenSquare, CalendarDays, Clock, BarChart3, Settings, LogOut, Rocket, Activity } from 'lucide-react'
+import { LayoutDashboard, PenSquare, CalendarDays, Clock, BarChart3, Settings, LogOut, Activity } from 'lucide-react'
+import logoImg from '../assets/logo.png'
 import './AppLayout.css'
 
 function AppLayout({ children }) {
@@ -28,8 +29,8 @@ function AppLayout({ children }) {
             {/* Desktop Sidebar */}
             <aside className="sidebar desktop-only">
                 <div className="sidebar-logo">
-                    <Link to="/">
-                        <Rocket className="logo-icon" size={24} />
+                    <Link to="/dashboard">
+                        <img src={logoImg} alt="SocialNex" className="logo-icon-img" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
                         <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                     </Link>
                 </div>

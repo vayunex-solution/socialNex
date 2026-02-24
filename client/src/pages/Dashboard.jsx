@@ -249,17 +249,17 @@ function Dashboard() {
                 <section className="quick-actions mt-4">
                     <h2>🚀 Quick Actions</h2>
                     <div className="actions-grid">
-                        <div className="action-card glass-card">
+                        <div className="action-card glass-card" onClick={() => navigate('/create-post')} style={{ cursor: 'pointer' }}>
                             <div className="action-icon">✍️</div>
                             <h3>Draft Post</h3>
                             <p>Write and schedule your first post</p>
-                            <button className="btn btn-secondary btn-sm">Create</button>
+                            <button className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); navigate('/create-post'); }}>Create</button>
                         </div>
-                        <div className="action-card glass-card">
+                        <div className="action-card glass-card" onClick={() => navigate('/guide')} style={{ cursor: 'pointer' }}>
                             <div className="action-icon">📚</div>
                             <h3>Read Guide</h3>
                             <p>Learn how to use SocialNex effectively</p>
-                            <button className="btn btn-secondary btn-sm">Read</button>
+                            <button className="btn btn-secondary btn-sm" onClick={(e) => { e.stopPropagation(); navigate('/guide'); }}>Read</button>
                         </div>
                     </div>
                 </section>

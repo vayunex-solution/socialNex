@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import logoImg from '../assets/logo.png'
 import '../App.css'
 
 // Platform data
@@ -152,7 +153,7 @@ function LandingPage() {
             <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
                 <div className="container navbar-content">
                     <Link to="/" className="logo">
-                        <span className="logo-icon">🚀</span>
+                        <img src={logoImg} alt="SocialNex" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
                         <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                     </Link>
                     <div className="nav-links">
@@ -534,7 +535,7 @@ function LandingPage() {
                     <div className="footer-content">
                         <div className="footer-brand">
                             <Link to="/" className="logo">
-                                <span className="logo-icon">🚀</span>
+                                <img src={logoImg} alt="SocialNex" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
                                 <span className="logo-text">Social<span className="text-gradient">Nex</span></span>
                             </Link>
                             <p className="footer-tagline">
