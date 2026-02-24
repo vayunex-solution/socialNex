@@ -15,7 +15,7 @@ const httpsAgent = new https.Agent({ family: 4, keepAlive: true });
 
 // Encryption (same pattern as blueskyService)
 const ALGORITHM = 'aes-256-gcm';
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'SocialNex-encryption-key-32char';
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'socialnex-encryption-key-32char';
 
 function encrypt(text) {
     const iv = crypto.randomBytes(16);

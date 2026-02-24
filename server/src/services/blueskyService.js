@@ -10,7 +10,7 @@ const crypto = require('crypto');
 
 // Encryption for storing tokens
 const ALGORITHM = 'aes-256-gcm';
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'SocialNex-encryption-key-32char';
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'socialnex-encryption-key-32char';
 
 function encrypt(text) {
     const iv = crypto.randomBytes(16);
