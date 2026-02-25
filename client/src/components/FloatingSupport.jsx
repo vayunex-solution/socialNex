@@ -58,7 +58,7 @@ function FloatingSupport() {
     const [open, setOpen] = useState(false)
 
     return (
-        <div style={styles.wrapper}>
+        <div style={styles.wrapper} className="floating-support-wrapper">
             {/* Panel */}
             {open && (
                 <div style={styles.panel}>
