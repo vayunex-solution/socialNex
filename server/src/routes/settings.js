@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authenticate } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 const {
     getNotificationSettings,
     updateNotificationSettings,
@@ -8,10 +8,10 @@ const {
 } = require('../controllers/settingsController');
 
 // Notification preference routes
-router.get('/notifications', authenticate, getNotificationSettings);
-router.put('/notifications', authenticate, updateNotificationSettings);
+router.get('/notifications', protect, getNotificationSettings);
+router.put('/notifications', protect, updateNotificationSettings);
 
 // Activity logs
-router.get('/activity', authenticate, getActivityLogs);
+router.get('/activity', protect, getActivityLogs);
 
 module.exports = router;
