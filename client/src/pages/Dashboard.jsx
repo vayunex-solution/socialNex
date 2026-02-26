@@ -185,7 +185,7 @@ function Dashboard() {
                                         <div className="account-details">
                                             <span className="account-name">{acc.name}</span>
                                             <span className="account-username">
-                                                {acc.username.startsWith('@') ? acc.username : `@${acc.username}`}
+                                                {acc.username ? (acc.username.startsWith('@') ? acc.username : `@${acc.username}`) : ''}
                                             </span>
                                             <span className={`account-badge platform-badge-${acc.platform}`}>{acc.platform}</span>
                                         </div>
