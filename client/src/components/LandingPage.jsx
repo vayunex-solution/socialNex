@@ -285,32 +285,15 @@ function LandingPage() {
                         </div>
                     </RevealSection>
 
-                    {/* Dashboard Mockup */}
+                    {/* Real Dashboard Screenshot */}
                     <RevealSection className="lp-hero-visual" delay={300} direction="right">
                         <div className="lp-mockup">
-                            <div className="lp-mockup-bar">
-                                <span className="lp-dot red"></span>
-                                <span className="lp-dot yellow"></span>
-                                <span className="lp-dot green"></span>
-                                <span className="lp-mockup-url">socialnex.vayunexsolution.com/dashboard</span>
-                            </div>
-                            <div className="lp-mockup-body">
-                                <div className="lp-mockup-sidebar">
-                                    <div className="lp-mockup-menu active"></div>
-                                    <div className="lp-mockup-menu"></div>
-                                    <div className="lp-mockup-menu"></div>
-                                    <div className="lp-mockup-menu"></div>
-                                    <div className="lp-mockup-menu"></div>
-                                </div>
-                                <div className="lp-mockup-main">
-                                    <div className="lp-mockup-card lg"></div>
-                                    <div className="lp-mockup-row">
-                                        <div className="lp-mockup-card sm"></div>
-                                        <div className="lp-mockup-card sm"></div>
-                                        <div className="lp-mockup-card sm"></div>
-                                    </div>
-                                </div>
-                            </div>
+                            <img 
+                                src="/dashboard-preview.png" 
+                                alt="SocialNex Dashboard — Analytics, Scheduling, Multi-Platform Posting" 
+                                className="lp-dashboard-img"
+                                loading="lazy"
+                            />
                         </div>
                         {/* Floating chips */}
                         <div className="lp-chip lp-chip-1">📈 +147% Growth</div>

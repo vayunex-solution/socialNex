@@ -197,6 +197,10 @@
     padding: 12px 16px; background: rgba(255,255,255,0.03);
     border-bottom: 1px solid rgba(255,255,255,0.06);
 }
+.lp-dashboard-img {
+    width: 100%; height: auto; display: block;
+    border-radius: 16px;
+}
 .lp-dot { width: 10px; height: 10px; border-radius: 50%; }
 .lp-dot.red { background: #EF4444; }
 .lp-dot.yellow { background: #F59E0B; }
