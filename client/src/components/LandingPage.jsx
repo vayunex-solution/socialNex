@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import logoIcon from '../assets/logo-icon.png'
 import FloatingSupport from './FloatingSupport'
 import SEO from './SEO'
+import DemoDashboard from './DemoDashboard'
 import './LandingPage.css'
 
 /* ═══════════════════════════════════════════════════
@@ -390,6 +391,26 @@ function LandingPage() {
                             </RevealSection>
                         ))}
                     </div>
+                </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════
+                LIVE DEMO — Interactive Dashboard
+               ═══════════════════════════════════════════════════════════ */}
+            <section className="lp-section lp-demo-section">
+                <div className="lp-container">
+                    <RevealSection>
+                        <div className="lp-section-badge">🖥️ Live Demo</div>
+                        <h2 className="lp-section-h2">
+                            Experience the <span className="lp-gradient-text">Dashboard</span>
+                        </h2>
+                        <p className="lp-section-sub">Click around. Explore every feature. No signup needed — this is a fully interactive preview of your future dashboard.</p>
+                    </RevealSection>
+                    <RevealSection delay={200}>
+                        <div className="lp-demo-container">
+                            <DemoDashboard />
+                        </div>
+                    </RevealSection>
                 </div>
             </section>
 
