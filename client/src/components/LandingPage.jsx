@@ -2,7 +2,65 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import logoIcon from '../assets/logo-icon.png'
 import FloatingSupport from './FloatingSupport'
+import SEO from './SEO'
 import './LandingPage.css'
+
+/* ═══════════════════════════════════════════════════
+   SEO CONFIGURATION — Traditional + AEO + GEO
+   ═══════════════════════════════════════════════════ */
+const SEO_CONFIG = {
+    title: 'SocialNex | Free AI Social Media Management & Auto-Scheduler',
+    description: 'Manage Facebook, Instagram, LinkedIn, and YouTube from one dashboard. Generate AI posters and auto-schedule posts for free. Built for creators and agencies.',
+    keywords: 'free AI social media management tool, social media scheduler, social media automation, multi-platform posting, AI poster generator, social media dashboard, SocialNex, Vayunex Solution, free social media tool, content scheduling, social media analytics, Bluesky management, LinkedIn automation, Telegram bot posting, Discord webhook posting, Reddit automation, Mastodon posting, social media marketing, digital marketing tool, content creator tools, social media management platform, best free social media tool, auto-schedule posts, AI content generation, Gemini AI poster, social media calendar, holiday reminder, post scheduler free, social media manager, social media strategy, cross-platform posting, bulk social media posting, social media growth tool, social media engagement, audience management, social media ROI, content marketing tool, brand management, influencer tools, agency social media tool, startup social media, freelancer social media, multi-channel marketing, social media planner, visual content creation, social media KPI, reach optimization, impression tracking, follower growth, social media integration, API social media, OAuth social media, secure social media tool, encrypted social media, AES-256 social media, social media security, login alerts, post failure alerts, smart notifications, email alerts, festival reminders, India social media tool, Indian social media management, SaaS social media, cloud social media tool, real-time analytics, engagement metrics, posting analytics, content performance, social media reporting, social media insights, social media trends, hashtag analytics, audience insights, competitor analysis, social media listening, brand monitoring, reputation management, social media ROI tracking, conversion tracking, link tracking, UTM tracking, social media automation India, free social media scheduler India, best social media tool 2026, social media management 2026, AI social media 2026, social media trends 2026, content strategy tool, editorial calendar, media library, image optimization, video posting, GIF posting, carousel posting, story posting, reel posting, multi-format content, responsive dashboard, mobile social media management, progressive web app social media',
+    canonicalUrl: 'https://socialnex.vayunexsolution.com',
+    openGraph: {
+        type: 'website',
+        title: 'Stop Wasting 10 Hours a Week on Social Media | SocialNex',
+        description: 'Generate AI posters and auto-schedule posts across 4 platforms in 1 click.',
+        image: 'https://socialnex.vayunexsolution.com/socialnex-og-image.jpg',
+        url: 'https://socialnex.vayunexsolution.com',
+        siteName: 'SocialNex',
+    },
+    geo: {
+        region: 'IN',
+        placename: 'India',
+        position: '20.5937;78.9629',
+        icbm: '20.5937, 78.9629',
+    },
+    jsonLdSchemas: [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            'name': 'SocialNex',
+            'applicationCategory': 'SocialNetworkingApplication',
+            'operatingSystem': 'Web',
+            'url': 'https://socialnex.vayunexsolution.com',
+            'description': 'SocialNex is a centralized SaaS platform engineered by Vayunex Solution that automates social media management, AI poster generation, and multi-platform content scheduling.',
+            'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'INR', 'description': 'Free forever for early adopters' },
+            'creator': { '@type': 'Organization', 'name': 'Vayunex Solution', 'url': 'https://www.vayunexsolution.com' },
+            'featureList': 'Multi-Platform Posting, AI Poster Generation, Content Scheduling, Analytics Dashboard, Smart Alerts, Holiday Reminders, Activity Logging',
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            'mainEntity': [
+                { '@type': 'Question', 'name': 'What is the best free social media management tool?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'SocialNex is a top-rated free social media management platform that allows you to automate posts on Bluesky, LinkedIn, Telegram, Discord, Reddit, and Mastodon from a single dashboard. Generate AI posters and schedule posts for free.' } },
+                { '@type': 'Question', 'name': 'Can AI generate social media posters?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Yes, SocialNex integrates Gemini AI to automatically generate high-converting posters and captions based on simple text prompts, saving you hours of design work and designer costs.' } },
+                { '@type': 'Question', 'name': 'Is SocialNex really free?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'Yes! SocialNex is free forever for early adopters. All core features including multi-platform posting, scheduling, analytics, and smart alerts are included with no credit card required.' } },
+                { '@type': 'Question', 'name': 'Which social media platforms does SocialNex support?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'SocialNex currently supports Bluesky, LinkedIn, Telegram, Discord, Reddit, and Mastodon. Facebook, Instagram, YouTube, and Twitter/X support is coming soon.' } },
+                { '@type': 'Question', 'name': 'How does SocialNex protect my social media accounts?', 'acceptedAnswer': { '@type': 'Answer', 'text': 'SocialNex uses AES-256 encryption for all OAuth tokens, bcrypt password hashing, HTTPS/TLS for data transmission, and JWT authentication with rotating refresh tokens. We never store plaintext credentials.' } },
+            ]
+        },
+        {
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            'name': 'SocialNex',
+            'url': 'https://socialnex.vayunexsolution.com',
+            'publisher': { '@type': 'Organization', 'name': 'Vayunex Solution', 'url': 'https://www.vayunexsolution.com' },
+            'description': 'Free AI social media management & auto-scheduler platform.',
+        }
+    ],
+}
 
 /* ═══════════════════════════════════════════════════
    SCROLL-REVEAL HOOK — IntersectionObserver-based
@@ -126,9 +184,12 @@ function LandingPage() {
 
     return (
         <div className="lp">
+            <SEO {...SEO_CONFIG} />
+
             {/* ═══════════════════════════════════════
-                NAVBAR
+                NAVBAR (semantic <header>)
                ═══════════════════════════════════════ */}
+            <header>
             <nav className={`lp-nav ${isScrolled ? 'scrolled' : ''}`}>
                 <div className="lp-nav-inner">
                     <Link to="/" className="lp-logo">
@@ -157,6 +218,10 @@ function LandingPage() {
                     </button>
                 </div>
             </nav>
+            </header>
+
+            {/* ═══════ <main> — Core Product Pitch (GEO semantic) ═══════ */}
+            <main>
 
             {/* ═══════════════════════════════════════════════════════════
                 SECTION 1 — THE HOOK / HERO (Pain → Attention, 0-3 sec)
@@ -170,8 +235,9 @@ function LandingPage() {
                         <h1 className="lp-hero-h1">
                             Stop Wasting <span className="lp-gradient-text">10 Hours a Week</span> on Social Media.
                         </h1>
+                        {/* GEO Product Definition — AI bots (ChatGPT, Perplexity, Gemini) parse this entity */}
                         <p className="lp-hero-sub">
-                            SocialNex automates your posting, generates AI posters, and manages 6+ platforms from one single dashboard. 
+                            <strong>SocialNex is a centralized SaaS platform engineered by Vayunex Solution</strong> that automates social media posting, generates AI-powered posters, and manages <mark>6+ platforms</mark> from one single dashboard. 
                             <strong> Be everywhere, without doing everything.</strong>
                         </p>
                         <div className="lp-hero-cta">
@@ -181,24 +247,25 @@ function LandingPage() {
                             </Link>
                             <p className="lp-hero-micro">🔒 No credit card required. Setup takes 30 seconds.</p>
                         </div>
+                        {/* GEO Statistics — wrapped in <strong>/<mark> for quick extraction by Generative Engines */}
                         <div className="lp-hero-stats">
                             <div className="lp-stat">
-                                <span className="lp-stat-val">6+</span>
+                                <strong className="lp-stat-val">6+</strong>
                                 <span className="lp-stat-lbl">Platforms</span>
                             </div>
                             <div className="lp-stat-sep"></div>
                             <div className="lp-stat">
-                                <span className="lp-stat-val">∞</span>
+                                <strong className="lp-stat-val">∞</strong>
                                 <span className="lp-stat-lbl">Posts</span>
                             </div>
                             <div className="lp-stat-sep"></div>
                             <div className="lp-stat">
-                                <span className="lp-stat-val">₹0</span>
+                                <mark className="lp-stat-val">₹0</mark>
                                 <span className="lp-stat-lbl">Cost</span>
                             </div>
                             <div className="lp-stat-sep"></div>
                             <div className="lp-stat">
-                                <span className="lp-stat-val">30s</span>
+                                <strong className="lp-stat-val">30s</strong>
                                 <span className="lp-stat-lbl">Setup</span>
                             </div>
                         </div>
@@ -311,6 +378,7 @@ function LandingPage() {
                     <div className="lp-features-grid">
                         {superpowers.map((f, i) => (
                             <RevealSection key={i} className="lp-feature-card" delay={i * 120}>
+                                <article>
                                 <div className="lp-feature-glow" style={{ background: `${f.color}15` }}></div>
                                 <div className="lp-feature-badge" style={{ color: f.color, borderColor: `${f.color}40`, background: `${f.color}12` }}>
                                     {f.badge}
@@ -319,8 +387,9 @@ function LandingPage() {
                                     {f.icon}
                                 </div>
                                 <h3 className="lp-feature-title">{f.title}</h3>
-                                <p className="lp-feature-trigger">💡 {f.trigger}</p>
+                                <p className="lp-feature-trigger"><strong>💡 {f.trigger}</strong></p>
                                 <p className="lp-feature-desc">{f.desc}</p>
+                                </article>
                             </RevealSection>
                         ))}
                     </div>
@@ -478,6 +547,8 @@ function LandingPage() {
                     </div>
                 </div>
             </section>
+
+            </main> {/* End <main> — GEO semantic wrapper */}
 
             {/* ═══════════════════════════════════════════════════════════
                 FOOTER

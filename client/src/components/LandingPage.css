@@ -10,6 +10,8 @@
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     overflow-x: hidden;
 }
+/* GEO <mark> override — semantic for AI bots, invisible to users */
+.lp mark { background: transparent; color: inherit; }
 
 .lp-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 .lp-container-sm { max-width: 800px; }
