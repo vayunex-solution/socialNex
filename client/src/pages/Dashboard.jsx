@@ -28,7 +28,7 @@ function Dashboard() {
         const urlParams = new URLSearchParams(window.location.search)
         const code = urlParams.get('code')
         const state = urlParams.get('state')
-        if (code && state) {
+        if (code && state && typeof state === 'string') {
             if (state.startsWith('linkedin_')) {
                 setShowConnectLinkedIn(true)
             } else if (state.startsWith('facebook_')) {
