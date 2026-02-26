@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './components/LandingPage'
 import AppLayout from './components/AppLayout'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
 import { Login, Register, VerifyEmail, Dashboard, ForgotPassword, ResetPassword, CreatePost, Scheduler, Calendar, Analytics, Settings, ActivityLogs, Guide } from './pages'
 
 // Protected Route Component
@@ -47,6 +49,8 @@ function App() {
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms-of-service" element={<TermsOfService />} />
 
       {/* Protected Routes */}
       <Route

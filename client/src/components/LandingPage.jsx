@@ -513,8 +513,8 @@ function LandingPage() {
                             </div>
                             <div className="lp-footer-col">
                                 <h4>Legal</h4>
-                                <a href="#">Privacy Policy</a>
-                                <a href="#">Terms of Service</a>
+                                <Link to="/privacy-policy">Privacy Policy</Link>
+                                <Link to="/terms-of-service">Terms of Service</Link>
                             </div>
                         </div>
                     </div>
