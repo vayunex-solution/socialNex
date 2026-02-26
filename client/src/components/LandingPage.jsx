@@ -415,6 +415,51 @@ function LandingPage() {
             </section>
 
             {/* ═══════════════════════════════════════════════════════════
+                HOW IT WORKS — Visual Guide for Gen-Z
+               ═══════════════════════════════════════════════════════════ */}
+            <section className="lp-section lp-guide">
+                <div className="lp-container">
+                    <RevealSection>
+                        <div className="lp-section-badge">📖 Super Simple</div>
+                        <h2 className="lp-section-h2">
+                            How It <span className="lp-gradient-text">Works</span>
+                        </h2>
+                        <p className="lp-section-sub">4 steps. Under 30 seconds. No tutorial needed.</p>
+                    </RevealSection>
+
+                    <div className="lp-guide-steps">
+                        {[
+                            { num: '01', icon: '🚀', title: 'Sign Up Free', desc: 'One click. No credit card. Your dashboard is ready in 30 seconds.', accent: '#6366F1' },
+                            { num: '02', icon: '🔗', title: 'Connect Platforms', desc: 'Link your Bluesky, LinkedIn, Discord, Telegram & more — OAuth, no passwords shared.', accent: '#8B5CF6' },
+                            { num: '03', icon: '✍️', title: 'Create & Schedule', desc: 'Write once, post everywhere. Use AI to generate posters. Schedule for the perfect time.', accent: '#C084FC' },
+                            { num: '04', icon: '📈', title: 'Track & Grow', desc: 'Real-time analytics across all platforms. See what works. Repeat. Scale.', accent: '#EC4899' },
+                        ].map((step, i) => (
+                            <RevealSection key={step.num} delay={i * 120}>
+                                <div className="lp-guide-card">
+                                    <div className="lp-guide-num" style={{ background: `${step.accent}15`, color: step.accent, borderColor: `${step.accent}30` }}>
+                                        {step.num}
+                                    </div>
+                                    <div className="lp-guide-icon">{step.icon}</div>
+                                    <h3 className="lp-guide-title">{step.title}</h3>
+                                    <p className="lp-guide-desc">{step.desc}</p>
+                                    {i < 3 && <div className="lp-guide-arrow" style={{ color: step.accent }}>→</div>}
+                                </div>
+                            </RevealSection>
+                        ))}
+                    </div>
+
+                    <RevealSection delay={500}>
+                        <div className="lp-guide-cta">
+                            <Link to="/register" className="lp-btn-hero">
+                                Start in 30 Seconds <span className="lp-btn-arrow">→</span>
+                            </Link>
+                            <p className="lp-hero-micro">🔒 No credit card • Free forever • Cancel anytime</p>
+                        </div>
+                    </RevealSection>
+                </div>
+            </section>
+
+            {/* ═══════════════════════════════════════════════════════════
                 PLATFORMS
                ═══════════════════════════════════════════════════════════ */}
             <section id="platforms" className="lp-section lp-platforms">
