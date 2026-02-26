@@ -721,7 +721,7 @@ const disconnectLinkedIn = asyncHandler(async (req, res) => {
 const getFacebookAuthUrl = asyncHandler(async (req, res) => {
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     // Match the redirect URI configured in Facebook App Settings exactly
-    const redirectUri = `${frontendUrl}/settings`;
+    const redirectUri = `${frontendUrl}/dashboard`;
     const state = 'facebook_' + crypto.randomBytes(16).toString('hex');
 
     const authUrl = facebookService.getAuthUrl(redirectUri, state);
@@ -742,7 +742,7 @@ const connectFacebook = asyncHandler(async (req, res) => {
 
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
     const cleanFrontendUrl = frontendUrl.replace(/\/+$/, '');
-    const finalRedirectUri = redirectUri || `${cleanFrontendUrl}/settings`;
+    const finalRedirectUri = redirectUri || `${cleanFrontendUrl}/dashboard`;
 
     logger.info(`Facebook Connect attempt: POST code=${code}, redirectUri=${finalRedirectUri}`);
 
