@@ -7,7 +7,7 @@ const { ApiError, asyncHandler } = require('../middleware/errorHandler');
 const blueskyService = require('../services/blueskyService');
 const linkedinService = require('../services/linkedinService');
 const telegramService = require('../services/telegramService');
-const dialogflowService = require('../services/dialogflowService');
+// dialogflowService removed - not yet implemented
 const facebookService = require('../services/facebookService');
 const { query } = require('../config/database');
 const { logger } = require('../utils/logger');
