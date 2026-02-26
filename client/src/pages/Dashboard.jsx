@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import API_URL from '../config/api'
 import { Link, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin } from 'lucide-react'
+import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin, Globe } from 'lucide-react'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
 import ConnectDiscord from '../components/ConnectDiscord'
 import ConnectLinkedIn from '../components/ConnectLinkedIn'
+import ConnectFacebook from '../components/ConnectFacebook'
 import '../components/ConnectBluesky.css'
 import './Dashboard.css'
 
@@ -15,6 +16,7 @@ function Dashboard() {
     const [showConnectTelegram, setShowConnectTelegram] = useState(false)
     const [showConnectDiscord, setShowConnectDiscord] = useState(false)
     const [showConnectLinkedIn, setShowConnectLinkedIn] = useState(false)
+    const [showConnectFacebook, setShowConnectFacebook] = useState(false)
     const [accounts, setAccounts] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -26,8 +28,12 @@ function Dashboard() {
         const urlParams = new URLSearchParams(window.location.search)
         const code = urlParams.get('code')
         const state = urlParams.get('state')
-        if (code && state && state.startsWith('linkedin_')) {
-            setShowConnectLinkedIn(true)
+        if (code && state) {
+            if (state.startsWith('linkedin_')) {
+                setShowConnectLinkedIn(true)
+            } else if (state.startsWith('facebook_')) {
+                setShowConnectFacebook(true)
+            }
         }
     }, [])
 
@@ -65,6 +71,11 @@ function Dashboard() {
 
     const handleLinkedInConnected = (newAccount) => {
         setShowConnectLinkedIn(false)
+        fetchAccounts()
+    }
+
+    const handleFacebookConnected = (newAccount) => {
+        setShowConnectFacebook(false)
         fetchAccounts()
     }
 
@@ -242,6 +253,17 @@ function Dashboard() {
                             </div>
                             <span className="connect-card-arrow">→</span>
                         </button>
+
+                        <button className="connect-card facebook" onClick={() => setShowConnectFacebook(true)}>
+                            <div className="connect-card-icon facebook-icon" style={{ background: 'rgba(24, 119, 242, 0.15)', color: '#1877F2' }}>
+                                <Globe size={24} />
+                            </div>
+                            <div className="connect-card-info">
+                                <span className="connect-card-name">Facebook</span>
+                                <span className="connect-card-desc">Pages & Groups</span>
+                            </div>
+                            <span className="connect-card-arrow">→</span>
+                        </button>
                     </div>
                 </section>
 
@@ -294,6 +316,14 @@ function Dashboard() {
                 <ConnectLinkedIn
                     onSuccess={handleLinkedInConnected}
                     onClose={() => setShowConnectLinkedIn(false)}
+                />
+            )}
+
+            {/* Connect Facebook Modal */}
+            {showConnectFacebook && (
+                <ConnectFacebook
+                    onSuccess={handleFacebookConnected}
+                    onClose={() => setShowConnectFacebook(false)}
                 />
             )}
         </>

@@ -119,6 +119,50 @@
     display: block;
 }
 
+.btn-connect.telegram-bg {
+    background-color: #26A5E4;
+    color: white;
+    border-color: #26A5E4;
+}
+
+.btn-connect.telegram-bg:hover {
+    background-color: #1e8cc4;
+    border-color: #1e8cc4;
+}
+
+.btn-connect.discord-bg {
+    background-color: #5865F2;
+    color: white;
+    border-color: #5865F2;
+}
+
+.btn-connect.discord-bg:hover {
+    background-color: #4752c4;
+    border-color: #4752c4;
+}
+
+.btn-connect.linkedin-bg {
+    background-color: #0077b5;
+    color: white;
+    border-color: #0077b5;
+}
+
+.btn-connect.linkedin-bg:hover {
+    background-color: #005582;
+    border-color: #005582;
+}
+
+.btn-connect.facebook-bg {
+    background-color: #1877F2;
+    color: white;
+    border-color: #1877F2;
+}
+
+.btn-connect.facebook-bg:hover {
+    background-color: #166fe5;
+    border-color: #166fe5;
+}
+
 .link-button {
     background: none;
     border: none;

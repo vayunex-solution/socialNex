@@ -7,7 +7,8 @@ const { ApiError, asyncHandler } = require('../middleware/errorHandler');
 const blueskyService = require('../services/blueskyService');
 const linkedinService = require('../services/linkedinService');
 const telegramService = require('../services/telegramService');
-const discordService = require('../services/discordService');
+const dialogflowService = require('../services/dialogflowService');
+const facebookService = require('../services/facebookService');
 const { query } = require('../config/database');
 const { logger } = require('../utils/logger');
 const crypto = require('crypto');
@@ -482,17 +483,38 @@ const publishPost = asyncHandler(async (req, res) => {
                     );
                 }
             } else if (account.platform === 'linkedin') {
-                postResult = await linkedinService.createPost(
-                    account.id, userId, text.trim(), images
-                );
+                try {
+                    const result = await linkedinService.createPost(account.id, userId, text.trim(), images);
+                    results.push({ platform: 'linkedin', name: account.account_name, success: true, data: result });
+                } catch (err) {
+                    results.push({ platform: 'linkedin', name: account.account_name, success: false, error: err.message });
+                }
+            } else if (account.platform === 'facebook') {
+                try {
+                    const result = await facebookService.createPost(account.id, userId, text.trim(), images);
+                    results.push({ platform: 'facebook', name: account.account_name, success: true, data: result });
+                } catch (err) {
+                    results.push({ platform: 'facebook', name: account.account_name, success: false, error: err.message });
+                }
+            } else {
+                logger.warn(`Unsupported platform for post: ${account.platform}`);
+                results.push({
+                    platform: account.platform,
+                    name: account.account_name,
+                    success: false,
+                    error: 'Unsupported platform for posting.'
+                });
             }
 
-            results.push({
-                platform: account.platform,
-                name: account.account_name,
-                success: true,
-                data: postResult
-            });
+            // For platforms that use the outer postResult variable
+            if (postResult) {
+                results.push({
+                    platform: account.platform,
+                    name: account.account_name,
+                    success: true,
+                    data: postResult
+                });
+            }
 
         } catch (err) {
             logger.error(`Post to ${account.platform} failed:`, err.message);
@@ -692,6 +714,61 @@ const disconnectLinkedIn = asyncHandler(async (req, res) => {
     });
 });
 
+// =============================================
+// FACEBOOK ENDPOINTS
+// =============================================
+
+const getFacebookAuthUrl = asyncHandler(async (req, res) => {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    // Match the redirect URI configured in Facebook App Settings exactly
+    const redirectUri = `${frontendUrl}/settings`;
+    const state = 'facebook_' + crypto.randomBytes(16).toString('hex');
+
+    const authUrl = facebookService.getAuthUrl(redirectUri, state);
+
+    res.json({
+        success: true,
+        data: { authUrl, state }
+    });
+});
+
+const connectFacebook = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const { code, redirectUri } = req.body;
+
+    if (!code) {
+        throw new ApiError(400, 'Authorization code is required.');
+    }
+
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const cleanFrontendUrl = frontendUrl.replace(/\/+$/, '');
+    const finalRedirectUri = redirectUri || `${cleanFrontendUrl}/settings`;
+
+    logger.info(`Facebook Connect attempt: POST code=${code}, redirectUri=${finalRedirectUri}`);
+
+    const result = await facebookService.connect(code, finalRedirectUri, userId);
+
+    res.json({
+        success: true,
+        message: result.reconnected
+            ? 'Facebook Page reconnected successfully!'
+            : 'Facebook Page connected successfully!',
+        data: result
+    });
+});
+
+const disconnectFacebook = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const { accountId } = req.params;
+
+    await facebookService.disconnect(parseInt(accountId), userId);
+
+    res.json({
+        success: true,
+        message: 'Facebook Page disconnected.'
+    });
+});
+
 module.exports = {
     getConnectedAccounts,
     connectBluesky,
@@ -709,5 +786,8 @@ module.exports = {
     disconnectDiscord,
     getLinkedInAuthUrl,
     connectLinkedIn,
-    disconnectLinkedIn
+    disconnectLinkedIn,
+    getFacebookAuthUrl,
+    connectFacebook,
+    disconnectFacebook
 };

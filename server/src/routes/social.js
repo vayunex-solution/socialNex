@@ -24,7 +24,10 @@ const {
     disconnectDiscord,
     getLinkedInAuthUrl,
     connectLinkedIn,
-    disconnectLinkedIn
+    disconnectLinkedIn,
+    getFacebookAuthUrl,
+    connectFacebook,
+    disconnectFacebook
 } = require('../controllers/socialController');
 
 // All routes require authentication
@@ -54,9 +57,11 @@ router.post('/discord/connect', connectDiscord);
 router.post('/discord/:accountId/message', sendDiscordMessage);
 router.delete('/discord/:accountId', disconnectDiscord);
 
-// LinkedIn routes
-router.get('/linkedin/auth-url', getLinkedInAuthUrl);
-router.post('/linkedin/connect', connectLinkedIn);
 router.delete('/linkedin/:accountId', disconnectLinkedIn);
+
+// Facebook routes
+router.get('/facebook/auth-url', getFacebookAuthUrl);
+router.post('/facebook/connect', connectFacebook);
+router.delete('/facebook/:accountId', disconnectFacebook);
 
 module.exports = router;

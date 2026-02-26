@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import { generateCaptionFromText, generateCaptionFromImage, improveCaption } from '../services/aiCaptionService'
-import { MessageCircle, Send, Linkedin, Image as ImageIcon, Sparkles, Edit3, ImagePlus, RefreshCw, SendHorizontal, Rocket, CheckCircle2, AlertCircle, BarChart3 } from 'lucide-react'
+import { ImagePlus, X, PenSquare, LayoutDashboard, Send, MessageCircle, Linkedin, Globe, Sparkles, Image, RefreshCw, LogIn, ChevronDown, Check, Clock, CalendarDays, BarChart2, Bell } from 'lucide-react'
 import './CreatePost.css'
 
 function CreatePost() {
@@ -30,7 +30,9 @@ function CreatePost() {
         bluesky: 300,
         telegram: 4096,
         mastodon: 500,
-        discord: 2000
+        discord: 2000,
+        linkedin: 3000,
+        facebook: 63206
     }
 
     const PLATFORM_ICONS = {
@@ -38,7 +40,8 @@ function CreatePost() {
         telegram: <Send size={16} />,
         mastodon: <MessageCircle size={16} />,
         discord: <MessageCircle size={16} />,
-        linkedin: <Linkedin size={16} />
+        linkedin: <Linkedin size={16} />,
+        facebook: <Globe size={16} />
     }
 
     useEffect(() => {
