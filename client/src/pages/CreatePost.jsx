@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import { generateCaptionFromText, generateCaptionFromImage, improveCaption } from '../services/aiCaptionService'
-import { ImagePlus, X, PenSquare, LayoutDashboard, Send, MessageCircle, Linkedin, Globe, Sparkles, Image, RefreshCw, LogIn, ChevronDown, Check, Clock, CalendarDays, BarChart2, Bell } from 'lucide-react'
+import { ImagePlus, X, PenSquare, LayoutDashboard, Send, MessageCircle, Linkedin, Globe, Sparkles, Image, RefreshCw, LogIn, ChevronDown, Check, Clock, CalendarDays, BarChart2, Bell, Rocket, AlertCircle, CheckCircle2, Edit3, ImageIcon, SendHorizontal, BarChart3 } from 'lucide-react'
 import './CreatePost.css'
 
 function CreatePost() {
