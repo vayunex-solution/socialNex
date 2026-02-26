@@ -1,0 +1,23 @@
+# Robots.txt for SocialNex — socialnex.vayunexsolution.com
+# Built by Vayunex Solution
+
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Allow: /privacy-policy
+Allow: /terms-of-service
+
+# Block protected/internal routes from crawlers
+Disallow: /dashboard
+Disallow: /create-post
+Disallow: /scheduler
+Disallow: /calendar
+Disallow: /analytics
+Disallow: /settings
+Disallow: /activity-logs
+Disallow: /guide
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://socialnex.vayunexsolution.com/sitemap.xml
