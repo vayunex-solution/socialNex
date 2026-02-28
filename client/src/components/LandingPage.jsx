@@ -652,6 +652,13 @@ function LandingPage() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Giant Footer Branding */}
+                    <div className="lp-footer-giant-brand">
+                        <div className="lp-giant-title">SOCIALNEX</div>
+                        <div className="lp-giant-subtitle">P L A T F O R M</div>
+                    </div>
+
                     <div className="lp-footer-bottom">
                         <p>© 2026 SocialNex. All rights reserved.</p>
                         <p>Powered by <a href="https://www.vayunexsolution.com" target="_blank" rel="noopener noreferrer">Vayunex Solution</a> 💜</p>
