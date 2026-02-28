@@ -57,6 +57,17 @@ function ConnectTelegram({ onSuccess, onClose }) {
                     <p>Connect a Telegram channel or group to post messages from SocialNex</p>
                 </div>
 
+                {/* Important Pre-requisite Notice */}
+                <div className="alert alert-warning" style={{ textAlign: 'left', marginBottom: '16px', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                    <strong>⚠️ IMPORTANT BEFORE CONNECTING:</strong>
+                    <ol style={{ margin: '8px 0 0 20px', padding: 0 }}>
+                        <li>Create a bot via <strong>@BotFather</strong> and copy the Token.</li>
+                        <li>Add the bot to your Telegram Channel/Group and make it an <strong>Admin</strong>.</li>
+                        <li>Send a test message (e.g. "hello") in that channel/group.</li>
+                    </ol>
+                    <p style={{ marginTop: '8px', fontStyle: 'italic' }}>Only after doing these steps, paste the token below and click Connect.</p>
+                </div>
+
                 {error && <div className="alert alert-error">{error}</div>}
 
                 <form onSubmit={handleSubmit} className="connect-form">
