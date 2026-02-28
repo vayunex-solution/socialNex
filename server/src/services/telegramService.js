@@ -59,6 +59,21 @@ class TelegramService {
             const bot = new TelegramBot(botToken, { polling: false });
             const botInfo = await bot.getMe();
 
+            // Auto-detect if no chatId provided
+            if (!chatId) {
+                const updates = await bot.getUpdates({ limit: 100 });
+                for (const update of updates) {
+                    const chat = update.channel_post?.chat || update.message?.chat || update.my_chat_member?.chat;
+                    if (chat && (chat.type === 'channel' || chat.type === 'supergroup' || chat.type === 'group')) {
+                        chatId = chat.id;
+                        break;
+                    }
+                }
+                if (!chatId) {
+                    throw new Error('Channel/Group not found. Please add the bot as Admin to your channel/group AND send a test message (e.g. "hello") in it, then click Connect again.');
+                }
+            }
+
             // Validate chat by getting chat info
             let chatInfo;
             try {

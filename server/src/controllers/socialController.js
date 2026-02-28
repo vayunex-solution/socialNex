@@ -305,8 +305,8 @@ const connectTelegram = asyncHandler(async (req, res) => {
     const userId = req.user.id;
     const { botToken, chatId } = req.body;
 
-    if (!botToken || !chatId) {
-        throw new ApiError(400, 'Please provide bot token and chat ID.');
+    if (!botToken) {
+        throw new ApiError(400, 'Please provide your Telegram bot token.');
     }
 
     const result = await telegramService.connect(botToken, chatId, userId);

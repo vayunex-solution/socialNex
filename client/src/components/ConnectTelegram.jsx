@@ -61,29 +61,14 @@ function ConnectTelegram({ onSuccess, onClose }) {
 
                 <form onSubmit={handleSubmit} className="connect-form">
                     <div className="form-group">
-                        <label htmlFor="botToken">Bot Token</label>
+                        <label htmlFor="botToken">Telegram Bot Token</label>
                         <input
                             type="password"
                             id="botToken"
                             name="botToken"
                             className="form-input"
-                            placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+                            placeholder="e.g. 123456:ABC-DEF1234ghI..."
                             value={formData.botToken}
-                            onChange={handleChange}
-                            required
-                        />
-                        <span className="form-hint">Token from @BotFather</span>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="chatId">Channel / Group ID</label>
-                        <input
-                            type="text"
-                            id="chatId"
-                            name="chatId"
-                            className="form-input"
-                            placeholder="@channelname or -1001234567890"
-                            value={formData.chatId}
                             onChange={handleChange}
                             required
                         />
@@ -93,33 +78,27 @@ function ConnectTelegram({ onSuccess, onClose }) {
                                 className="link-button"
                                 onClick={() => setShowInstructions(!showInstructions)}
                             >
-                                {showInstructions ? 'Hide' : 'How to get Bot Token & Chat ID?'}
+                                {showInstructions ? 'Hide Instructions' : 'How to connect?'}
                             </button>
                         </span>
                     </div>
 
                     {showInstructions && (
                         <div className="instructions-box">
-                            <h4>🤖 Step 1: Create a Bot</h4>
+                            <h4>🤖 Step 1: Get Bot Token</h4>
                             <ol>
                                 <li>Open Telegram and search for <strong>@BotFather</strong></li>
-                                <li>Send <code>/newbot</code></li>
-                                <li>Choose a name (e.g., "My SocialNex Bot")</li>
-                                <li>Choose a username ending in "bot" (e.g., <code>mySocialNex_bot</code>)</li>
-                                <li>Copy the <strong>token</strong> and paste above</li>
+                                <li>Send <code>/newbot</code> to create a bot</li>
+                                <li>Copy the HTTP API <strong>token</strong> given to you and paste it above</li>
                             </ol>
 
-                            <h4 style={{ marginTop: '12px' }}>📢 Step 2: Get Channel/Group ID</h4>
+                            <h4 style={{ marginTop: '12px' }}>📢 Step 2: Auto-connect Channel</h4>
                             <ol>
-                                <li><strong>For channels:</strong> Use <code>@channelname</code> format</li>
-                                <li>Add your bot as <strong>Admin</strong> to the channel/group</li>
-                                <li><strong>For groups:</strong> Add the bot, send a message, then visit:<br />
-                                    <code>https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates</code><br />
-                                    and find the <code>chat.id</code> field
-                                </li>
+                                <li>Add your newly created bot to your Channel or Group</li>
+                                <li>Make sure to promote the bot to <strong>Admin</strong></li>
+                                <li>Send a test message (like "hello") in the channel</li>
+                                <li>Click the <strong>Connect Telegram</strong> button below. We'll find it automatically!</li>
                             </ol>
-
-                            <p className="warning-text">⚠️ Bot must be admin of the channel/group to post!</p>
                         </div>
                     )}
 
