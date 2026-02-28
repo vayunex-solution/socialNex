@@ -655,7 +655,10 @@ function LandingPage() {
 
                     {/* Giant Footer Branding */}
                     <div className="lp-footer-giant-brand">
-                        <div className="lp-giant-title">SOCIALNEX</div>
+                        <div className="lp-giant-title">
+                            <span className="lp-giant-social">SOCIAL</span>
+                            <span className="lp-giant-nex">NEX</span>
+                        </div>
                         <div className="lp-giant-subtitle">P L A T F O R M</div>
                     </div>
 
