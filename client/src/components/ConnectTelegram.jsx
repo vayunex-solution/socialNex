@@ -4,8 +4,7 @@ import './ConnectBluesky.css'
 
 function ConnectTelegram({ onSuccess, onClose }) {
     const [formData, setFormData] = useState({
-        botToken: '',
-        chatId: ''
+        botToken: ''
     })
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
