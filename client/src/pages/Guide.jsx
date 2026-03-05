@@ -1,19 +1,19 @@
 import { Link } from 'react-router-dom'
-import { BookOpen, Zap, CalendarDays, BarChart3, Bell, PenSquare, Settings, ArrowRight, Rocket } from 'lucide-react'
+import { BookOpen, Zap, CalendarDays, BarChart3, Bell, PenSquare, Settings, ArrowRight, Rocket, AlertTriangle } from 'lucide-react'
 import './Dashboard.css'
 
 const GUIDE_SECTIONS = [
     {
         icon: <Zap size={24} />,
         title: 'Connect Your Accounts',
-        desc: 'Head to the Dashboard and click on any platform card (Bluesky, Telegram, Discord, LinkedIn) to link your social accounts. This is your first step to cross-platform posting.',
+        desc: 'Head to the Dashboard and click on any platform card (Bluesky, Telegram, Discord, LinkedIn, Facebook, Instagram) to link your social accounts. This is your first step to cross-platform posting.',
         link: '/dashboard',
         action: 'Go to Dashboard'
     },
     {
         icon: <PenSquare size={24} />,
         title: 'Create & Draft Posts',
-        desc: 'Click "Create Post" to compose content. You can write once and publish to multiple platforms simultaneously. Add images, format text, and preview before posting.',
+        desc: 'Click "Create Post" to compose content. Publish to multiple platforms at once! For Instagram, choose between Photo Post, Story, or Reel. Upload images or videos (MP4, MOV, WebM) up to 50MB.',
         link: '/create-post',
         action: 'Create a Post'
     },
@@ -103,6 +103,39 @@ function Guide() {
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* Instagram Disclaimer */}
+            <div className="glass-card" style={{
+                padding: '24px',
+                marginTop: '24px',
+                border: '1px solid rgba(228, 64, 95, 0.3)',
+                background: 'rgba(228, 64, 95, 0.05)'
+            }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                    <div style={{
+                        width: '44px', height: '44px', borderRadius: '10px', flexShrink: 0,
+                        background: 'rgba(228, 64, 95, 0.15)', border: '1px solid rgba(228, 64, 95, 0.3)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E4405F'
+                    }}>
+                        <AlertTriangle size={22} />
+                    </div>
+                    <div>
+                        <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 700, color: '#E4405F' }}>
+                            ⚠️ Important: Instagram Requirements
+                        </h3>
+                        <p style={{ margin: '0 0 8px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.7 }}>
+                            Instagram integration works <strong>only</strong> with <strong>Business</strong> or <strong>Creator</strong> accounts
+                            that are linked to a <strong>Facebook Page</strong>. Personal Instagram accounts are not supported by
+                            Instagram's API.
+                        </p>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.7 }}>
+                            <strong>How to set up:</strong> Switch your Instagram to a Business/Creator account in Instagram Settings → 
+                            Account → Switch Account Type. Then link it to your Facebook Page in Facebook Page Settings → 
+                            Instagram. After that, connect Facebook in SocialNex and Instagram will be auto-detected! 🚀
+                        </p>
+                    </div>
+                </div>
             </div>
 
             {/* Help Footer */}

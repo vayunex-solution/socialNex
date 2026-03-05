@@ -169,15 +169,15 @@ const platforms = [
     { name: 'Discord', icon: PlatformIcons.Discord('#5865F2'), status: 'live', color: '#5865F2' },
     { name: 'Reddit', icon: PlatformIcons.Reddit('#FF4500'), status: 'live', color: '#FF4500' },
     { name: 'Mastodon', icon: PlatformIcons.Mastodon('#6364FF'), status: 'live', color: '#6364FF' },
-    { name: 'Facebook', icon: PlatformIcons.Facebook('#1877F2'), status: 'soon', color: '#1877F2' },
-    { name: 'Instagram', icon: PlatformIcons.Instagram('#E4405F'), status: 'soon', color: '#E4405F' },
+    { name: 'Facebook', icon: PlatformIcons.Facebook('#1877F2'), status: 'live', color: '#1877F2' },
+    { name: 'Instagram', icon: PlatformIcons.Instagram('#E4405F'), status: 'live', color: '#E4405F' },
     { name: 'Twitter/X', icon: PlatformIcons['Twitter/X']('#fff'), status: 'soon', color: '#000' },
     { name: 'YouTube', icon: PlatformIcons.YouTube('#FF0000'), status: 'soon', color: '#FF0000' },
 ]
 
 const faqs = [
     { q: 'Is SocialNex really free?', a: 'Yes! We\'re free forever for early adopters. All core features are included — no credit card, no hidden charges.' },
-    { q: 'Which platforms do you support?', a: 'Currently: Bluesky, LinkedIn, Telegram, Discord, Reddit & Mastodon. Facebook, Instagram, YouTube & more coming soon!' },
+    { q: 'Which platforms do you support?', a: 'Currently live: Bluesky, LinkedIn, Telegram, Discord, Reddit, Mastodon, Facebook & Instagram (Posts, Stories, Reels). YouTube & Twitter/X coming soon!' },
     { q: 'Do I need developer accounts to connect?', a: 'For most platforms, no! We\'ve made it super easy. Just click "Connect" and authorize.' },
     { q: 'Is my data secure?', a: 'Absolutely. We use AES-256 encryption for all tokens, HTTPS everywhere, and never store your passwords.' },
     { q: 'Can I schedule posts in advance?', a: 'Yes! Schedule posts days or weeks ahead with our visual date-time picker. Your content goes live automatically.' },
