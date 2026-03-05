@@ -58,7 +58,8 @@ class FacebookService {
             redirect_uri: redirectUri,
             state: state,
             response_type: 'code',
-            scope: scopes
+            scope: scopes,
+            auth_type: 'rerequest'
         });
         return `https://www.facebook.com/v20.0/dialog/oauth?${params.toString()}`;
     }

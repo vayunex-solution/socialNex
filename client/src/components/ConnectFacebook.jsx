@@ -123,6 +123,9 @@ function ConnectFacebook({ onSuccess, onClose }) {
                             <strong>Authorize SocialNex</strong> to post to the Pages you manage
                         </li>
                         <li>
+                            <strong>⚠️ Select your Facebook Page</strong> when asked — do NOT skip this step!
+                        </li>
+                        <li>
                             You'll be <strong>redirected back</strong> and your primary Page will be connected!
                         </li>
                     </ol>
