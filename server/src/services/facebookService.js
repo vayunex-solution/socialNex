@@ -114,18 +114,20 @@ class FacebookService {
                 params: { access_token: longLivedToken, fields: 'id,name' }
             });
             userProfile = profileRes.data;
-        } catch(err) {
+        } catch (err) {
             throw new Error('Failed to fetch Facebook user profile.');
         }
 
         // 4. Debug: Check what permissions were actually granted
+        let grantedPerms = [];
         try {
             const permRes = await axios.get(`${FB_GRAPH_URL}/${userProfile.id}/permissions`, {
                 params: { access_token: longLivedToken }
             });
-            logger.info('Facebook granted permissions:', JSON.stringify(permRes.data.data));
+            grantedPerms = permRes.data.data || [];
+            console.error('[FB DEBUG] Granted permissions:', JSON.stringify(grantedPerms));
         } catch (e) {
-            logger.warn('Could not fetch permissions debug info:', e.message);
+            console.error('[FB DEBUG] Could not fetch permissions:', e.message);
         }
 
         // 5. Get Pages managed by user (with Page Access Tokens)
@@ -134,22 +136,25 @@ class FacebookService {
             const pagesRes = await axios.get(`${FB_GRAPH_URL}/${userProfile.id}/accounts`, {
                 params: { access_token: longLivedToken }
             });
-            logger.info(`Facebook pages response: found ${pagesRes.data.data?.length || 0} pages`, JSON.stringify(pagesRes.data));
+            console.error(`[FB DEBUG] Pages response: ${JSON.stringify(pagesRes.data)}`);
             pagesData = pagesRes.data.data;
         } catch (err) {
-            logger.error('Facebook fetch pages failed:', err.response?.data || err.message);
-            throw new Error('Failed to fetch Facebook pages.');
+            console.error('[FB DEBUG] Fetch pages FAILED:', err.response?.data || err.message);
+            throw new Error('Failed to fetch Facebook pages: ' + JSON.stringify(err.response?.data || err.message));
         }
 
         if (!pagesData || pagesData.length === 0) {
-            throw new Error('No Facebook Pages found for this account. You must manage a Facebook Page to connect. Make sure you selected your Page in the Facebook authorization dialog.');
+            const permList = grantedPerms.map(p => `${p.permission}:${p.status}`).join(', ');
+            const debugMsg = `Permissions=[${permList}] User=${userProfile.name}(${userProfile.id})`;
+            console.error(`[FB DEBUG] No pages found. ${debugMsg}`);
+            throw new Error(`No Facebook Pages found. Debug: ${debugMsg}`);
         }
 
         // We'll automatically connect the first page for simplicity in this flow,
         // or we could save all pages. Saving the first page as default.
         // A better approach in V2 would return the list to UI to select, but let's connect the primary one.
         const primaryPage = pagesData[0];
-        
+
         // Page access tokens bound to a long-lived user token are permanent 
         // (unless permissions revoked or password changed). They don't have an expiry field often.
         const pageAccessToken = primaryPage.access_token;
@@ -233,7 +238,7 @@ class FacebookService {
 
         try {
             let response;
-            
+
             // If images exist, use the /photos endpoint for the first image
             // Note: For multiple images, FB Graph API requires bulk publishing which is complex.
             // We'll handle a single image post here as the standard flow.
