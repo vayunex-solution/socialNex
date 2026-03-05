@@ -209,6 +209,9 @@ class FacebookService {
             [userId, pageId]
         );
 
+        let fbAccountId;
+        let reconnected = false;
+
         if (existing.length > 0) {
             await query(
                 `UPDATE social_accounts SET 
@@ -218,20 +221,21 @@ class FacebookService {
                 [pageName, pageAvatar, encryptedToken, tokenExpiresAt, existing[0].id]
             );
             logger.info(`Facebook page reconnected: ${pageName} for user ${userId}`);
-            return { id: existing[0].id, reconnected: true, pageName, pageAvatar, pageId };
+            fbAccountId = existing[0].id;
+            reconnected = true;
+        } else {
+            // Insert new
+            const result = await query(
+                `INSERT INTO social_accounts 
+                 (user_id, platform, account_id, account_name, account_avatar, access_token, token_expires_at, is_active, connected_at)
+                 VALUES (?, 'facebook', ?, ?, ?, ?, ?, 1, NOW())`,
+                [userId, pageId, pageName, pageAvatar, encryptedToken, tokenExpiresAt]
+            );
+            logger.info(`Facebook page connected: ${pageName} for user ${userId}`);
+            fbAccountId = result.insertId;
         }
 
-        // Insert new
-        const result = await query(
-            `INSERT INTO social_accounts 
-             (user_id, platform, account_id, account_name, account_avatar, access_token, token_expires_at, is_active, connected_at)
-             VALUES (?, 'facebook', ?, ?, ?, ?, ?, 1, NOW())`,
-            [userId, pageId, pageName, pageAvatar, encryptedToken, tokenExpiresAt]
-        );
-
-        logger.info(`Facebook page connected: ${pageName} for user ${userId}`);
-
-        // 7. Auto-detect linked Instagram Business Account
+        // 7. Auto-detect linked Instagram Business Account (runs on BOTH connect AND reconnect)
         let instagramAccount = null;
         try {
             instagramAccount = await this._detectInstagramAccount(pageId, pageAccessToken, pageAvatar, userId);
@@ -241,11 +245,11 @@ class FacebookService {
         }
 
         return {
-            id: result.insertId,
+            id: fbAccountId,
             pageId,
             pageName,
             pageAvatar,
-            reconnected: false,
+            reconnected,
             instagram: instagramAccount
         };
     }
