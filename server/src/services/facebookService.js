@@ -235,8 +235,9 @@ class FacebookService {
         let instagramAccount = null;
         try {
             instagramAccount = await this._detectInstagramAccount(pageId, pageAccessToken, pageAvatar, userId);
+            console.error('[FB DEBUG] Instagram auto-detected:', JSON.stringify(instagramAccount));
         } catch (igErr) {
-            logger.warn(`Instagram auto-detect skipped: ${igErr.message}`);
+            console.error('[FB DEBUG] Instagram auto-detect FAILED:', igErr.message);
         }
 
         return {
@@ -346,8 +347,10 @@ class FacebookService {
 
         const igAccountId = igRes.data?.instagram_business_account?.id;
         if (!igAccountId) {
+            console.error('[FB DEBUG] Instagram check result: no instagram_business_account on page', JSON.stringify(igRes.data));
             throw new Error('No Instagram Business Account linked to this Page.');
         }
+        console.error(`[FB DEBUG] Found Instagram Business Account ID: ${igAccountId}`);
 
         // Fetch Instagram profile info
         const igProfileRes = await axios.get(`${FB_GRAPH_URL}/${igAccountId}`, {

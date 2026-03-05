@@ -179,7 +179,9 @@ function Dashboard() {
                                                 {acc.platform === 'bluesky' ? <MessageCircle size={22} /> :
                                                     acc.platform === 'linkedin' ? <Linkedin size={22} /> :
                                                         acc.platform === 'telegram' ? <Send size={22} /> :
-                                                            <MessageCircle size={22} />}
+                                                            acc.platform === 'facebook' ? <Globe size={22} /> :
+                                                                acc.platform === 'instagram' ? <Camera size={22} /> :
+                                                                    <MessageCircle size={22} />}
                                             </div>
                                         )}
                                         <div className="account-details">
