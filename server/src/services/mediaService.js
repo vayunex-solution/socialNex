@@ -12,7 +12,21 @@ const crypto = require('crypto');
 const { logger } = require('../utils/logger');
 
 const UPLOAD_DIR = path.join(__dirname, '../../tmp/uploads');
-const BASE_URL = process.env.API_BASE_URL || process.env.FRONTEND_URL?.replace(/:\d+$/, ':5000') || 'http://localhost:5000';
+
+// Determine the public base URL for serving temp media files
+// Instagram API needs a publicly accessible URL to download images
+function getBaseUrl() {
+    if (process.env.API_BASE_URL) return process.env.API_BASE_URL;
+    if (process.env.FRONTEND_URL) {
+        // Derive API URL from frontend URL (e.g., socialnex.vayunexsolution.com → api.socialnex.vayunexsolution.com)
+        const frontendUrl = process.env.FRONTEND_URL.replace(/\/+$/, '');
+        const parsed = new URL(frontendUrl);
+        return `${parsed.protocol}//api.${parsed.hostname}`;
+    }
+    return 'http://localhost:5000'; // Only for local dev
+}
+const BASE_URL = getBaseUrl();
+console.error(`[MEDIA SERVICE] BASE_URL for temp files: ${BASE_URL}`);
 
 class MediaService {
 
