@@ -7,8 +7,9 @@ const { ApiError, asyncHandler } = require('../middleware/errorHandler');
 const blueskyService = require('../services/blueskyService');
 const linkedinService = require('../services/linkedinService');
 const telegramService = require('../services/telegramService');
-// dialogflowService removed - not yet implemented
 const facebookService = require('../services/facebookService');
+const instagramService = require('../services/instagramService');
+const mediaService = require('../services/mediaService');
 const { query } = require('../config/database');
 const { logger } = require('../utils/logger');
 const crypto = require('crypto');
@@ -496,6 +497,44 @@ const publishPost = asyncHandler(async (req, res) => {
                 } catch (err) {
                     results.push({ platform: 'facebook', name: account.account_name, success: false, error: err.message });
                 }
+            } else if (account.platform === 'instagram') {
+                try {
+                    const postType = req.body.postType || 'post'; // 'post', 'story', 'reel'
+                    let result;
+
+                    if (images.length > 0) {
+                        // Upload to temp storage to get public URLs
+                        const uploaded = await mediaService.uploadMultiple(images);
+                        const publicUrls = uploaded.map(u => u.url);
+                        const filePaths = uploaded.map(u => u.filePath);
+
+                        const isVideo = images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/');
+
+                        if (postType === 'story') {
+                            result = await instagramService.createStory(
+                                account.id, userId, publicUrls[0], isVideo ? 'VIDEO' : 'IMAGE'
+                            );
+                        } else if (postType === 'reel') {
+                            if (!isVideo) throw new Error('Reels require a video file.');
+                            result = await instagramService.createReel(
+                                account.id, userId, publicUrls[0], text.trim()
+                            );
+                        } else {
+                            result = await instagramService.createPost(
+                                account.id, userId, text.trim(), publicUrls
+                            );
+                        }
+
+                        // Schedule cleanup of temp files after processing
+                        mediaService.scheduleCleanup(filePaths, 10 * 60 * 1000);
+                    } else {
+                        throw new Error('Instagram requires at least one image or video.');
+                    }
+
+                    results.push({ platform: 'instagram', name: account.account_name, success: true, data: result });
+                } catch (err) {
+                    results.push({ platform: 'instagram', name: account.account_name, success: false, error: err.message });
+                }
             } else {
                 logger.warn(`Unsupported platform for post: ${account.platform}`);
                 results.push({
@@ -769,6 +808,22 @@ const disconnectFacebook = asyncHandler(async (req, res) => {
     });
 });
 
+// =============================================
+// INSTAGRAM ENDPOINTS
+// =============================================
+
+const disconnectInstagram = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const { accountId } = req.params;
+
+    await instagramService.disconnect(parseInt(accountId), userId);
+
+    res.json({
+        success: true,
+        message: 'Instagram account disconnected.'
+    });
+});
+
 module.exports = {
     getConnectedAccounts,
     connectBluesky,
@@ -789,5 +844,6 @@ module.exports = {
     disconnectLinkedIn,
     getFacebookAuthUrl,
     connectFacebook,
-    disconnectFacebook
+    disconnectFacebook,
+    disconnectInstagram
 };

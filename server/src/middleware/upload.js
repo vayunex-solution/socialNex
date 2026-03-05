@@ -9,14 +9,17 @@ const path = require('path');
 // Use memory storage - files stored as Buffer (no disk writes)
 const storage = multer.memoryStorage();
 
-// File filter - only allow images
+// File filter - allow images and videos
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const allowedTypes = [
+        'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+        'video/mp4', 'video/quicktime', 'video/webm', 'video/mpeg'
+    ];
 
     if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
     } else {
-        cb(new Error('Only JPEG, PNG, GIF, and WebP images are allowed.'), false);
+        cb(new Error('Only JPEG, PNG, GIF, WebP images and MP4, MOV, WebM videos are allowed.'), false);
     }
 };
 
@@ -25,8 +28,8 @@ const upload = multer({
     storage,
     fileFilter,
     limits: {
-        fileSize: 5 * 1024 * 1024, // 5MB max per file
-        files: 4 // Max 4 images (Bluesky limit)
+        fileSize: 50 * 1024 * 1024, // 50MB max per file (for videos)
+        files: 10 // Max 10 files (Instagram carousel limit)
     }
 });
 

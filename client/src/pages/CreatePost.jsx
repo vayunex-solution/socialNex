@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import { generateCaptionFromText, generateCaptionFromImage, improveCaption } from '../services/aiCaptionService'
-import { ImagePlus, X, PenSquare, LayoutDashboard, Send, MessageCircle, Linkedin, Globe, Sparkles, Image, RefreshCw, LogIn, ChevronDown, Check, Clock, CalendarDays, BarChart2, Bell, Rocket, AlertCircle, CheckCircle2, Edit3, ImageIcon, SendHorizontal, BarChart3 } from 'lucide-react'
+import { ImagePlus, X, PenSquare, LayoutDashboard, Send, MessageCircle, Linkedin, Globe, Sparkles, Image, RefreshCw, LogIn, ChevronDown, Check, Clock, CalendarDays, BarChart2, Bell, Rocket, AlertCircle, CheckCircle2, Edit3, ImageIcon, SendHorizontal, BarChart3, Camera, Video } from 'lucide-react'
 import './CreatePost.css'
 
 function CreatePost() {
@@ -15,6 +15,7 @@ function CreatePost() {
     const [result, setResult] = useState(null)
     const [error, setError] = useState('')
     const [discordBotName, setDiscordBotName] = useState('SocialNex')
+    const [postType, setPostType] = useState('post') // 'post', 'story', 'reel'
     const fileInputRef = useRef(null)
 
     // AI Caption state
@@ -32,7 +33,8 @@ function CreatePost() {
         mastodon: 500,
         discord: 2000,
         linkedin: 3000,
-        facebook: 63206
+        facebook: 63206,
+        instagram: 2200
     }
 
     const PLATFORM_ICONS = {
@@ -41,7 +43,8 @@ function CreatePost() {
         mastodon: <MessageCircle size={16} />,
         discord: <MessageCircle size={16} />,
         linkedin: <Linkedin size={16} />,
-        facebook: <Globe size={16} />
+        facebook: <Globe size={16} />,
+        instagram: <Camera size={16} />
     }
 
     useEffect(() => {
@@ -85,17 +88,22 @@ function CreatePost() {
     const charsLeft = charLimit - postText.length
     const isOverLimit = charsLeft < 0
 
-    // Image handling
+    // Media handling (images + videos)
     const handleImageSelect = (e) => {
         const files = Array.from(e.target.files)
+        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+        const allowedVideoTypes = ['video/mp4', 'video/quicktime', 'video/webm']
+        const allAllowed = [...allowedImageTypes, ...allowedVideoTypes]
+
         const validFiles = files.filter(f => {
-            if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(f.type)) return false
-            if (f.size > 5 * 1024 * 1024) return false
+            if (!allAllowed.includes(f.type)) return false
+            if (f.type.startsWith('video/') && f.size > 50 * 1024 * 1024) return false
+            if (f.type.startsWith('image/') && f.size > 10 * 1024 * 1024) return false
             return true
         })
 
-        if (images.length + validFiles.length > 4) {
-            setError('Maximum 4 images allowed.')
+        if (images.length + validFiles.length > 10) {
+            setError('Maximum 10 media files allowed.')
             return
         }
 
@@ -103,7 +111,10 @@ function CreatePost() {
             file,
             preview: URL.createObjectURL(file),
             name: file.name,
-            size: (file.size / 1024).toFixed(1) + ' KB'
+            size: file.size >= 1024 * 1024 
+                ? (file.size / (1024 * 1024)).toFixed(1) + ' MB' 
+                : (file.size / 1024).toFixed(1) + ' KB',
+            isVideo: file.type.startsWith('video/')
         }))
 
         setImages(prev => [...prev, ...newImages])
@@ -242,6 +253,12 @@ function CreatePost() {
                 formData.append('images', img.file)
             })
 
+            // Pass Instagram post type if Instagram is selected
+            const hasInstagram = accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'instagram')
+            if (hasInstagram) {
+                formData.append('postType', postType)
+            }
+
             const response = await fetch(`${API_URL}/social/publish`, {
                 method: 'POST',
                 headers: {
@@ -344,6 +361,52 @@ function CreatePost() {
                             </div>
                         )}
 
+                        {/* Instagram Settings */}
+                        {accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'instagram') && (
+                            <div className="discord-settings">
+                                <div className="discord-settings-header">
+                                    <span className="discord-logo"><Camera size={18} /></span>
+                                    <span>Instagram Post Type</span>
+                                </div>
+                                <div className="discord-settings-body">
+                                    <div className="platform-chips" style={{ marginBottom: '8px' }}>
+                                        <button
+                                            className={`platform-chip ${postType === 'post' ? 'selected' : ''}`}
+                                            onClick={() => setPostType('post')}
+                                            type="button"
+                                        >
+                                            <span className="chip-icon flex-center"><ImagePlus size={14} /></span>
+                                            <span className="chip-name">Photo Post</span>
+                                            {postType === 'post' && <span className="chip-check"><CheckCircle2 size={14} /></span>}
+                                        </button>
+                                        <button
+                                            className={`platform-chip ${postType === 'story' ? 'selected' : ''}`}
+                                            onClick={() => setPostType('story')}
+                                            type="button"
+                                        >
+                                            <span className="chip-icon flex-center"><Camera size={14} /></span>
+                                            <span className="chip-name">Story</span>
+                                            {postType === 'story' && <span className="chip-check"><CheckCircle2 size={14} /></span>}
+                                        </button>
+                                        <button
+                                            className={`platform-chip ${postType === 'reel' ? 'selected' : ''}`}
+                                            onClick={() => setPostType('reel')}
+                                            type="button"
+                                        >
+                                            <span className="chip-icon flex-center"><Video size={14} /></span>
+                                            <span className="chip-name">Reel</span>
+                                            {postType === 'reel' && <span className="chip-check"><CheckCircle2 size={14} /></span>}
+                                        </button>
+                                    </div>
+                                    <p className="discord-hint">
+                                        {postType === 'post' && '📸 Upload one or more images with a caption'}
+                                        {postType === 'story' && '📱 Upload one image or video (disappears after 24hrs)'}
+                                        {postType === 'reel' && '🎬 Upload a video (9:16 recommended, max 15 min)'}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
                         {/* Text area */}
                         <div className="composer-textarea-wrapper">
                             <textarea
@@ -373,17 +436,21 @@ function CreatePost() {
                                 <div className="image-previews">
                                     {images.map((img, index) => (
                                         <div key={index} className="image-preview-item">
-                                            <img src={img.preview} alt={img.name} />
+                                            {img.isVideo ? (
+                                                <video src={img.preview} muted style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                                            ) : (
+                                                <img src={img.preview} alt={img.name} />
+                                            )}
                                             <button
                                                 className="remove-image-btn"
                                                 onClick={() => removeImage(index)}
                                             >
                                                 ✕
                                             </button>
-                                            <span className="image-size">{img.size}</span>
+                                            <span className="image-size">{img.isVideo ? '🎬 ' : ''}{img.size}</span>
                                         </div>
                                     ))}
-                                    {images.length < 4 && (
+                                    {images.length < 10 && (
                                         <button
                                             className="add-more-images"
                                             onClick={() => fileInputRef.current?.click()}
@@ -399,14 +466,14 @@ function CreatePost() {
                                     onClick={() => fileInputRef.current?.click()}
                                 >
                                     <span className="upload-icon flex-center" style={{ marginBottom: '10px' }}><ImagePlus size={32} /></span>
-                                    <p>Drag & drop images here or <strong>click to browse</strong></p>
-                                    <small>JPEG, PNG, GIF, WebP • Max 5MB • Up to 4 images</small>
+                                    <p>Drag & drop media here or <strong>click to browse</strong></p>
+                                    <small>Images: JPEG, PNG, GIF, WebP (10MB) • Videos: MP4, MOV, WebM (50MB) • Up to 10 files</small>
                                 </div>
                             )}
                             <input
                                 ref={fileInputRef}
                                 type="file"
-                                accept="image/jpeg,image/png,image/gif,image/webp"
+                                accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/quicktime,video/webm"
                                 multiple
                                 onChange={handleImageSelect}
                                 style={{ display: 'none' }}

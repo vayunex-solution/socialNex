@@ -27,7 +27,8 @@ const {
     disconnectLinkedIn,
     getFacebookAuthUrl,
     connectFacebook,
-    disconnectFacebook
+    disconnectFacebook,
+    disconnectInstagram
 } = require('../controllers/socialController');
 
 // All routes require authentication
@@ -36,8 +37,8 @@ router.use(protect);
 // Get all connected accounts
 router.get('/accounts', getConnectedAccounts);
 
-// Unified publish (with image support)
-router.post('/publish', upload.array('images', 4), publishPost);
+// Unified publish (with image/video support)
+router.post('/publish', upload.array('images', 10), publishPost);
 
 // Bluesky routes
 router.post('/bluesky/connect', connectBluesky);
@@ -63,5 +64,8 @@ router.delete('/linkedin/:accountId', disconnectLinkedIn);
 router.get('/facebook/auth-url', getFacebookAuthUrl);
 router.post('/facebook/connect', connectFacebook);
 router.delete('/facebook/:accountId', disconnectFacebook);
+
+// Instagram routes (connect auto-happens via Facebook OAuth)
+router.delete('/instagram/:accountId', disconnectInstagram);
 
 module.exports = router;

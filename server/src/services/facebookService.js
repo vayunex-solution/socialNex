@@ -52,7 +52,7 @@ class FacebookService {
      * Generate OAuth URL for Facebook Login
      */
     getAuthUrl(redirectUri, state) {
-        const scopes = 'pages_manage_posts,pages_read_engagement,pages_show_list,public_profile';
+        const scopes = 'pages_manage_posts,pages_read_engagement,pages_show_list,public_profile,instagram_basic,instagram_content_publish,instagram_manage_insights';
         const params = new URLSearchParams({
             client_id: this.appId,
             redirect_uri: redirectUri,
@@ -188,12 +188,21 @@ class FacebookService {
 
         logger.info(`Facebook page connected: ${pageName} for user ${userId}`);
 
+        // 7. Auto-detect linked Instagram Business Account
+        let instagramAccount = null;
+        try {
+            instagramAccount = await this._detectInstagramAccount(pageId, pageAccessToken, pageAvatar, userId);
+        } catch (igErr) {
+            logger.warn(`Instagram auto-detect skipped: ${igErr.message}`);
+        }
+
         return {
             id: result.insertId,
             pageId,
             pageName,
             pageAvatar,
-            reconnected: false
+            reconnected: false,
+            instagram: instagramAccount
         };
     }
 
@@ -277,6 +286,74 @@ class FacebookService {
             throw new Error('Facebook account not found or inactive');
         }
         return accounts[0];
+    }
+
+    /**
+     * Auto-detect Instagram Business Account linked to a Facebook Page
+     * Saves it as a separate 'instagram' platform entry
+     */
+    async _detectInstagramAccount(pageId, pageAccessToken, pageAvatar, userId) {
+        // Fetch Instagram Business Account ID linked to the Page
+        const igRes = await axios.get(`${FB_GRAPH_URL}/${pageId}`, {
+            params: {
+                fields: 'instagram_business_account',
+                access_token: pageAccessToken
+            }
+        });
+
+        const igAccountId = igRes.data?.instagram_business_account?.id;
+        if (!igAccountId) {
+            throw new Error('No Instagram Business Account linked to this Page.');
+        }
+
+        // Fetch Instagram profile info
+        const igProfileRes = await axios.get(`${FB_GRAPH_URL}/${igAccountId}`, {
+            params: {
+                fields: 'id,username,name,profile_picture_url,followers_count',
+                access_token: pageAccessToken
+            }
+        });
+
+        const igProfile = igProfileRes.data;
+        const igUsername = igProfile.username || igProfile.name || igAccountId;
+        const igAvatar = igProfile.profile_picture_url || pageAvatar;
+        const encryptedToken = encrypt(pageAccessToken);
+
+        // Check if this Instagram account already exists
+        const existing = await query(
+            `SELECT id FROM social_accounts WHERE user_id = ? AND platform = 'instagram' AND account_id = ?`,
+            [userId, String(igAccountId)]
+        );
+
+        if (existing.length > 0) {
+            await query(
+                `UPDATE social_accounts SET
+                 account_name = ?, account_username = ?, account_avatar = ?,
+                 access_token = ?, is_active = 1, updated_at = NOW()
+                 WHERE id = ?`,
+                [igProfile.name || igUsername, `@${igUsername}`, igAvatar, encryptedToken, existing[0].id]
+            );
+            logger.info(`Instagram reconnected: @${igUsername} for user ${userId}`);
+            return { id: existing[0].id, reconnected: true, username: igUsername, avatar: igAvatar };
+        }
+
+        // Insert new Instagram account
+        const result = await query(
+            `INSERT INTO social_accounts
+             (user_id, platform, account_id, account_name, account_username, account_avatar,
+              access_token, is_active, connected_at)
+             VALUES (?, 'instagram', ?, ?, ?, ?, ?, 1, NOW())`,
+            [userId, String(igAccountId), igProfile.name || igUsername, `@${igUsername}`, igAvatar, encryptedToken]
+        );
+
+        logger.info(`Instagram connected: @${igUsername} for user ${userId}`);
+        return {
+            id: result.insertId,
+            igAccountId,
+            username: igUsername,
+            avatar: igAvatar,
+            reconnected: false
+        };
     }
 }
 

@@ -3,6 +3,7 @@
  */
 
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -63,6 +64,7 @@ if (process.env.NODE_ENV === 'development') {
 // Static Files
 // ===========================================
 app.use('/uploads', express.static('uploads'));
+app.use('/tmp/uploads', express.static(path.join(__dirname, '../tmp/uploads')));
 
 // ===========================================
 // API Documentation (Swagger)
