@@ -118,12 +118,23 @@ class FacebookService {
             throw new Error('Failed to fetch Facebook user profile.');
         }
 
-        // 4. Get Pages managed by user (with Page Access Tokens)
+        // 4. Debug: Check what permissions were actually granted
+        try {
+            const permRes = await axios.get(`${FB_GRAPH_URL}/${userProfile.id}/permissions`, {
+                params: { access_token: longLivedToken }
+            });
+            logger.info('Facebook granted permissions:', JSON.stringify(permRes.data.data));
+        } catch (e) {
+            logger.warn('Could not fetch permissions debug info:', e.message);
+        }
+
+        // 5. Get Pages managed by user (with Page Access Tokens)
         let pagesData;
         try {
             const pagesRes = await axios.get(`${FB_GRAPH_URL}/${userProfile.id}/accounts`, {
                 params: { access_token: longLivedToken }
             });
+            logger.info(`Facebook pages response: found ${pagesRes.data.data?.length || 0} pages`, JSON.stringify(pagesRes.data));
             pagesData = pagesRes.data.data;
         } catch (err) {
             logger.error('Facebook fetch pages failed:', err.response?.data || err.message);
@@ -131,7 +142,7 @@ class FacebookService {
         }
 
         if (!pagesData || pagesData.length === 0) {
-            throw new Error('No Facebook Pages found for this account. You must manage a Facebook Page to connect.');
+            throw new Error('No Facebook Pages found for this account. You must manage a Facebook Page to connect. Make sure you selected your Page in the Facebook authorization dialog.');
         }
 
         // We'll automatically connect the first page for simplicity in this flow,

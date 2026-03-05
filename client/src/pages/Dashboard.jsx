@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import API_URL from '../config/api'
 import { Link, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin, Globe } from 'lucide-react'
+import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin, Globe, Camera } from 'lucide-react'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
 import ConnectDiscord from '../components/ConnectDiscord'
@@ -261,6 +261,17 @@ function Dashboard() {
                             <div className="connect-card-info">
                                 <span className="connect-card-name">Facebook</span>
                                 <span className="connect-card-desc">Pages & Groups</span>
+                            </div>
+                            <span className="connect-card-arrow">→</span>
+                        </button>
+
+                        <button className="connect-card" onClick={() => setShowConnectFacebook(true)} style={{ borderColor: 'rgba(228, 64, 95, 0.3)' }}>
+                            <div className="connect-card-icon" style={{ background: 'rgba(228, 64, 95, 0.15)', color: '#E4405F' }}>
+                                <Camera size={24} />
+                            </div>
+                            <div className="connect-card-info">
+                                <span className="connect-card-name">Instagram</span>
+                                <span className="connect-card-desc">Auto-connects via Facebook</span>
                             </div>
                             <span className="connect-card-arrow">→</span>
                         </button>
