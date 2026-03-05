@@ -173,17 +173,27 @@ function Dashboard() {
                                     <div className="account-card-stripe"></div>
                                     <div className="account-info">
                                         {acc.avatar ? (
-                                            <img src={acc.avatar} alt={acc.name} className="account-avatar" />
-                                        ) : (
-                                            <div className={`account-avatar-placeholder platform-bg-${acc.platform}`}>
-                                                {acc.platform === 'bluesky' ? <MessageCircle size={22} /> :
-                                                    acc.platform === 'linkedin' ? <Linkedin size={22} /> :
-                                                        acc.platform === 'telegram' ? <Send size={22} /> :
-                                                            acc.platform === 'facebook' ? <Globe size={22} /> :
-                                                                acc.platform === 'instagram' ? <Camera size={22} /> :
-                                                                    <MessageCircle size={22} />}
-                                            </div>
-                                        )}
+                                            <img
+                                                src={acc.avatar}
+                                                alt={acc.name}
+                                                className="account-avatar"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                    e.target.nextSibling && (e.target.nextSibling.style.display = 'flex');
+                                                }}
+                                            />
+                                        ) : null}
+                                        <div
+                                            className={`account-avatar-placeholder platform-bg-${acc.platform}`}
+                                            style={{ display: acc.avatar ? 'none' : 'flex' }}
+                                        >
+                                            {acc.platform === 'bluesky' ? <MessageCircle size={22} /> :
+                                                acc.platform === 'linkedin' ? <Linkedin size={22} /> :
+                                                    acc.platform === 'telegram' ? <Send size={22} /> :
+                                                        acc.platform === 'facebook' ? <Globe size={22} /> :
+                                                            acc.platform === 'instagram' ? <Camera size={22} /> :
+                                                                <MessageCircle size={22} />}
+                                        </div>
                                         <div className="account-details">
                                             <span className="account-name">{acc.name}</span>
                                             <span className="account-username">
