@@ -52,7 +52,7 @@ class FacebookService {
      * Generate OAuth URL for Facebook Login
      */
     getAuthUrl(redirectUri, state) {
-        const scopes = 'pages_manage_posts,pages_read_engagement,pages_show_list,public_profile,instagram_basic,instagram_content_publish,instagram_manage_insights';
+        const scopes = 'pages_manage_posts,pages_read_engagement,pages_show_list,public_profile,business_management,instagram_basic,instagram_content_publish,instagram_manage_insights';
         const params = new URLSearchParams({
             client_id: this.appId,
             redirect_uri: redirectUri,
@@ -144,9 +144,35 @@ class FacebookService {
         }
 
         if (!pagesData || pagesData.length === 0) {
+            // Fallback: Try to find pages through Business Portfolio
+            console.error('[FB DEBUG] Direct accounts empty, trying business pages fallback...');
+            try {
+                const bizRes = await axios.get(`${FB_GRAPH_URL}/${userProfile.id}/businesses`, {
+                    params: { access_token: longLivedToken }
+                });
+                console.error(`[FB DEBUG] Businesses: ${JSON.stringify(bizRes.data)}`);
+                
+                if (bizRes.data.data && bizRes.data.data.length > 0) {
+                    for (const biz of bizRes.data.data) {
+                        const bizPagesRes = await axios.get(`${FB_GRAPH_URL}/${biz.id}/owned_pages`, {
+                            params: { access_token: longLivedToken, fields: 'id,name,access_token,category' }
+                        });
+                        console.error(`[FB DEBUG] Business ${biz.name} pages: ${JSON.stringify(bizPagesRes.data)}`);
+                        if (bizPagesRes.data.data && bizPagesRes.data.data.length > 0) {
+                            pagesData = bizPagesRes.data.data;
+                            break;
+                        }
+                    }
+                }
+            } catch (bizErr) {
+                console.error('[FB DEBUG] Business pages fallback failed:', bizErr.response?.data || bizErr.message);
+            }
+        }
+
+        if (!pagesData || pagesData.length === 0) {
             const permList = grantedPerms.map(p => `${p.permission}:${p.status}`).join(', ');
             const debugMsg = `Permissions=[${permList}] User=${userProfile.name}(${userProfile.id})`;
-            console.error(`[FB DEBUG] No pages found. ${debugMsg}`);
+            console.error(`[FB DEBUG] No pages found even after business fallback. ${debugMsg}`);
             throw new Error(`No Facebook Pages found. Debug: ${debugMsg}`);
         }
 
