@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import { generateCaptionFromText, generateCaptionFromImage, improveCaption } from '../services/aiCaptionService'
-import { ImagePlus, X, PenSquare, LayoutDashboard, Send, MessageCircle, Linkedin, Globe, Sparkles, Image, RefreshCw, LogIn, ChevronDown, Check, Clock, CalendarDays, BarChart2, Bell, Rocket, AlertCircle, CheckCircle2, Edit3, ImageIcon, SendHorizontal, BarChart3, Camera, Video } from 'lucide-react'
+import { ImagePlus, X, PenSquare, LayoutDashboard, Send, MessageCircle, Linkedin, Globe, Sparkles, Image, RefreshCw, LogIn, ChevronDown, Check, Clock, CalendarDays, BarChart2, Bell, Rocket, AlertCircle, CheckCircle2, Edit3, ImageIcon, SendHorizontal, BarChart3, Camera, Video, Youtube } from 'lucide-react'
 import './CreatePost.css'
 
 function CreatePost() {
@@ -30,21 +30,21 @@ function CreatePost() {
     const PLATFORM_LIMITS = {
         bluesky: 300,
         telegram: 4096,
-        mastodon: 500,
         discord: 2000,
         linkedin: 3000,
         facebook: 63206,
-        instagram: 2200
+        instagram: 2200,
+        youtube: 5000
     }
 
     const PLATFORM_ICONS = {
         bluesky: <MessageCircle size={16} />,
         telegram: <Send size={16} />,
-        mastodon: <MessageCircle size={16} />,
         discord: <MessageCircle size={16} />,
         linkedin: <Linkedin size={16} />,
         facebook: <Globe size={16} />,
-        instagram: <Camera size={16} />
+        instagram: <Camera size={16} />,
+        youtube: <Youtube size={16} />
     }
 
     useEffect(() => {

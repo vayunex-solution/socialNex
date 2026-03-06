@@ -115,4 +115,12 @@ app.use('/api/v1', routes);
 app.use(notFound);
 app.use(errorHandler);
 
+// ===========================================
+// Temp Media Cleanup (every 6 hours)
+// ===========================================
+const { cleanupOldFiles } = require('./jobs/mediaCleanup');
+// Run once on startup, then every 6 hours
+cleanupOldFiles();
+setInterval(cleanupOldFiles, 6 * 60 * 60 * 1000);
+
 module.exports = app;
