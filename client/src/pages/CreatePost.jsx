@@ -225,14 +225,28 @@ function CreatePost() {
     }
 
     const handlePost = async () => {
-        if (!postText.trim()) {
-            setError('Post text cannot be empty.')
+        if (!postText.trim() && images.length === 0) {
+            setError('Please add some text or media to post.')
             return
         }
         if (selectedAccounts.length === 0) {
             setError('Please select at least one platform.')
             return
         }
+        
+        const hasYouTube = accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'youtube');
+        if (hasYouTube) {
+            const hasVideo = images.some(img => img.isVideo);
+            if (!hasVideo) {
+                setError('YouTube requires a video file.');
+                return;
+            }
+            if (!youtubeTitle.trim()) {
+                setError('Please enter a Video Title for YouTube.');
+                return;
+            }
+        }
+
         if (isOverLimit) {
             setError(`Post exceeds character limit by ${Math.abs(charsLeft)} characters.`)
             return
@@ -726,7 +740,7 @@ function CreatePost() {
                             <button
                                 className="btn btn-primary btn-lg"
                                 onClick={handlePost}
-                                disabled={loading || !postText.trim() || selectedAccounts.length === 0}
+                                disabled={loading || (!postText.trim() && images.length === 0) || selectedAccounts.length === 0}
                             >
                                 {loading ? (
                                     <span className="loading-spinner"></span>
