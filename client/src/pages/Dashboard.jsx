@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import API_URL from '../config/api'
 import { Link, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin, Globe, Camera } from 'lucide-react'
+import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin, Globe, Camera, Youtube } from 'lucide-react'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
 import ConnectDiscord from '../components/ConnectDiscord'
 import ConnectLinkedIn from '../components/ConnectLinkedIn'
 import ConnectFacebook from '../components/ConnectFacebook'
+import ConnectYouTube from '../components/ConnectYouTube'
 import '../components/ConnectBluesky.css'
 import './Dashboard.css'
 
@@ -17,6 +18,7 @@ function Dashboard() {
     const [showConnectDiscord, setShowConnectDiscord] = useState(false)
     const [showConnectLinkedIn, setShowConnectLinkedIn] = useState(false)
     const [showConnectFacebook, setShowConnectFacebook] = useState(false)
+    const [showConnectYouTube, setShowConnectYouTube] = useState(false)
     const [accounts, setAccounts] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -33,6 +35,8 @@ function Dashboard() {
                 setShowConnectLinkedIn(true)
             } else if (state.startsWith('facebook_')) {
                 setShowConnectFacebook(true)
+            } else if (state.startsWith('youtube_')) {
+                setShowConnectYouTube(true)
             }
         }
     }, [])
@@ -76,6 +80,11 @@ function Dashboard() {
 
     const handleFacebookConnected = (newAccount) => {
         setShowConnectFacebook(false)
+        fetchAccounts()
+    }
+
+    const handleYouTubeConnected = (newAccount) => {
+        setShowConnectYouTube(false)
         fetchAccounts()
     }
 
@@ -192,7 +201,8 @@ function Dashboard() {
                                                     acc.platform === 'telegram' ? <Send size={22} /> :
                                                         acc.platform === 'facebook' ? <Globe size={22} /> :
                                                             acc.platform === 'instagram' ? <Camera size={22} /> :
-                                                                <MessageCircle size={22} />}
+                                                                acc.platform === 'youtube' ? <Youtube size={22} /> :
+                                                                    <MessageCircle size={22} />}
                                         </div>
                                         <div className="account-details">
                                             <span className="account-name">{acc.name}</span>
@@ -287,6 +297,17 @@ function Dashboard() {
                             </div>
                             <span className="connect-card-arrow">→</span>
                         </button>
+
+                        <button className="connect-card" onClick={() => setShowConnectYouTube(true)} style={{ borderColor: 'rgba(255, 0, 0, 0.3)' }}>
+                            <div className="connect-card-icon" style={{ background: 'rgba(255, 0, 0, 0.15)', color: '#FF0000' }}>
+                                <Youtube size={24} />
+                            </div>
+                            <div className="connect-card-info">
+                                <span className="connect-card-name">YouTube</span>
+                                <span className="connect-card-desc">Upload videos & Shorts</span>
+                            </div>
+                            <span className="connect-card-arrow">→</span>
+                        </button>
                     </div>
                 </section>
 
@@ -347,6 +368,14 @@ function Dashboard() {
                 <ConnectFacebook
                     onSuccess={handleFacebookConnected}
                     onClose={() => setShowConnectFacebook(false)}
+                />
+            )}
+
+            {/* Connect YouTube Modal */}
+            {showConnectYouTube && (
+                <ConnectYouTube
+                    onSuccess={handleYouTubeConnected}
+                    onClose={() => setShowConnectYouTube(false)}
                 />
             )}
         </>
