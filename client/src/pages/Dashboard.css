@@ -498,3 +498,103 @@
         grid-template-columns: 1fr 1fr;
     }
 }
+
+/* ============================================
+   Dashboard Premium Enhancements
+   ============================================ */
+
+/* Stagger fade-in for stat cards */
+.dash-stagger-1,
+.dash-stagger-2,
+.dash-stagger-3,
+.dash-stagger-4 {
+    opacity: 0;
+    animation: dashFadeIn 0.5s ease forwards;
+}
+
+.dash-stagger-1 { animation-delay: 0s; }
+.dash-stagger-2 { animation-delay: 0.1s; }
+.dash-stagger-3 { animation-delay: 0.2s; }
+.dash-stagger-4 { animation-delay: 0.3s; }
+
+@keyframes dashFadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Tabular nums for animated counters */
+.stat-card .stat-value {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Platform Health Strip */
+.platform-health-strip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    padding: var(--space-md) var(--space-xl);
+    margin-bottom: var(--space-2xl);
+}
+
+.health-label {
+    font-size: 0.75rem;
+    font-weight: var(--font-bold);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+.health-dots {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.health-dot-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.health-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.health-dot.health-active {
+    background: #34D399;
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+    animation: healthPulse 2s ease-in-out infinite;
+}
+
+.health-dot.health-warning {
+    background: #FBBF24;
+    box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+}
+
+.health-dot.health-error {
+    background: #F87171;
+    box-shadow: 0 0 8px rgba(248, 113, 113, 0.4);
+}
+
+@keyframes healthPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.health-platform-name {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: capitalize;
+    font-weight: var(--font-medium);
+}
+
+/* Greeting bold */
+.dashboard-header p strong {
+    color: var(--accent-light);
+}

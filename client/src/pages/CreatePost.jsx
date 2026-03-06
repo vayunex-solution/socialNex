@@ -3,6 +3,7 @@ import API_URL from '../config/api'
 import { Link } from 'react-router-dom'
 import { generateCaptionFromText, generateCaptionFromImage, improveCaption } from '../services/aiCaptionService'
 import { ImagePlus, X, PenSquare, LayoutDashboard, Send, MessageCircle, Linkedin, Globe, Sparkles, Image, RefreshCw, LogIn, ChevronDown, Check, Clock, CalendarDays, BarChart2, Bell, Rocket, AlertCircle, CheckCircle2, Edit3, ImageIcon, SendHorizontal, BarChart3, Camera, Video, Youtube } from 'lucide-react'
+import FullScreenLoader from '../components/FullScreenLoader'
 import './CreatePost.css'
 
 function CreatePost() {
@@ -17,6 +18,11 @@ function CreatePost() {
     const [discordBotName, setDiscordBotName] = useState('SocialNex')
     const [postType, setPostType] = useState('post') // 'post', 'story', 'reel'
     const fileInputRef = useRef(null)
+
+    // Publish progress state
+    const [publishProgress, setPublishProgress] = useState(-1)
+    const [publishStatus, setPublishStatus] = useState('Publishing...')
+    const [publishActivePlatform, setPublishActivePlatform] = useState(null)
 
     // AI Caption state
     const [showAiPanel, setShowAiPanel] = useState(false)
@@ -234,6 +240,9 @@ function CreatePost() {
         setLoading(true)
         setError('')
         setResult(null)
+        setPublishProgress(0)
+        setPublishStatus('Uploading media...')
+        setPublishActivePlatform(null)
 
         try {
             const token = localStorage.getItem('accessToken')
@@ -259,26 +268,73 @@ function CreatePost() {
                 formData.append('postType', postType)
             }
 
-            const response = await fetch(`${API_URL}/social/publish`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formData
-            })
+            // Get selected platform names for cycling status
+            const selectedPlatforms = accounts
+                .filter(a => selectedAccounts.includes(a.id))
+                .map(a => a.platform)
 
-            const data = await response.json()
+            // Use XMLHttpRequest for upload progress
+            const data = await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest()
+                
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const pct = Math.round((e.loaded / e.total) * 50) // 0-50% is upload
+                        setPublishProgress(pct)
+                        setPublishStatus(pct < 50 ? 'Uploading media...' : 'Processing...')
+                    }
+                }
+
+                xhr.onload = () => {
+                    try {
+                        const res = JSON.parse(xhr.responseText)
+                        resolve(res)
+                    } catch {
+                        reject(new Error('Invalid response'))
+                    }
+                }
+
+                xhr.onerror = () => reject(new Error('Network error'))
+                xhr.open('POST', `${API_URL}/social/publish`)
+                xhr.setRequestHeader('Authorization', `Bearer ${token}`)
+                xhr.send(formData)
+
+                // Cycle through platforms while server processes (50-95%)
+                let platformIdx = 0
+                const cycleInterval = setInterval(() => {
+                    if (xhr.readyState === 4) {
+                        clearInterval(cycleInterval)
+                        setPublishProgress(100)
+                        setPublishStatus('Done!')
+                        return
+                    }
+                    const p = selectedPlatforms[platformIdx % selectedPlatforms.length]
+                    setPublishActivePlatform(p)
+                    setPublishStatus(`Publishing to ${p.charAt(0).toUpperCase() + p.slice(1)}...`)
+                    const fakeProgress = 50 + Math.min((platformIdx + 1) * (45 / selectedPlatforms.length), 45)
+                    setPublishProgress(Math.round(fakeProgress))
+                    platformIdx++
+                }, 1500)
+            })
 
             if (data.success) {
                 setResult(data.data.results)
-                // Clear on full success
-                if (data.data.results.every(r => r.success)) {
-                    setTimeout(() => {
-                        setPostText('')
-                        setImages([])
-                        setResult(null)
-                    }, 3000)
-                }
+                setPublishProgress(100)
+                setPublishStatus('All done! ✅')
+                // Clear after delay
+                setTimeout(() => {
+                    setLoading(false)
+                    setPublishProgress(-1)
+                    setPublishActivePlatform(null)
+                    if (data.data.results.every(r => r.success)) {
+                        setTimeout(() => {
+                            setPostText('')
+                            setImages([])
+                            setResult(null)
+                        }, 3000)
+                    }
+                }, 1200)
+                return
             } else {
                 setError(data.message || 'Publishing failed.')
             }
@@ -286,11 +342,22 @@ function CreatePost() {
             setError('Network error. Check if server is running.')
         } finally {
             setLoading(false)
+            setPublishProgress(-1)
+            setPublishActivePlatform(null)
         }
     }
 
     return (
         <>
+            {/* Full-Screen Publish Loader */}
+            <FullScreenLoader
+                visible={loading}
+                statusText={publishStatus}
+                progress={publishProgress}
+                activePlatform={publishActivePlatform}
+                platforms={accounts.filter(a => selectedAccounts.includes(a.id)).map(a => a.platform)}
+            />
+
             {/* Main Content */}
             < main className="dashboard-main w-full" >
                 <header className="dashboard-header">

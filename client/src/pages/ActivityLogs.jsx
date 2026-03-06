@@ -119,15 +119,25 @@ export default function ActivityLogs() {
 
             {/* Filters */}
             <div className="logs-filters">
-                {FILTERS.map(f => (
-                    <button
-                        key={f}
-                        className={`logs-filter-btn ${filter === f ? 'active' : ''}`}
-                        onClick={() => setFilter(f)}
-                    >
-                        {f}
-                    </button>
-                ))}
+                {FILTERS.map(f => {
+                    // Count per filter
+                    const count = f === 'ALL' ? logs.length
+                        : f === 'LOGIN' ? logs.filter(l => l.action.startsWith('LOGIN') || l.action === 'LOGOUT').length
+                        : f === 'POST' ? logs.filter(l => l.action.startsWith('POST')).length
+                        : f === 'ACCOUNT' ? logs.filter(l => l.action.startsWith('ACCOUNT')).length
+                        : f === 'SECURITY' ? logs.filter(l => ['PASSWORD_CHANGED', 'PASSWORD_RESET', 'EMAIL_VERIFIED'].includes(l.action)).length
+                        : 0
+                    return (
+                        <button
+                            key={f}
+                            className={`logs-filter-btn ${filter === f ? 'active' : ''}`}
+                            onClick={() => setFilter(f)}
+                        >
+                            {f}
+                            {count > 0 && <span className="logs-filter-count">{count}</span>}
+                        </button>
+                    )
+                })}
             </div>
 
             {/* Content */}

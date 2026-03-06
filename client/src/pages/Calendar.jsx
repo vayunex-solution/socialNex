@@ -7,7 +7,10 @@ const PLATFORM_ICONS = {
     bluesky: '🦋',
     telegram: '✈️',
     discord: '🎮',
-    linkedin: '💼'
+    linkedin: '💼',
+    facebook: '📘',
+    instagram: '📷',
+    youtube: '▶️'
 }
 
 const MONTH_NAMES = [

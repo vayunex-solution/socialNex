@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import logoIcon from '../assets/logo-icon.png'
+import FullScreenLoader from '../components/FullScreenLoader'
 import './Auth.css'
 
 import API_URL from '../config/api'
@@ -89,6 +90,7 @@ function Register() {
 
     return (
         <div className="auth-page">
+            <FullScreenLoader visible={loading} statusText="Creating your account..." />
             <div className="auth-container">
                 <div className="auth-card glass-card">
                     {/* Logo */}

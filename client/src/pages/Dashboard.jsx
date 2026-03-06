@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import API_URL from '../config/api'
 import { Link, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin, Globe, Camera, Youtube } from 'lucide-react'
+import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin, Globe, Camera, Youtube, TrendingUp, Zap } from 'lucide-react'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
 import ConnectDiscord from '../components/ConnectDiscord'
@@ -21,25 +21,78 @@ function Dashboard() {
     const [showConnectYouTube, setShowConnectYouTube] = useState(false)
     const [accounts, setAccounts] = useState([])
     const [loading, setLoading] = useState(true)
+    const [stats, setStats] = useState({ totalPosts: 0, successRate: 0, weekPosts: 0, scheduled: 0 })
+    const navigate = useNavigate()
+
+    // Animated counter hook
+    function useCountUp(target, duration = 1200) {
+        const [value, setValue] = useState(0)
+        const ref = useRef(null)
+        useEffect(() => {
+            if (target === 0) { setValue(0); return }
+            let start = 0
+            const startTime = performance.now()
+            function step(now) {
+                const elapsed = now - startTime
+                const progress = Math.min(elapsed / duration, 1)
+                const eased = 1 - Math.pow(1 - progress, 3) // ease-out cubic
+                setValue(Math.round(eased * target))
+                if (progress < 1) ref.current = requestAnimationFrame(step)
+            }
+            ref.current = requestAnimationFrame(step)
+            return () => ref.current && cancelAnimationFrame(ref.current)
+        }, [target, duration])
+        return value
+    }
+
+    // Time-of-day greeting
+    const getGreeting = () => {
+        const h = new Date().getHours()
+        if (h < 12) return 'Good morning'
+        if (h < 17) return 'Good afternoon'
+        return 'Good evening'
+    }
+
+    const animAccounts = useCountUp(accounts.length)
+    const animPosts = useCountUp(stats.totalPosts)
+    const animScheduled = useCountUp(stats.scheduled)
+    const animRate = useCountUp(stats.successRate)
 
     // Fetch connected accounts
     useEffect(() => {
         fetchAccounts()
+        fetchStats()
 
-        // Check for LinkedIn OAuth callback
+        // Check for OAuth callback
         const urlParams = new URLSearchParams(window.location.search)
         const code = urlParams.get('code')
         const state = urlParams.get('state')
         if (code && state && typeof state === 'string') {
-            if (state.startsWith('linkedin_')) {
-                setShowConnectLinkedIn(true)
-            } else if (state.startsWith('facebook_')) {
-                setShowConnectFacebook(true)
-            } else if (state.startsWith('youtube_')) {
-                setShowConnectYouTube(true)
-            }
+            if (state.startsWith('linkedin_')) setShowConnectLinkedIn(true)
+            else if (state.startsWith('facebook_')) setShowConnectFacebook(true)
+            else if (state.startsWith('youtube_')) setShowConnectYouTube(true)
         }
     }, [])
+
+    const fetchStats = async () => {
+        try {
+            const token = localStorage.getItem('accessToken')
+            const res = await fetch(`${API_URL}/analytics/overview`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            const data = await res.json()
+            if (data.success) {
+                setStats({
+                    totalPosts: data.data.totalPosts || 0,
+                    successRate: data.data.successRate || 0,
+                    weekPosts: data.data.weekPosts || 0,
+                    scheduled: data.data.scheduled || 0
+                })
+            }
+        } catch (err) {
+            console.error('Failed to load stats:', err)
+        }
+    }
 
     const fetchAccounts = async () => {
         try {
@@ -103,7 +156,7 @@ function Dashboard() {
         }
     }
 
-    const navigate = useNavigate()
+
 
     const handleLogout = () => {
         localStorage.removeItem('accessToken')
@@ -119,7 +172,7 @@ function Dashboard() {
                 <header className="dashboard-header">
                     <div>
                         <h1 className="flex-center gap-2"><LayoutDashboard size={28} /> Dashboard</h1>
-                        <p>Here's what's happening with your social media.</p>
+                        <p>{getGreeting()}, <strong>{user.fullName?.split(' ')[0] || 'Creator'}</strong>! Here's your command center.</p>
                     </div>
                     <button className="btn btn-primary" onClick={() => navigate('/create-post')}>
                         <PenSquare size={18} style={{ marginRight: '6px' }} />
@@ -129,35 +182,50 @@ function Dashboard() {
 
                 {/* Stats Grid */}
                 <div className="stats-grid">
-                    <div className="stat-card glass-card">
+                    <div className="stat-card glass-card dash-stagger-1">
                         <div className="stat-icon"><Smartphone size={24} /></div>
                         <div className="stat-info">
-                            <span className="stat-value">{accounts.length}</span>
+                            <span className="stat-value">{animAccounts}</span>
                             <span className="stat-label">Connected Accounts</span>
                         </div>
                     </div>
-                    <div className="stat-card glass-card">
-                        <div className="stat-icon"><PenSquare size={24} /></div>
+                    <div className="stat-card glass-card dash-stagger-2">
+                        <div className="stat-icon"><TrendingUp size={24} /></div>
                         <div className="stat-info">
-                            <span className="stat-value">0</span>
-                            <span className="stat-label">Posts Created</span>
+                            <span className="stat-value">{animPosts}</span>
+                            <span className="stat-label">Posts Published</span>
                         </div>
                     </div>
-                    <div className="stat-card glass-card">
+                    <div className="stat-card glass-card dash-stagger-3">
                         <div className="stat-icon"><CalendarDays size={24} /></div>
                         <div className="stat-info">
-                            <span className="stat-value">0</span>
+                            <span className="stat-value">{animScheduled}</span>
                             <span className="stat-label">Scheduled</span>
                         </div>
                     </div>
-                    <div className="stat-card glass-card">
-                        <div className="stat-icon"><BarChart3 size={24} /></div>
+                    <div className="stat-card glass-card dash-stagger-4">
+                        <div className="stat-icon"><Zap size={24} /></div>
                         <div className="stat-info">
-                            <span className="stat-value">0</span>
-                            <span className="stat-label">Total Reach</span>
+                            <span className="stat-value">{animRate}%</span>
+                            <span className="stat-label">Success Rate</span>
                         </div>
                     </div>
                 </div>
+
+                {/* Platform Health Strip */}
+                {accounts.length > 0 && (
+                    <div className="platform-health-strip glass-card">
+                        <span className="health-label">Platform Status</span>
+                        <div className="health-dots">
+                            {accounts.map(acc => (
+                                <div key={acc.id} className="health-dot-item" title={`${acc.platform} — ${acc.name}`}>
+                                    <span className="health-dot health-active" />
+                                    <span className="health-platform-name">{acc.platform}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Connected Accounts */}
                 <section className="accounts-section">

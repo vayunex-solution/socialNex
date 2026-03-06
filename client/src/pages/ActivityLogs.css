@@ -59,6 +59,24 @@
     box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
 }
 
+.logs-filter-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 0.65rem;
+    font-weight: 700;
+    margin-left: 6px;
+}
+
+.logs-filter-btn.active .logs-filter-count {
+    background: rgba(255, 255, 255, 0.2);
+}
+
 /* Loading */
 .logs-loading {
     display: flex;
@@ -112,6 +130,9 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-2xl);
+    max-height: calc(100vh - 280px);
+    overflow-y: auto;
+    padding-right: 4px;
 }
 
 /* Date group */
@@ -159,7 +180,9 @@
 }
 
 .logs-item:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateX(4px);
+    transition: all 0.25s ease;
 }
 
 /* Icon bubble */

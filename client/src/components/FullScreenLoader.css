@@ -1,0 +1,180 @@
+/* ============================================
+   FullScreenLoader — Premium Overlay
+   ============================================ */
+
+/* Overlay */
+.fsl-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 20, 0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+.fsl-overlay.fsl-visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Center Content */
+.fsl-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    max-width: 420px;
+    padding: 48px 40px;
+    animation: fslSlideUp 0.5s ease forwards;
+}
+
+@keyframes fslSlideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+
+/* Platform Icons Row */
+.fsl-icons-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.fsl-icon {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    filter: grayscale(1) brightness(0.6);
+    transition: all 0.4s ease;
+}
+
+.fsl-icon-emoji {
+    font-size: 22px;
+    line-height: 1;
+}
+
+/* Active icon — full color + glow + pulse */
+.fsl-icon.fsl-icon-active {
+    filter: grayscale(0) brightness(1);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--glow-color, #8B5CF6);
+    box-shadow:
+        0 0 20px color-mix(in srgb, var(--glow-color, #8B5CF6) 40%, transparent),
+        0 0 40px color-mix(in srgb, var(--glow-color, #8B5CF6) 15%, transparent);
+    animation: fslPulse 1.5s ease-in-out infinite;
+    transform: scale(1.12);
+}
+
+/* Pulse ring behind active icon */
+.fsl-icon-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 18px;
+    border: 2px solid var(--glow-color, #8B5CF6);
+    opacity: 0.4;
+    animation: fslRingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes fslPulse {
+    0%, 100% { transform: scale(1.12); }
+    50% { transform: scale(1.18); }
+}
+
+@keyframes fslRingPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.1; transform: scale(1.15); }
+}
+
+/* Status Text */
+.fsl-status {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Progress Bar */
+.fsl-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.fsl-progress-track {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.fsl-progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #6366F1, #8B5CF6, #EC4899);
+    background-size: 200% 100%;
+    animation: fslBarShimmer 2s linear infinite;
+    transition: width 0.4s ease;
+}
+
+@keyframes fslBarShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.fsl-progress-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.82rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 36px;
+    text-align: right;
+}
+
+/* Indeterminate Pulse Dots */
+.fsl-pulse-dots {
+    display: flex;
+    gap: 8px;
+}
+
+.fsl-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #8B5CF6;
+    animation: fslDotPulse 1.4s ease-in-out infinite;
+}
+
+.fsl-dot:nth-child(2) { animation-delay: 0.2s; }
+.fsl-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes fslDotPulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .fsl-content { padding: 32px 24px; gap: 20px; }
+    .fsl-icons-row { gap: 10px; }
+    .fsl-icon { width: 40px; height: 40px; border-radius: 10px; }
+    .fsl-icon-emoji { font-size: 18px; }
+    .fsl-status { font-size: 0.95rem; }
+    .fsl-progress-wrap { max-width: 260px; }
+}

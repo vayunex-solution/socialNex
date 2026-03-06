@@ -7,14 +7,20 @@ const PLATFORM_COLORS = {
     bluesky: '#0085FF',
     telegram: '#0088CC',
     discord: '#5865F2',
-    linkedin: '#0077B5'
+    linkedin: '#0077B5',
+    facebook: '#1877F2',
+    instagram: '#E4405F',
+    youtube: '#FF0000'
 }
 
 const PLATFORM_ICONS = {
     bluesky: '🦋',
     telegram: '✈️',
     discord: '🎮',
-    linkedin: '💼'
+    linkedin: '💼',
+    facebook: '📘',
+    instagram: '📷',
+    youtube: '▶️'
 }
 
 function Analytics() {
