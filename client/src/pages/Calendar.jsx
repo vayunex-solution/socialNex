@@ -1,17 +1,8 @@
 import { useState, useEffect } from 'react'
 import API_URL from '../config/api'
 import { ChevronLeft, ChevronRight, CalendarDays, Clock, CheckCircle2 } from 'lucide-react'
+import PlatformIcon from '../components/PlatformIcon'
 import './Calendar.css'
-
-const PLATFORM_ICONS = {
-    bluesky: '🦋',
-    telegram: '✈️',
-    discord: '🎮',
-    linkedin: '💼',
-    facebook: '📘',
-    instagram: '📷',
-    youtube: '▶️'
-}
 
 const MONTH_NAMES = [
     'January', 'February', 'March', 'April', 'May', 'June',

@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './components/LandingPage'
 import AppLayout from './components/AppLayout'
+import TokenRefreshProvider from './components/TokenRefreshProvider'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import { Login, Register, VerifyEmail, Dashboard, ForgotPassword, ResetPassword, CreatePost, Scheduler, Calendar, Analytics, Settings, ActivityLogs, Guide } from './pages'
@@ -27,6 +28,7 @@ function PublicRoute({ children }) {
 
 function App() {
   return (
+    <TokenRefreshProvider>
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<LandingPage />} />
@@ -137,6 +139,7 @@ function App() {
       {/* Catch all - redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </TokenRefreshProvider>
   )
 }
 

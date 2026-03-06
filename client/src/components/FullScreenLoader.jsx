@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import PlatformIcon from './PlatformIcon'
 import './FullScreenLoader.css'
 
 /**
@@ -13,13 +14,13 @@ import './FullScreenLoader.css'
  */
 
 const PLATFORM_DATA = {
-    bluesky: { icon: '🦋', label: 'Bluesky', color: '#0085FF' },
-    telegram: { icon: '✈️', label: 'Telegram', color: '#0088CC' },
-    discord: { icon: '🎮', label: 'Discord', color: '#5865F2' },
-    linkedin: { icon: '💼', label: 'LinkedIn', color: '#0077B5' },
-    facebook: { icon: '📘', label: 'Facebook', color: '#1877F2' },
-    instagram: { icon: '📷', label: 'Instagram', color: '#E4405F' },
-    youtube: { icon: '▶️', label: 'YouTube', color: '#FF0000' },
+    bluesky: { label: 'Bluesky', color: '#0085FF' },
+    telegram: { label: 'Telegram', color: '#0088CC' },
+    discord: { label: 'Discord', color: '#5865F2' },
+    linkedin: { label: 'LinkedIn', color: '#0077B5' },
+    facebook: { label: 'Facebook', color: '#1877F2' },
+    instagram: { label: 'Instagram', color: '#E4405F' },
+    youtube: { label: 'YouTube', color: '#FF0000' },
 }
 
 const DEFAULT_PLATFORMS = ['bluesky', 'telegram', 'discord', 'linkedin', 'facebook', 'instagram', 'youtube']
@@ -67,7 +68,7 @@ export default function FullScreenLoader({
                                 style={isActive ? { '--glow-color': data.color } : {}}
                                 title={data.label}
                             >
-                                <span className="fsl-icon-emoji">{data.icon}</span>
+                                <PlatformIcon platform={p} size={22} colored={isActive} />
                                 {isActive && <span className="fsl-icon-ring" />}
                             </div>
                         )

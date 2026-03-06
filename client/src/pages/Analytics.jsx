@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import API_URL from '../config/api'
 import { BarChart3, TrendingUp, CheckCircle2, AlertCircle, Calendar, Globe, Clock, Activity } from 'lucide-react'
+import PlatformIcon from '../components/PlatformIcon'
 import './Analytics.css'
 
 const PLATFORM_COLORS = {
@@ -13,14 +14,14 @@ const PLATFORM_COLORS = {
     youtube: '#FF0000'
 }
 
-const PLATFORM_ICONS = {
-    bluesky: '🦋',
-    telegram: '✈️',
-    discord: '🎮',
-    linkedin: '💼',
-    facebook: '📘',
-    instagram: '📷',
-    youtube: '▶️'
+const PLATFORM_ICONS_MAP = {
+    bluesky: 'bluesky',
+    telegram: 'telegram',
+    discord: 'discord',
+    linkedin: 'linkedin',
+    facebook: 'facebook',
+    instagram: 'instagram',
+    youtube: 'youtube'
 }
 
 function Analytics() {
@@ -303,7 +304,7 @@ function Analytics() {
                 <div className="glass-card stat-card stat-platform">
                     <div className="stat-icon"><Globe size={20} /></div>
                     <div className="stat-info">
-                        <span className="stat-value">{overview?.topPlatform ? `${PLATFORM_ICONS[overview.topPlatform]} ${overview.topPlatform}` : '—'}</span>
+                        <span className="stat-value" style={{display:'flex',alignItems:'center',gap:'8px'}}>{overview?.topPlatform ? <><PlatformIcon platform={overview.topPlatform} size={20} /> {overview.topPlatform}</> : '—'}</span>
                         <span className="stat-label">Top Platform</span>
                     </div>
                 </div>
@@ -345,7 +346,7 @@ function Analytics() {
                         <div className="platform-stats-list">
                             {platformStats.map(p => (
                                 <div key={p.platform} className="platform-stat-row">
-                                    <span className="platform-stat-icon">{PLATFORM_ICONS[p.platform]}</span>
+                                    <span className="platform-stat-icon"><PlatformIcon platform={p.platform} size={16} /></span>
                                     <span className="platform-stat-name">{p.platform}</span>
                                     <div className="platform-stat-bar-wrap">
                                         <div
@@ -388,7 +389,7 @@ function Analytics() {
                                     <tr key={p.id}>
                                         <td>
                                             <span className="recent-platform">
-                                                {PLATFORM_ICONS[p.platform]} {p.account_name || p.platform}
+                                                <PlatformIcon platform={p.platform} size={16} /> {p.account_name || p.platform}
                                             </span>
                                         </td>
                                         <td className="recent-content">

@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import API_URL from '../config/api'
 import { Link, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, MessageCircle, Send, Linkedin, Globe, Camera, Youtube, TrendingUp, Zap } from 'lucide-react'
+import { LayoutDashboard, Smartphone, PenSquare, CalendarDays, BarChart3, Linkedin, TrendingUp, Zap } from 'lucide-react'
+import PlatformIcon from '../components/PlatformIcon'
 import ConnectBluesky from '../components/ConnectBluesky'
 import ConnectTelegram from '../components/ConnectTelegram'
 import ConnectDiscord from '../components/ConnectDiscord'
@@ -264,13 +265,7 @@ function Dashboard() {
                                             className={`account-avatar-placeholder platform-bg-${acc.platform}`}
                                             style={{ display: acc.avatar ? 'none' : 'flex' }}
                                         >
-                                            {acc.platform === 'bluesky' ? <MessageCircle size={22} /> :
-                                                acc.platform === 'linkedin' ? <Linkedin size={22} /> :
-                                                    acc.platform === 'telegram' ? <Send size={22} /> :
-                                                        acc.platform === 'facebook' ? <Globe size={22} /> :
-                                                            acc.platform === 'instagram' ? <Camera size={22} /> :
-                                                                acc.platform === 'youtube' ? <Youtube size={22} /> :
-                                                                    <MessageCircle size={22} />}
+                                            <PlatformIcon platform={acc.platform} size={22} />
                                         </div>
                                         <div className="account-details">
                                             <span className="account-name">{acc.name}</span>
@@ -302,7 +297,7 @@ function Dashboard() {
                     <div className="connect-grid">
                         <button className="connect-card bluesky" onClick={() => setShowConnectBluesky(true)}>
                             <div className="connect-card-icon bluesky-icon">
-                                <MessageCircle size={24} />
+                                <PlatformIcon platform="bluesky" size={24} />
                             </div>
                             <div className="connect-card-info">
                                 <span className="connect-card-name">Bluesky</span>
@@ -313,7 +308,7 @@ function Dashboard() {
 
                         <button className="connect-card telegram" onClick={() => setShowConnectTelegram(true)}>
                             <div className="connect-card-icon telegram-icon">
-                                <Send size={24} />
+                                <PlatformIcon platform="telegram" size={24} />
                             </div>
                             <div className="connect-card-info">
                                 <span className="connect-card-name">Telegram</span>
@@ -324,7 +319,7 @@ function Dashboard() {
 
                         <button className="connect-card discord" onClick={() => setShowConnectDiscord(true)}>
                             <div className="connect-card-icon discord-icon">
-                                <MessageCircle size={24} />
+                                <PlatformIcon platform="discord" size={24} />
                             </div>
                             <div className="connect-card-info">
                                 <span className="connect-card-name">Discord</span>
@@ -335,7 +330,7 @@ function Dashboard() {
 
                         <button className="connect-card linkedin" onClick={() => setShowConnectLinkedIn(true)}>
                             <div className="connect-card-icon linkedin-icon">
-                                <Linkedin size={24} />
+                                <PlatformIcon platform="linkedin" size={24} />
                             </div>
                             <div className="connect-card-info">
                                 <span className="connect-card-name">LinkedIn</span>
@@ -345,8 +340,8 @@ function Dashboard() {
                         </button>
 
                         <button className="connect-card facebook" onClick={() => setShowConnectFacebook(true)}>
-                            <div className="connect-card-icon facebook-icon" style={{ background: 'rgba(24, 119, 242, 0.15)', color: '#1877F2' }}>
-                                <Globe size={24} />
+                            <div className="connect-card-icon" style={{ background: 'rgba(24, 119, 242, 0.15)' }}>
+                                <PlatformIcon platform="facebook" size={24} />
                             </div>
                             <div className="connect-card-info">
                                 <span className="connect-card-name">Facebook</span>
@@ -356,8 +351,8 @@ function Dashboard() {
                         </button>
 
                         <button className="connect-card" onClick={() => setShowConnectFacebook(true)} style={{ borderColor: 'rgba(228, 64, 95, 0.3)' }}>
-                            <div className="connect-card-icon" style={{ background: 'rgba(228, 64, 95, 0.15)', color: '#E4405F' }}>
-                                <Camera size={24} />
+                            <div className="connect-card-icon" style={{ background: 'rgba(228, 64, 95, 0.15)' }}>
+                                <PlatformIcon platform="instagram" size={24} />
                             </div>
                             <div className="connect-card-info">
                                 <span className="connect-card-name">Instagram</span>
@@ -367,8 +362,8 @@ function Dashboard() {
                         </button>
 
                         <button className="connect-card" onClick={() => setShowConnectYouTube(true)} style={{ borderColor: 'rgba(255, 0, 0, 0.3)' }}>
-                            <div className="connect-card-icon" style={{ background: 'rgba(255, 0, 0, 0.15)', color: '#FF0000' }}>
-                                <Youtube size={24} />
+                            <div className="connect-card-icon" style={{ background: 'rgba(255, 0, 0, 0.15)' }}>
+                                <PlatformIcon platform="youtube" size={24} />
                             </div>
                             <div className="connect-card-info">
                                 <span className="connect-card-name">YouTube</span>

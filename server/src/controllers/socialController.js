@@ -4,6 +4,7 @@
  */
 
 const { ApiError, asyncHandler } = require('../middleware/errorHandler');
+const { logActivity, ACTIONS } = require('../services/activityLogger');
 const blueskyService = require('../services/blueskyService');
 const linkedinService = require('../services/linkedinService');
 const telegramService = require('../services/telegramService');
@@ -100,6 +101,8 @@ const connectBluesky = asyncHandler(async (req, res) => {
     }
 
     const result = await blueskyService.connect(cleanHandle, appPassword, userId);
+
+    logActivity(userId, ACTIONS.ACCOUNT_CONNECTED, 'social_account', result.accountId, { platform: 'bluesky', handle: result.handle });
 
     res.json({
         success: true,
@@ -221,6 +224,9 @@ const disconnectBluesky = asyncHandler(async (req, res) => {
 
     await blueskyService.disconnect(parseInt(accountId), userId);
 
+    const accountRow = await query('SELECT account_name FROM social_accounts WHERE id = ?', [accountId]);
+    logActivity(userId, ACTIONS.ACCOUNT_REMOVED, 'social_account', accountId, { platform: 'bluesky', handle: accountRow[0]?.account_name });
+
     res.json({
         success: true,
         message: 'Bluesky account disconnected.'
@@ -315,6 +321,8 @@ const connectTelegram = asyncHandler(async (req, res) => {
 
     const result = await telegramService.connect(botToken, chatId, userId);
 
+    logActivity(userId, ACTIONS.ACCOUNT_CONNECTED, 'social_account', result.accountId, { platform: 'telegram', name: result.name });
+
     res.json({
         success: true,
         message: result.reconnected
@@ -391,6 +399,9 @@ const disconnectTelegram = asyncHandler(async (req, res) => {
     const { accountId } = req.params;
 
     await telegramService.disconnect(parseInt(accountId), userId);
+
+    const accountRow = await query('SELECT account_name FROM social_accounts WHERE id = ?', [accountId]);
+    logActivity(userId, ACTIONS.ACCOUNT_REMOVED, 'social_account', accountId, { platform: 'telegram', name: accountRow[0]?.account_name });
 
     res.json({
         success: true,
@@ -618,8 +629,15 @@ const publishPost = asyncHandler(async (req, res) => {
             [userId, text.trim(), JSON.stringify({ platforms: results.map(r => r.platform) })]
         );
     } catch (logErr) {
-        logger.warn('Post logging skipped:', logErr.message);
+        logger.error('Failed to log legacy post:', logErr.message);
     }
+
+    // Log to global activity timeline
+    logActivity(userId, ACTIONS.POST_PUBLISHED, 'post', null, {
+        platforms: results.map(r => r.platform),
+        successCount: results.filter(r => r.success).length,
+        failCount: results.filter(r => !r.success).length
+    });
 
     const allSuccess = results.every(r => r.success);
     const anySuccess = results.some(r => r.success);
@@ -692,6 +710,9 @@ const disconnectDiscord = asyncHandler(async (req, res) => {
 
     await discordService.disconnect(parseInt(accountId), userId);
 
+    const accountRow = await query('SELECT account_name FROM social_accounts WHERE id = ?', [accountId]);
+    logActivity(userId, ACTIONS.ACCOUNT_REMOVED, 'social_account', accountId, { platform: 'discord', name: accountRow[0]?.account_name });
+
     res.json({
         success: true,
         message: 'Discord disconnected.'
@@ -750,6 +771,8 @@ const connectLinkedIn = asyncHandler(async (req, res) => {
 
     const result = await linkedinService.connect(code, finalRedirectUri, userId);
 
+    logActivity(userId, ACTIONS.ACCOUNT_CONNECTED, 'social_account', result.accountId, { platform: 'linkedin', name: result.name });
+
     res.json({
         success: true,
         message: result.reconnected
@@ -764,6 +787,9 @@ const disconnectLinkedIn = asyncHandler(async (req, res) => {
     const { accountId } = req.params;
 
     await linkedinService.disconnect(parseInt(accountId), userId);
+
+    const accountRow = await query('SELECT account_name FROM social_accounts WHERE id = ?', [accountId]);
+    logActivity(userId, ACTIONS.ACCOUNT_REMOVED, 'social_account', accountId, { platform: 'linkedin', name: accountRow[0]?.account_name });
 
     res.json({
         success: true,
@@ -805,6 +831,8 @@ const connectFacebook = asyncHandler(async (req, res) => {
 
     const result = await facebookService.connect(code, finalRedirectUri, userId);
 
+    logActivity(userId, ACTIONS.ACCOUNT_CONNECTED, 'social_account', result.accountId, { platform: 'facebook', name: result.name });
+
     res.json({
         success: true,
         message: result.reconnected
@@ -819,6 +847,9 @@ const disconnectFacebook = asyncHandler(async (req, res) => {
     const { accountId } = req.params;
 
     await facebookService.disconnect(parseInt(accountId), userId);
+
+    const accountRow = await query('SELECT account_name FROM social_accounts WHERE id = ?', [accountId]);
+    logActivity(userId, ACTIONS.ACCOUNT_REMOVED, 'social_account', accountId, { platform: 'facebook', name: accountRow[0]?.account_name });
 
     res.json({
         success: true,
@@ -835,6 +866,9 @@ const disconnectInstagram = asyncHandler(async (req, res) => {
     const { accountId } = req.params;
 
     await instagramService.disconnect(parseInt(accountId), userId);
+
+    const accountRow = await query('SELECT account_name FROM social_accounts WHERE id = ?', [accountId]);
+    logActivity(userId, ACTIONS.ACCOUNT_REMOVED, 'social_account', accountId, { platform: 'instagram', name: accountRow[0]?.account_name });
 
     res.json({
         success: true,
@@ -860,6 +894,8 @@ const connectYouTube = asyncHandler(async (req, res) => {
 
     const result = await youtubeService.connect(code, req.user.id);
 
+    logActivity(req.user.id, ACTIONS.ACCOUNT_CONNECTED, 'social_account', result.id, { platform: 'youtube', name: result.channelName });
+
     res.json({
         success: true,
         message: result.reconnected
@@ -878,6 +914,10 @@ const connectYouTube = asyncHandler(async (req, res) => {
 const disconnectYouTube = asyncHandler(async (req, res) => {
     const { accountId } = req.params;
     await youtubeService.disconnect(parseInt(accountId), req.user.id);
+
+    const accountRow = await query('SELECT account_name FROM social_accounts WHERE id = ?', [accountId]);
+    logActivity(req.user.id, ACTIONS.ACCOUNT_REMOVED, 'social_account', accountId, { platform: 'youtube', name: accountRow[0]?.account_name });
+
     res.json({ success: true, message: 'YouTube channel disconnected.' });
 });
 

@@ -84,13 +84,13 @@ const updateNotificationSettings = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'No settings provided to update.');
     }
 
-    values.push(userId);
+    // Ensure row exists first
+    await query('INSERT IGNORE INTO notification_settings (user_id) VALUES (?)', [userId]);
 
+    // Then update
     await query(
-        `INSERT INTO notification_settings (user_id${updates.length ? ', ' + updates.map(u => u.split(' ')[0]).join(', ') : ''})
-         VALUES (?${values.slice(0, -1).map(() => ', ?').join('')})
-         ON DUPLICATE KEY UPDATE ${updates.join(', ')}, updated_at = NOW()`,
-        [userId, ...values]
+        `UPDATE notification_settings SET ${updates.join(', ')}, updated_at = NOW() WHERE user_id = ?`,
+        [...values, userId]
     );
 
     await logActivity(userId, ACTIONS.SETTINGS_UPDATED, null, null, { fields: updates.map(u => u.split(' ')[0]) });
