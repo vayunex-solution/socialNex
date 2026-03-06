@@ -511,78 +511,59 @@ const publishPost = asyncHandler(async (req, res) => {
                 } catch (err) {
                     results.push({ platform: 'linkedin', name: account.account_name, success: false, error: err.message });
                 }
-            } else if (account.platform === 'facebook') {
+            } else if (account.platform === 'facebook' || account.platform === 'instagram') {
                 try {
-                    const postType = req.body.postType || 'post'; // 'post', 'story', 'reel'
-                    let result;
+                    const postTypesStr = req.body.postTypes;
+                    let postTypes = ['post'];
+                    try { if (postTypesStr) postTypes = JSON.parse(postTypesStr) } catch(e){}
 
-                    if (postType === 'story' || postType === 'reel') {
-                        if (images.length === 0) {
-                            throw new Error(`Facebook ${postType} requires a media file.`);
-                        }
-                        
-                        // Upload to temp storage to get public URLs
+                    let finalResults = [];
+                    let publicUrls = [];
+                    let filePaths = [];
+                    const isVideo = images.length > 0 && (images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/'));
+
+                    // Only upload once to temp storage if we need URLs across multiple post types
+                    if (images.length > 0 && postTypes.some(t => t === 'story' || t === 'reel' || account.platform === 'instagram')) {
                         const uploaded = await mediaService.uploadMultiple(images);
-                        const publicUrls = uploaded.map(u => u.url);
-                        const filePaths = uploaded.map(u => u.filePath);
-                        
-                        const isVideo = images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/');
-                        
-                        if (postType === 'reel' && !isVideo) {
-                            throw new Error('Facebook Reels require a video file.');
-                        }
-
-                        // Pass publicUrls to the updated facebookService
-                        result = await facebookService.createPost(account.id, userId, text.trim(), images, postType, publicUrls);
-                        
-                        // Schedule cleanup of temp files
-                        mediaService.scheduleCleanup(filePaths, 10 * 60 * 1000);
-                    } else {
-                        // Standard Photo/Text Post
-                        result = await facebookService.createPost(account.id, userId, text.trim(), images, 'post', []);
+                        publicUrls = uploaded.map(u => u.url);
+                        filePaths = uploaded.map(u => u.filePath);
+                        mediaService.scheduleCleanup(filePaths, 10 * 60 * 1000); // 10 mins cleanup
                     }
 
-                    results.push({ platform: 'facebook', name: account.account_name, success: true, data: result });
-                } catch (err) {
-                    results.push({ platform: 'facebook', name: account.account_name, success: false, error: err.message });
-                }
-            } else if (account.platform === 'instagram') {
-                try {
-                    const postType = req.body.postType || 'post'; // 'post', 'story', 'reel'
-                    let result;
-
-                    if (images.length > 0) {
-                        // Upload to temp storage to get public URLs
-                        const uploaded = await mediaService.uploadMultiple(images);
-                        const publicUrls = uploaded.map(u => u.url);
-                        const filePaths = uploaded.map(u => u.filePath);
-
-                        const isVideo = images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/');
-
-                        if (postType === 'story') {
-                            result = await instagramService.createStory(
-                                account.id, userId, publicUrls[0], isVideo ? 'VIDEO' : 'IMAGE'
-                            );
-                        } else if (postType === 'reel') {
-                            if (!isVideo) throw new Error('Reels require a video file.');
-                            result = await instagramService.createReel(
-                                account.id, userId, publicUrls[0], text.trim()
-                            );
-                        } else {
-                            result = await instagramService.createPost(
-                                account.id, userId, text.trim(), publicUrls
-                            );
+                    // Loop through each selected post type and publish
+                    for (const postType of postTypes) {
+                        let result;
+                        if (account.platform === 'facebook') {
+                            if (postType === 'story' || postType === 'reel') {
+                                if (images.length === 0) throw new Error(`Facebook ${postType} requires a media file.`);
+                                if (postType === 'reel' && !isVideo) throw new Error('Facebook Reels require a video file.');
+                                result = await facebookService.createPost(account.id, userId, text.trim(), images, postType, publicUrls);
+                            } else {
+                                // Standard Photo/Text Post
+                                result = await facebookService.createPost(account.id, userId, text.trim(), images, 'post', []);
+                            }
+                        } else if (account.platform === 'instagram') {
+                            if (images.length === 0) throw new Error('Instagram requires at least one image or video.');
+                            if (postType === 'story') {
+                                result = await instagramService.createStory(account.id, userId, publicUrls[0], isVideo ? 'VIDEO' : 'IMAGE');
+                            } else if (postType === 'reel') {
+                                if (!isVideo) throw new Error('Instagram Reels require a video file.');
+                                result = await instagramService.createReel(account.id, userId, publicUrls[0], text.trim());
+                            } else {
+                                result = await instagramService.createPost(account.id, userId, text.trim(), publicUrls);
+                            }
                         }
-
-                        // Schedule cleanup of temp files after processing
-                        mediaService.scheduleCleanup(filePaths, 10 * 60 * 1000);
-                    } else {
-                        throw new Error('Instagram requires at least one image or video.');
+                        finalResults.push({ type: postType, data: result });
                     }
 
-                    results.push({ platform: 'instagram', name: account.account_name, success: true, data: result });
+                    results.push({ 
+                        platform: account.platform, 
+                        name: account.account_name, 
+                        success: true, 
+                        data: finalResults.length === 1 ? finalResults[0].data : finalResults 
+                    });
                 } catch (err) {
-                    results.push({ platform: 'instagram', name: account.account_name, success: false, error: err.message });
+                    results.push({ platform: account.platform, name: account.account_name, success: false, error: err.message });
                 }
             } else if (account.platform === 'youtube') {
                 try {

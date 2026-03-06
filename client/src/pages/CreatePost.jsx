@@ -18,8 +18,18 @@ function CreatePost() {
     const [discordBotName, setDiscordBotName] = useState('SocialNex')
     const [youtubeTitle, setYoutubeTitle] = useState('')
     const [youtubePostType, setYoutubePostType] = useState('video') // 'video', 'short'
-    const [postType, setPostType] = useState('post') // 'post', 'story', 'reel'
+    const [postTypes, setPostTypes] = useState(['post']) // ['post', 'story', 'reel']
     const fileInputRef = useRef(null)
+
+    const togglePostType = (type) => {
+        setPostTypes(prev => {
+            if (prev.includes(type)) {
+                if (prev.length === 1) return prev; // Keep at least one selected
+                return prev.filter(t => t !== type);
+            }
+            return [...prev, type];
+        });
+    }
 
     // Publish progress state
     const [publishProgress, setPublishProgress] = useState(-1)
@@ -248,6 +258,15 @@ function CreatePost() {
             }
         }
 
+        const hasFBInsta = accounts.some(a => selectedAccounts.includes(a.id) && (a.platform === 'instagram' || a.platform === 'facebook'));
+        if (hasFBInsta) {
+            const hasVideo = images.some(img => img.isVideo);
+            if (postTypes.includes('reel') && !hasVideo) {
+                setError('Reels require a video file.');
+                return;
+            }
+        }
+
         if (isOverLimit) {
             setError(`Post exceeds character limit by ${Math.abs(charsLeft)} characters.`)
             return
@@ -285,10 +304,10 @@ function CreatePost() {
                 formData.append('images', img.file)
             })
 
-            // Pass Instagram post type if Instagram is selected
-            const hasInstagram = accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'instagram')
-            if (hasInstagram) {
-                formData.append('postType', postType)
+            // Pass Instagram/Facebook post types if selected
+            const hasFBInstaPayload = accounts.some(a => selectedAccounts.includes(a.id) && (a.platform === 'instagram' || a.platform === 'facebook'))
+            if (hasFBInstaPayload) {
+                formData.append('postTypes', JSON.stringify(postTypes))
             }
 
             // Get selected platform names for cycling status
@@ -461,37 +480,38 @@ function CreatePost() {
                                 <div className="discord-settings-body">
                                     <div className="platform-chips" style={{ marginBottom: '8px' }}>
                                         <button
-                                            className={`platform-chip ${postType === 'post' ? 'selected' : ''}`}
-                                            onClick={() => setPostType('post')}
+                                            className={`platform-chip ${postTypes.includes('post') ? 'selected' : ''}`}
+                                            onClick={() => togglePostType('post')}
                                             type="button"
                                         >
                                             <span className="chip-icon flex-center"><ImagePlus size={14} /></span>
                                             <span className="chip-name">Photo Post</span>
-                                            {postType === 'post' && <span className="chip-check"><CheckCircle2 size={14} /></span>}
+                                            {postTypes.includes('post') && <span className="chip-check"><CheckCircle2 size={14} /></span>}
                                         </button>
                                         <button
-                                            className={`platform-chip ${postType === 'story' ? 'selected' : ''}`}
-                                            onClick={() => setPostType('story')}
+                                            className={`platform-chip ${postTypes.includes('story') ? 'selected' : ''}`}
+                                            onClick={() => togglePostType('story')}
                                             type="button"
                                         >
                                             <span className="chip-icon flex-center"><Camera size={14} /></span>
                                             <span className="chip-name">Story</span>
-                                            {postType === 'story' && <span className="chip-check"><CheckCircle2 size={14} /></span>}
+                                            {postTypes.includes('story') && <span className="chip-check"><CheckCircle2 size={14} /></span>}
                                         </button>
                                         <button
-                                            className={`platform-chip ${postType === 'reel' ? 'selected' : ''}`}
-                                            onClick={() => setPostType('reel')}
+                                            className={`platform-chip ${postTypes.includes('reel') ? 'selected' : ''}`}
+                                            onClick={() => togglePostType('reel')}
                                             type="button"
                                         >
                                             <span className="chip-icon flex-center"><Video size={14} /></span>
                                             <span className="chip-name">Reel</span>
-                                            {postType === 'reel' && <span className="chip-check"><CheckCircle2 size={14} /></span>}
+                                            {postTypes.includes('reel') && <span className="chip-check"><CheckCircle2 size={14} /></span>}
                                         </button>
                                     </div>
                                     <p className="discord-hint">
-                                        {postType === 'post' && '📸 Upload one or more images with a caption'}
-                                        {postType === 'story' && '📱 Upload one image or video (disappears after 24hrs)'}
-                                        {postType === 'reel' && '🎬 Upload a video (9:16 recommended, max 15 min)'}
+                                        💡 You can select multiple formats to publish them simultaneously.<br/>
+                                        {postTypes.includes('post') && <span>📸 Standard Post (Photo/Text)<br/></span>}
+                                        {postTypes.includes('story') && <span>📱 Story (1 Photo/Video, 24hrs)<br/></span>}
+                                        {postTypes.includes('reel') && <span>🎬 Reel (Video required, 9:16)<br/></span>}
                                     </p>
                                 </div>
                             </div>
@@ -780,6 +800,19 @@ function CreatePost() {
 
                     {/* Preview */}
                     <div className="preview-section">
+                        {/* Tagging Tips Card */}
+                        <div className="preview-card glass-card" style={{ marginBottom: '16px', background: 'rgba(59, 130, 246, 0.05)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                            <h3 style={{ fontSize: '14px', marginBottom: '8px', color: '#60a5fa', display: 'flex', alignItems: 'center', gap: '6px' }}><Sparkles size={16} /> Tagging & Mentioning Guide</h3>
+                            <div className="discord-hint" style={{ fontSize: '13px', lineHeight: '1.6' }}>
+                                <p>To mention or tag pages/users across platforms, simply use the <b>@username</b> format in your post text.</p>
+                                <ul style={{ paddingLeft: '20px', marginTop: '6px', opacity: 0.9 }}>
+                                    <li><b>Facebook / Insta:</b> Tag accounts like <span style={{color: '#60a5fa'}}>@nike</span></li>
+                                    <li><b>LinkedIn / X:</b> Profiles are auto-linked if handles match perfectly.</li>
+                                    <li><b>YouTube:</b> Mention channels using <span style={{color: '#60a5fa'}}>@ChannelName</span> in the description.</li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div className="preview-card glass-card">
                             <h3>📋 Preview</h3>
                             <div className="preview-content">
