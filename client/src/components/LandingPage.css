@@ -1536,3 +1536,181 @@
     
     .lp-platform-name { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   THEME TOGGLE BUTTON (Navbar)
+   ═══════════════════════════════════════════════════════════ */
+.lp-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #B8B8D1;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
+.lp-theme-toggle:hover {
+    background: rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.4);
+    color: #818CF8;
+    transform: rotate(15deg) scale(1.05);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FIRST-VISIT THEME PICKER POPUP
+   ═══════════════════════════════════════════════════════════ */
+.lp-theme-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 9999;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 40px;
+    animation: lp-popup-in 0.3s ease;
+}
+@media (min-width: 600px) {
+    .lp-theme-popup-overlay {
+        align-items: center;
+        padding-bottom: 0;
+    }
+}
+@keyframes lp-popup-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.lp-theme-popup {
+    background: #1A1A2E;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 32px 28px 24px;
+    width: min(400px, 92vw);
+    text-align: center;
+    animation: lp-popup-slide 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99,102,241,0.15);
+}
+@keyframes lp-popup-slide {
+    from { transform: translateY(30px) scale(0.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.lp-theme-popup-icon {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+    animation: lp-popup-wink 1.5s ease infinite;
+}
+@keyframes lp-popup-wink {
+    0%, 80%, 100% { transform: scale(1); }
+    90%            { transform: scale(1.15) rotate(-5deg); }
+}
+
+.lp-theme-popup-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    font-family: 'Outfit', 'Inter', sans-serif;
+}
+.lp-theme-popup-sub {
+    font-size: 0.9rem;
+    color: #818098;
+    margin-bottom: 24px;
+}
+
+.lp-theme-popup-options {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.lp-theme-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 12px;
+    border-radius: 16px;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #B8B8D1;
+}
+.lp-theme-option:hover {
+    border-color: rgba(99,102,241,0.5);
+    background: rgba(99,102,241,0.08);
+    color: #fff;
+    transform: translateY(-3px);
+}
+.lp-theme-option.active {
+    border-color: #6366F1;
+    background: rgba(99,102,241,0.15);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(99,102,241,0.2);
+}
+.lp-theme-option span {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: inherit;
+}
+.lp-theme-option small {
+    font-size: 0.75rem;
+    color: #666;
+}
+.lp-theme-option.active small {
+    color: #A5B4FC;
+}
+
+.lp-theme-popup-skip {
+    font-size: 0.82rem;
+    color: #555;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+.lp-theme-popup-skip:hover {
+    color: #888;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LIGHT MODE — Landing Page Overrides
+   ═══════════════════════════════════════════════════════════ */
+.light-mode .lp {
+    background: #F8FAFC;
+    color: #1E293B;
+}
+.light-mode .lp-theme-popup {
+    background: #FFFFFF;
+    border-color: rgba(0,0,0,0.08);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.12);
+}
+.light-mode .lp-theme-popup-title { color: #0F172A; }
+.light-mode .lp-theme-option {
+    border-color: rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.02);
+    color: #334155;
+}
+.light-mode .lp-theme-option.active {
+    background: rgba(99,102,241,0.08);
+    border-color: #6366F1;
+    color: #1E293B;
+}
+.light-mode .lp-theme-toggle {
+    background: rgba(0,0,0,0.06);
+    border-color: rgba(0,0,0,0.1);
+    color: #334155;
+}
+.light-mode .lp-theme-toggle:hover {
+    background: rgba(99,102,241,0.1);
+    color: #6366F1;
+}
