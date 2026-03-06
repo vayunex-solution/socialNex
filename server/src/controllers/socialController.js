@@ -9,10 +9,12 @@ const linkedinService = require('../services/linkedinService');
 const telegramService = require('../services/telegramService');
 const facebookService = require('../services/facebookService');
 const instagramService = require('../services/instagramService');
+const youtubeService = require('../services/youtubeService');
 const mediaService = require('../services/mediaService');
 const { query } = require('../config/database');
 const { logger } = require('../utils/logger');
 const crypto = require('crypto');
+
 
 /**
  * @swagger
@@ -824,6 +826,87 @@ const disconnectInstagram = asyncHandler(async (req, res) => {
     });
 });
 
+/* ═══════════════════════════════════════════════════════════
+   YOUTUBE CONTROLLERS
+   ═══════════════════════════════════════════════════════════ */
+
+/** GET /youtube/auth-url — Returns Google OAuth URL */
+const getYouTubeAuthUrl = asyncHandler(async (req, res) => {
+    const state = `youtube_${req.user.id}_${Date.now()}_${crypto.randomBytes(8).toString('hex')}`;
+    const url = youtubeService.getAuthUrl(state);
+    res.json({ success: true, data: { url, state } });
+});
+
+/** POST /youtube/connect — Exchange OAuth code and save channel */
+const connectYouTube = asyncHandler(async (req, res) => {
+    const { code } = req.body;
+    if (!code) throw new ApiError(400, 'Authorization code is required.');
+
+    const result = await youtubeService.connect(code, req.user.id);
+
+    res.json({
+        success: true,
+        message: result.reconnected
+            ? 'YouTube channel reconnected successfully!'
+            : 'YouTube channel connected successfully!',
+        data: {
+            id: result.id,
+            channelName: result.channelName,
+            channelAvatar: result.channelAvatar,
+            reconnected: result.reconnected
+        }
+    });
+});
+
+/** DELETE /youtube/:accountId — Disconnect YouTube */
+const disconnectYouTube = asyncHandler(async (req, res) => {
+    const { accountId } = req.params;
+    await youtubeService.disconnect(parseInt(accountId), req.user.id);
+    res.json({ success: true, message: 'YouTube channel disconnected.' });
+});
+
+/** POST /youtube/:accountId/upload — Upload a video */
+const uploadYouTubeVideo = asyncHandler(async (req, res) => {
+    const { accountId } = req.params;
+    const { title, description, tags, privacy, categoryId } = req.body;
+
+    // Video file comes from multer upload middleware
+    const videoFile = req.files?.find(f => f.fieldname === 'video') || req.file;
+    if (!videoFile) throw new ApiError(400, 'Video file is required.');
+
+    const thumbnailFile = req.files?.find(f => f.fieldname === 'thumbnail');
+
+    const result = await youtubeService.uploadVideo(parseInt(accountId), req.user.id, {
+        videoPath: videoFile.path,
+        title,
+        description,
+        tags: tags ? (Array.isArray(tags) ? tags : tags.split(',').map(t => t.trim())) : [],
+        privacy: privacy || 'public',
+        categoryId: categoryId || '22',
+        thumbnailPath: thumbnailFile?.path || null
+    });
+
+    res.json({
+        success: true,
+        message: 'Video uploaded to YouTube successfully!',
+        data: result
+    });
+});
+
+/** GET /youtube/:accountId/stats — Channel statistics */
+const getYouTubeChannelStats = asyncHandler(async (req, res) => {
+    const { accountId } = req.params;
+    const stats = await youtubeService.getChannelStats(parseInt(accountId), req.user.id);
+    res.json({ success: true, data: stats });
+});
+
+/** GET /youtube/:accountId/video/:videoId/status — Video processing status */
+const getYouTubeVideoStatus = asyncHandler(async (req, res) => {
+    const { accountId, videoId } = req.params;
+    const status = await youtubeService.getVideoStatus(parseInt(accountId), req.user.id, videoId);
+    res.json({ success: true, data: status });
+});
+
 module.exports = {
     getConnectedAccounts,
     connectBluesky,
@@ -845,5 +928,13 @@ module.exports = {
     getFacebookAuthUrl,
     connectFacebook,
     disconnectFacebook,
-    disconnectInstagram
+    disconnectInstagram,
+    // YouTube
+    getYouTubeAuthUrl,
+    connectYouTube,
+    disconnectYouTube,
+    uploadYouTubeVideo,
+    getYouTubeChannelStats,
+    getYouTubeVideoStatus
 };
+
