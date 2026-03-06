@@ -451,12 +451,12 @@ function CreatePost() {
                             </div>
                         )}
 
-                        {/* Instagram Settings */}
-                        {accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'instagram') && (
+                        {/* Facebook & Instagram Settings */}
+                        {accounts.some(a => selectedAccounts.includes(a.id) && (a.platform === 'instagram' || a.platform === 'facebook')) && (
                             <div className="discord-settings">
                                 <div className="discord-settings-header">
                                     <span className="discord-logo"><Camera size={18} /></span>
-                                    <span>Instagram Post Type</span>
+                                    <span>Facebook & Instagram Post Type</span>
                                 </div>
                                 <div className="discord-settings-body">
                                     <div className="platform-chips" style={{ marginBottom: '8px' }}>

@@ -513,7 +513,35 @@ const publishPost = asyncHandler(async (req, res) => {
                 }
             } else if (account.platform === 'facebook') {
                 try {
-                    const result = await facebookService.createPost(account.id, userId, text.trim(), images);
+                    const postType = req.body.postType || 'post'; // 'post', 'story', 'reel'
+                    let result;
+
+                    if (postType === 'story' || postType === 'reel') {
+                        if (images.length === 0) {
+                            throw new Error(`Facebook ${postType} requires a media file.`);
+                        }
+                        
+                        // Upload to temp storage to get public URLs
+                        const uploaded = await mediaService.uploadMultiple(images);
+                        const publicUrls = uploaded.map(u => u.url);
+                        const filePaths = uploaded.map(u => u.filePath);
+                        
+                        const isVideo = images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/');
+                        
+                        if (postType === 'reel' && !isVideo) {
+                            throw new Error('Facebook Reels require a video file.');
+                        }
+
+                        // Pass publicUrls to the updated facebookService
+                        result = await facebookService.createPost(account.id, userId, text.trim(), images, postType, publicUrls);
+                        
+                        // Schedule cleanup of temp files
+                        mediaService.scheduleCleanup(filePaths, 10 * 60 * 1000);
+                    } else {
+                        // Standard Photo/Text Post
+                        result = await facebookService.createPost(account.id, userId, text.trim(), images, 'post', []);
+                    }
+
                     results.push({ platform: 'facebook', name: account.account_name, success: true, data: result });
                 } catch (err) {
                     results.push({ platform: 'facebook', name: account.account_name, success: false, error: err.message });

@@ -255,9 +255,9 @@ class FacebookService {
     }
 
     /**
-     * Create a post to the Facebook Page
+     * Create a post, story, or reel to the Facebook Page
      */
-    async createPost(accountId, userId, text, images = []) {
+    async createPost(accountId, userId, text, images = [], postType = 'post', publicUrls = []) {
         const account = await this._getAccount(accountId, userId);
         const accessToken = decrypt(account.access_token);
 
@@ -269,15 +269,63 @@ class FacebookService {
 
         try {
             let response;
+            
+            // Post Type: REEL
+            if (postType === 'reel') {
+                if (!publicUrls || publicUrls.length === 0) {
+                    throw new Error('Reels require a video URL.');
+                }
+                
+                // Step 1: Initialize upload
+                const initRes = await axios.post(`${FB_GRAPH_URL}/${pageId}/video_reels?access_token=${accessToken}`, {
+                    upload_phase: 'start'
+                });
+                
+                const videoId = initRes.data.video_id;
+                
+                // Step 2: Upload video using public URL
+                await axios.post(`${FB_GRAPH_URL}/${pageId}/video_reels?access_token=${accessToken}`, {
+                    upload_phase: 'transfer',
+                    video_id: videoId,
+                    file_url: publicUrls[0]
+                });
+                
+                // Step 3: Publish Reel
+                response = await axios.post(`${FB_GRAPH_URL}/${pageId}/video_reels?access_token=${accessToken}`, {
+                    upload_phase: 'finish',
+                    video_id: videoId,
+                    video_state: 'PUBLISHED',
+                    description: text || ''
+                });
 
+                logger.info(`Facebook Reel published by user ${userId} on page ${pageId}. Reel ID: ${videoId}`);
+                return { postId: videoId, success: true };
+            }
+            
+            // Post Type: STORY
+            if (postType === 'story') {
+                if (!publicUrls || publicUrls.length === 0) {
+                    throw new Error('Stories require a media URL.');
+                }
+                
+                const isVideo = publicUrls[0].match(/\.(mp4|mov|webm)$/i);
+                
+                // Single step publish for Stories via photo or video URL
+                const endpoint = isVideo ? `${FB_GRAPH_URL}/${pageId}/video_stories` : `${FB_GRAPH_URL}/${pageId}/photo_stories`;
+                const payload = isVideo ? { video_url: publicUrls[0] } : { photo_url: publicUrls[0] };
+                
+                response = await axios.post(`${endpoint}?access_token=${accessToken}`, payload);
+                
+                logger.info(`Facebook Story published by user ${userId} on page ${pageId}. Story ID: ${response.data.id}`);
+                return { postId: response.data.id, success: true };
+            }
+
+            // Post Type: STANDARD POST
             // If images exist, use the /photos endpoint for the first image
-            // Note: For multiple images, FB Graph API requires bulk publishing which is complex.
-            // We'll handle a single image post here as the standard flow.
             if (images && images.length > 0) {
                 const img = images[0];
                 const formData = new FormData();
                 formData.append('message', text || '');
-                // FormData needs a buffer and filename
                 formData.append('source', img.data, {
                     filename: 'upload.jpg',
                     contentType: img.mimeType || 'image/jpeg'
