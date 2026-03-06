@@ -16,6 +16,7 @@ function CreatePost() {
     const [result, setResult] = useState(null)
     const [error, setError] = useState('')
     const [discordBotName, setDiscordBotName] = useState('SocialNex')
+    const [youtubeTitle, setYoutubeTitle] = useState('')
     const [postType, setPostType] = useState('post') // 'post', 'story', 'reel'
     const fileInputRef = useRef(null)
 
@@ -117,8 +118,8 @@ function CreatePost() {
             file,
             preview: URL.createObjectURL(file),
             name: file.name,
-            size: file.size >= 1024 * 1024 
-                ? (file.size / (1024 * 1024)).toFixed(1) + ' MB' 
+            size: file.size >= 1024 * 1024
+                ? (file.size / (1024 * 1024)).toFixed(1) + ' MB'
                 : (file.size / 1024).toFixed(1) + ' KB',
             isVideo: file.type.startsWith('video/')
         }))
@@ -258,6 +259,12 @@ function CreatePost() {
                 formData.append('discordBotName', discordBotName.trim())
             }
 
+            // Pass YouTube title if YouTube is selected
+            const hasYouTube = accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'youtube')
+            if (hasYouTube && youtubeTitle.trim()) {
+                formData.append('youtubeTitle', youtubeTitle.trim())
+            }
+
             images.forEach(img => {
                 formData.append('images', img.file)
             })
@@ -276,7 +283,7 @@ function CreatePost() {
             // Use XMLHttpRequest for upload progress
             const data = await new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest()
-                
+
                 xhr.upload.onprogress = (e) => {
                     if (e.lengthComputable) {
                         const pct = Math.round((e.loaded / e.total) * 50) // 0-50% is upload
@@ -470,6 +477,33 @@ function CreatePost() {
                                         {postType === 'story' && '📱 Upload one image or video (disappears after 24hrs)'}
                                         {postType === 'reel' && '🎬 Upload a video (9:16 recommended, max 15 min)'}
                                     </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* YouTube Settings */}
+                        {accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'youtube') && (
+                            <div className="discord-settings">
+                                <div className="discord-settings-header">
+                                    <span className="discord-logo"><Youtube size={18} /></span>
+                                    <span>YouTube Settings</span>
+                                </div>
+                                <div className="discord-settings-body">
+                                    <div className="discord-preview-row">
+                                        <div className="discord-name-field" style={{ width: '100%' }}>
+                                            <label htmlFor="youtubeTitle">Video Title</label>
+                                            <input
+                                                id="youtubeTitle"
+                                                type="text"
+                                                className="form-input discord-name-input"
+                                                value={youtubeTitle}
+                                                onChange={(e) => setYoutubeTitle(e.target.value)}
+                                                placeholder="Enter video title..."
+                                                maxLength={100}
+                                            />
+                                        </div>
+                                    </div>
+                                    <p className="discord-hint">YouTube requires a title and a video file. Your post text will be used as the video description.</p>
                                 </div>
                             </div>
                         )}
@@ -697,7 +731,7 @@ function CreatePost() {
                                 {loading ? (
                                     <span className="loading-spinner"></span>
                                 ) : (
-                                    <><Rocket size={20} style={{ marginRight: '8px' }} /> Publish {images.length > 0 ? `(${images.length} image${images.length > 1 ? 's' : ''})` : 'Now'}</>
+                                    <><Rocket size={20} style={{ marginRight: '8px' }} /> Publish {images.length > 0 ? `(${images.length} media file${images.length > 1 ? 's' : ''})` : 'Now'}</>
                                 )}
                             </button>
                         </div>

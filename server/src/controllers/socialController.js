@@ -556,6 +556,27 @@ const publishPost = asyncHandler(async (req, res) => {
                 } catch (err) {
                     results.push({ platform: 'instagram', name: account.account_name, success: false, error: err.message });
                 }
+            } else if (account.platform === 'youtube') {
+                try {
+                    const isVideo = images.length > 0 && (images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/'));
+                    if (!isVideo) throw new Error('YouTube requires a video file.');
+
+                    const youtubeTitle = req.body.youtubeTitle || text.trim().substring(0, 100) || 'SocialNex Upload';
+
+                    const result = await youtubeService.uploadVideo(account.id, userId, {
+                        videoPath: images[0].filePath,
+                        title: youtubeTitle,
+                        description: text.trim(),
+                        tags: [],
+                        privacy: 'public',
+                        categoryId: '22',
+                        thumbnailPath: null
+                    });
+                    
+                    results.push({ platform: 'youtube', name: account.account_name, success: true, data: result });
+                } catch (err) {
+                    results.push({ platform: 'youtube', name: account.account_name, success: false, error: err.message });
+                }
             } else {
                 logger.warn(`Unsupported platform for post: ${account.platform}`);
                 results.push({
