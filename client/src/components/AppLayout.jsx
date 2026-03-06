@@ -3,11 +3,10 @@ import { Link, useLocation } from 'react-router-dom'
 import {
     LayoutDashboard, PenSquare, CalendarDays, Clock, BarChart3,
     Settings, LogOut, Activity, MoreHorizontal, X, Bell,
-    HelpCircle, ChevronRight, User, Sun, Moon
+    HelpCircle, ChevronRight, User
 } from 'lucide-react'
 import logoIcon from '../assets/logo-icon.png'
 import FloatingSupport from './FloatingSupport'
-import { useTheme } from '../context/ThemeContext'
 import './AppLayout.css'
 
 function AppLayout({ children }) {
@@ -15,7 +14,6 @@ function AppLayout({ children }) {
     const path = location.pathname
     const [moreOpen, setMoreOpen] = useState(false)
     const [user, setUser] = useState({})
-    const { theme, toggleTheme } = useTheme()
 
     useEffect(() => {
         try {
@@ -110,9 +108,6 @@ function AppLayout({ children }) {
                         </h2>
                     </div>
                     <div className="header-right">
-                        <button className="header-icon-btn" onClick={toggleTheme} title="Toggle Theme">
-                            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-                        </button>
                         <button className="header-icon-btn" title="Notifications">
                             <Bell size={20} />
                             <span className="header-notif-dot"></span>
@@ -142,9 +137,6 @@ function AppLayout({ children }) {
                         </span>
                     </Link>
                     <div className="mobile-header-right">
-                        <button className="header-icon-btn" onClick={toggleTheme} title="Toggle Theme">
-                            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-                        </button>
                         <button className="header-icon-btn mobile-notif" title="Notifications">
                             <Bell size={18} />
                         </button>
