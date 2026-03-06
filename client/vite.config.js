@@ -7,5 +7,17 @@ export default defineConfig({
   plugins: [react(), basicSsl()],
   server: {
     https: true,
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          lucide: ['lucide-react'],
+          axios: ['axios']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 800
   }
 })

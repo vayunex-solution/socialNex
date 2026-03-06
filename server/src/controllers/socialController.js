@@ -561,13 +561,23 @@ const publishPost = asyncHandler(async (req, res) => {
                     const isVideo = images.length > 0 && (images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/'));
                     if (!isVideo) throw new Error('YouTube requires a video file.');
 
-                    const youtubeTitle = req.body.youtubeTitle || text.trim().substring(0, 100) || 'SocialNex Upload';
+                    const youtubePostType = req.body.youtubePostType || 'video';
+                    let youtubeTitle = req.body.youtubeTitle || text.trim().substring(0, 100) || 'SocialNex Upload';
+
+                    if (youtubePostType === 'short' && !youtubeTitle.toLowerCase().includes('#shorts')) {
+                        // Ensure title fits within 100 chars, leaving room for ' #Shorts' (8 chars)
+                        if (youtubeTitle.length > 92) {
+                            youtubeTitle = youtubeTitle.substring(0, 89) + '... #Shorts';
+                        } else {
+                            youtubeTitle += ' #Shorts';
+                        }
+                    }
 
                     const result = await youtubeService.uploadVideo(account.id, userId, {
                         videoPath: images[0].filePath,
                         title: youtubeTitle,
                         description: text.trim(),
-                        tags: [],
+                        tags: youtubePostType === 'short' ? ['shorts'] : [],
                         privacy: 'public',
                         categoryId: '22',
                         thumbnailPath: null

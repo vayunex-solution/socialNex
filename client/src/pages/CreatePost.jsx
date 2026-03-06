@@ -13,10 +13,10 @@ function CreatePost() {
     const [images, setImages] = useState([])
     const [loading, setLoading] = useState(false)
     const [loadingAccounts, setLoadingAccounts] = useState(true)
-    const [result, setResult] = useState(null)
     const [error, setError] = useState('')
     const [discordBotName, setDiscordBotName] = useState('SocialNex')
     const [youtubeTitle, setYoutubeTitle] = useState('')
+    const [youtubePostType, setYoutubePostType] = useState('video') // 'video', 'short'
     const [postType, setPostType] = useState('post') // 'post', 'story', 'reel'
     const fileInputRef = useRef(null)
 
@@ -233,7 +233,7 @@ function CreatePost() {
             setError('Please select at least one platform.')
             return
         }
-        
+
         const hasYouTube = accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'youtube');
         if (hasYouTube) {
             const hasVideo = images.some(img => img.isVideo);
@@ -273,10 +273,11 @@ function CreatePost() {
                 formData.append('discordBotName', discordBotName.trim())
             }
 
-            // Pass YouTube title if YouTube is selected
+            // Pass YouTube title and type if YouTube is selected
             const hasYouTube = accounts.some(a => selectedAccounts.includes(a.id) && a.platform === 'youtube')
-            if (hasYouTube && youtubeTitle.trim()) {
-                formData.append('youtubeTitle', youtubeTitle.trim())
+            if (hasYouTube) {
+                if (youtubeTitle.trim()) formData.append('youtubeTitle', youtubeTitle.trim())
+                formData.append('youtubePostType', youtubePostType)
             }
 
             images.forEach(img => {
@@ -503,6 +504,27 @@ function CreatePost() {
                                     <span>YouTube Settings</span>
                                 </div>
                                 <div className="discord-settings-body">
+                                    <div className="platform-chips" style={{ marginBottom: '12px' }}>
+                                        <button
+                                            className={`platform-chip ${youtubePostType === 'video' ? 'selected' : ''}`}
+                                            onClick={() => setYoutubePostType('video')}
+                                            type="button"
+                                        >
+                                            <span className="chip-icon flex-center"><Video size={14} /></span>
+                                            <span className="chip-name">Standard Video</span>
+                                            {youtubePostType === 'video' && <span className="chip-check"><CheckCircle2 size={14} /></span>}
+                                        </button>
+                                        <button
+                                            className={`platform-chip ${youtubePostType === 'short' ? 'selected' : ''}`}
+                                            onClick={() => setYoutubePostType('short')}
+                                            type="button"
+                                        >
+                                            <span className="chip-icon flex-center"><Youtube size={14} /></span>
+                                            <span className="chip-name">Short</span>
+                                            {youtubePostType === 'short' && <span className="chip-check"><CheckCircle2 size={14} /></span>}
+                                        </button>
+                                    </div>
+
                                     <div className="discord-preview-row">
                                         <div className="discord-name-field" style={{ width: '100%' }}>
                                             <label htmlFor="youtubeTitle">Video Title</label>
@@ -517,7 +539,11 @@ function CreatePost() {
                                             />
                                         </div>
                                     </div>
-                                    <p className="discord-hint">YouTube requires a title and a video file. Your post text will be used as the video description.</p>
+                                    <p className="discord-hint">
+                                        {youtubePostType === 'short'
+                                            ? '📱 Upload a vertical video (under 60s). We will auto-append #Shorts to the title.'
+                                            : '🎬 Standard YouTube upload. Post text will be used as video description.'}
+                                    </p>
                                 </div>
                             </div>
                         )}
