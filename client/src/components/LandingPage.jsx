@@ -598,8 +598,15 @@ function LandingPage() {
                         </RevealSection>
                         <RevealSection className="lp-about-card" delay={200} direction="right">
                             <div className="lp-about-card-head">
-                                <span style={{ fontSize: '28px' }}>🌐</span>
-                                <h3 className="lp-logo-vn">Vayunex Solution</h3>
+                                <a href="https://www.vayunexsolution.com" target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src="https://www.vayunexsolution.com/static/media/vayunex-logo.5116c4e5323b27908498.png"
+                                        alt="Vayunex Solution"
+                                        className="lp-vn-logo"
+                                        onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
+                                    />
+                                    <h3 className="lp-logo-vn" style={{ display: 'none' }}>Vayunex Solution</h3>
+                                </a>
                             </div>
                             <p>Vayunex Solution is an innovative technology company building next-generation SaaS tools and digital solutions. From full-stack web development to AI-powered platforms, we craft software that transforms how businesses operate.</p>
                             <div className="lp-about-links">

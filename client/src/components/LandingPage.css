@@ -1536,3 +1536,18 @@
     
     .lp-platform-name { display: none; }
 }
+
+/* ── Vayunex Solution Logo ── */
+.lp-vn-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    filter: brightness(1.05);
+    transition: opacity 0.2s;
+}
+.lp-vn-logo:hover { opacity: 0.85; }
+.lp-about-card-head a {
+    display: inline-block;
+    text-decoration: none;
+}
