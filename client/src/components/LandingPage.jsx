@@ -209,9 +209,12 @@ function LandingPage() {
                 <div className="lp-nav-inner">
                     <Link to="/" className="lp-logo">
                         <img src={logoIcon} alt="SocialNex" className="lp-logo-icon" />
-                        <span className="lp-logo-text">
-                            <span className="lp-logo-social">Social</span>
-                            <span className="lp-logo-nex">Nex</span>
+                        <span className="lp-logo-stack">
+                            <span className="lp-logo-text">
+                                <span className="lp-logo-social">Social</span>
+                                <span className="lp-logo-nex">Nex</span>
+                            </span>
+                            <span className="lp-logo-powered">by VayuNex Solution</span>
                         </span>
                     </Link>
                     <div className={`lp-nav-links ${mobileMenu ? 'open' : ''}`}>
@@ -598,7 +601,7 @@ function LandingPage() {
                         </RevealSection>
                         <RevealSection className="lp-about-card" delay={200} direction="right">
                             <div className="lp-about-card-head">
-                                <a href="https://www.vayunexsolution.com" target="_blank" rel="noopener noreferrer">
+                                <a href="https://www.vayunexsolution.com" target="_blank" rel="noopener noreferrer" className="lp-vn-logo-link">
                                     <img
                                         src="https://www.vayunexsolution.com/static/media/vayunex-logo.5116c4e5323b27908498.png"
                                         alt="Vayunex Solution"

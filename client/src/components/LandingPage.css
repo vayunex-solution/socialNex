@@ -120,6 +120,41 @@
     font-weight: 800;
 }
 
+/* Stacked logo — SocialNex + by VayuNex Solution */
+.lp-logo-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    line-height: 1;
+}
+
+.lp-logo-powered {
+    font-size: 0.55rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+/* Vayunex Solution logo in about section */
+.lp-vn-logo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.lp-vn-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    transition: opacity 0.2s;
+}
+.lp-vn-logo:hover { opacity: 0.8; }
+
+
 .lp-logo-social {
     background: linear-gradient(135deg, #60a5fa, #818cf8);
     -webkit-background-clip: text;

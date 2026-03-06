@@ -199,6 +199,23 @@
     color: var(--color-text);
 }
 
+/* Stacked logo layout — SocialNex + by VayuNex Solution */
+.logo-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    line-height: 1;
+}
+
+.logo-powered {
+    font-size: 0.6rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.28);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
 .sidebar-nav {
     display: flex;
     flex-direction: column;
