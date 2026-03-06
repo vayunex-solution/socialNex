@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PlatformIcon from './PlatformIcon'
 import './DemoDashboard.css'
 
 /* ═══════════════════════════════════════
@@ -12,10 +13,10 @@ const STATS = [
 ]
 
 const POSTS = [
-    { id: 1, platform: 'LinkedIn', platformIcon: '💼', platformColor: '#0A66C2', text: '🚀 Excited to announce our new AI-powered analytics dashboard! Track your social media growth like never before...', time: '2 hours ago', likes: 142, comments: 23, status: 'published' },
-    { id: 2, platform: 'Bluesky', platformIcon: '🦋', platformColor: '#0085FF', text: 'Just shipped a major update to SocialNex! Now supporting 6+ platforms with one-click posting ✨', time: '5 hours ago', likes: 89, comments: 12, status: 'published' },
-    { id: 3, platform: 'Discord', platformIcon: '🎮', platformColor: '#5865F2', text: '📢 Community Update: New scheduler feature is live! Set it and forget it — your posts go out on autopilot.', time: '1 day ago', likes: 234, comments: 45, status: 'published' },
-    { id: 4, platform: 'Telegram', platformIcon: '✈️', platformColor: '#26A5E4', text: '🎯 Pro tip: Use our AI poster generator to create stunning visuals in seconds. No designer needed!', time: 'Scheduled • Tomorrow 9:00 AM', likes: '-', comments: '-', status: 'scheduled' },
+    { id: 1, platform: 'LinkedIn', platformIcon: <PlatformIcon platform="linkedin" size={14} colored={true} />, platformColor: '#0A66C2', text: '🚀 Excited to announce our new AI-powered analytics dashboard! Track your social media growth like never before...', time: '2 hours ago', likes: 142, comments: 23, status: 'published' },
+    { id: 2, platform: 'Bluesky', platformIcon: <PlatformIcon platform="bluesky" size={14} colored={true} />, platformColor: '#0085FF', text: 'Just shipped a major update to SocialNex! Now supporting 6+ platforms with one-click posting ✨', time: '5 hours ago', likes: 89, comments: 12, status: 'published' },
+    { id: 3, platform: 'Discord', platformIcon: <PlatformIcon platform="discord" size={14} colored={true} />, platformColor: '#5865F2', text: '📢 Community Update: New scheduler feature is live! Set it and forget it — your posts go out on autopilot.', time: '1 day ago', likes: 234, comments: 45, status: 'published' },
+    { id: 4, platform: 'Telegram', platformIcon: <PlatformIcon platform="telegram" size={14} colored={true} />, platformColor: '#26A5E4', text: '🎯 Pro tip: Use our AI poster generator to create stunning visuals in seconds. No designer needed!', time: 'Scheduled • Tomorrow 9:00 AM', likes: '-', comments: '-', status: 'scheduled' },
 ]
 
 const SCHEDULE = [
@@ -148,7 +149,7 @@ function DemoDashboard() {
                                 {POSTS.map(post => (
                                     <div key={post.id} className="demo-post-card">
                                         <div className="demo-post-header">
-                                            <span className="demo-post-platform" style={{ background: `${post.platformColor}20`, color: post.platformColor }}>
+                                            <span className="demo-post-platform" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: `${post.platformColor}20`, color: post.platformColor }}>
                                                 {post.platformIcon} {post.platform}
                                             </span>
                                             <span className={`demo-post-status ${post.status}`}>
@@ -176,8 +177,8 @@ function DemoDashboard() {
                         <div className="demo-create-card">
                             <div className="demo-create-platforms">
                                 <span className="demo-create-label">Post to:</span>
-                                {[{ id: 'linkedin', icon: '💼', name: 'LinkedIn' }, { id: 'bluesky', icon: '🦋', name: 'Bluesky' }, { id: 'discord', icon: '🎮', name: 'Discord' }, { id: 'telegram', icon: '✈️', name: 'Telegram' }, { id: 'reddit', icon: '🔴', name: 'Reddit' }].map(p => (
-                                    <button key={p.id} className={`demo-plat-btn ${selectedPlatforms.includes(p.id) ? 'selected' : ''}`} onClick={() => togglePlatform(p.id)}>
+                                {[{ id: 'linkedin', icon: <PlatformIcon platform="linkedin" size={14} colored={true} />, name: 'LinkedIn' }, { id: 'bluesky', icon: <PlatformIcon platform="bluesky" size={14} colored={true} />, name: 'Bluesky' }, { id: 'discord', icon: <PlatformIcon platform="discord" size={14} colored={true} />, name: 'Discord' }, { id: 'telegram', icon: <PlatformIcon platform="telegram" size={14} colored={true} />, name: 'Telegram' }, { id: 'reddit', icon: <PlatformIcon platform="reddit" size={14} colored={true} />, name: 'Reddit' }].map(p => (
+                                    <button key={p.id} className={`demo-plat-btn ${selectedPlatforms.includes(p.id) ? 'selected' : ''}`} onClick={() => togglePlatform(p.id)} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                                         {p.icon} {p.name}
                                     </button>
                                 ))}
@@ -309,11 +310,11 @@ function DemoDashboard() {
                             </div>
                             <div className="demo-setting-card">
                                 <h4>🔗 Connected Accounts</h4>
-                                <div className="demo-setting-row"><span>💼 LinkedIn</span><span className="demo-connected">● Connected</span></div>
-                                <div className="demo-setting-row"><span>🦋 Bluesky</span><span className="demo-connected">● Connected</span></div>
-                                <div className="demo-setting-row"><span>🎮 Discord</span><span className="demo-connected">● Connected</span></div>
-                                <div className="demo-setting-row"><span>✈️ Telegram</span><span className="demo-connected">● Connected</span></div>
-                                <div className="demo-setting-row"><span>🔴 Reddit</span><span className="demo-pending">○ Pending</span></div>
+                                <div className="demo-setting-row"><span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><PlatformIcon platform="linkedin" size={14} colored={true} /> LinkedIn</span><span className="demo-connected">● Connected</span></div>
+                                <div className="demo-setting-row"><span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><PlatformIcon platform="bluesky" size={14} colored={true} /> Bluesky</span><span className="demo-connected">● Connected</span></div>
+                                <div className="demo-setting-row"><span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><PlatformIcon platform="discord" size={14} colored={true} /> Discord</span><span className="demo-connected">● Connected</span></div>
+                                <div className="demo-setting-row"><span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><PlatformIcon platform="telegram" size={14} colored={true} /> Telegram</span><span className="demo-connected">● Connected</span></div>
+                                <div className="demo-setting-row"><span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><PlatformIcon platform="reddit" size={14} colored={true} /> Reddit</span><span className="demo-pending">○ Pending</span></div>
                             </div>
                             <div className="demo-setting-card">
                                 <h4>🔔 Notifications</h4>
