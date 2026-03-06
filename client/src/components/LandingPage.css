@@ -1683,34 +1683,240 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   LIGHT MODE — Landing Page Overrides
+   LIGHT MODE — Landing Page FULL Overrides
    ═══════════════════════════════════════════════════════════ */
+
+/* ── Base ── */
 .light-mode .lp {
     background: #F8FAFC;
     color: #1E293B;
 }
+
+/* ── Navbar ── */
+.light-mode .lp-nav.scrolled {
+    background: rgba(248, 250, 252, 0.92);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-nav-links a {
+    color: rgba(15, 23, 42, 0.65);
+}
+.light-mode .lp-nav-links a:hover {
+    color: #0F172A;
+}
+.light-mode .lp-btn-ghost {
+    color: rgba(15, 23, 42, 0.75);
+    border-color: rgba(0, 0, 0, 0.12);
+}
+.light-mode .lp-btn-ghost:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: #0F172A;
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.light-mode .lp-hamburger span {
+    background: rgba(15, 23, 42, 0.7);
+}
+
+/* ── Hero ── */
+.light-mode .lp-hero-h1 {
+    color: #0F172A;
+}
+.light-mode .lp-hero-sub {
+    color: rgba(15, 23, 42, 0.6);
+}
+.light-mode .lp-hero-sub strong {
+    color: #0F172A;
+}
+.light-mode .lp-hero-micro {
+    color: rgba(15, 23, 42, 0.45);
+}
+.light-mode .lp-hero-stats {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-stat-val {
+    color: #0F172A;
+}
+.light-mode .lp-stat-lbl {
+    color: rgba(15, 23, 42, 0.45);
+}
+.light-mode .lp-stat-sep {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* ── Mockup ── */
+.light-mode .lp-mockup {
+    background: #EEF2FF;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-mockup-bar {
+    background: rgba(0, 0, 0, 0.03);
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+.light-mode .lp-mockup-url {
+    color: rgba(15, 23, 42, 0.35);
+    background: rgba(0, 0, 0, 0.04);
+}
+.light-mode .lp-mockup-menu {
+    background: rgba(0, 0, 0, 0.07);
+}
+.light-mode .lp-mockup-card {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.07);
+}
+
+/* ── Section headings & subtext ── */
+.light-mode .lp-section-h2 {
+    color: #0F172A;
+}
+.light-mode .lp-section-sub {
+    color: rgba(15, 23, 42, 0.6);
+}
+
+/* ── Pain / Comparison section ── */
+.light-mode .lp-comparison-col {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-comparison-col.old { border-color: rgba(239, 68, 68, 0.3); }
+.light-mode .lp-comparison-col.new { border-color: rgba(99, 102, 241, 0.35); }
+.light-mode .lp-comparison-col-title {
+    color: #0F172A;
+}
+.light-mode .lp-comparison-item {
+    color: rgba(15, 23, 42, 0.75);
+}
+.light-mode .lp-comparison-item-icon {
+    color: rgba(15, 23, 42, 0.4);
+}
+
+/* ── Feature cards / Superpowers ── */
+.light-mode .lp-feature-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-feature-card:hover {
+    background: #FFFFFF;
+    border-color: rgba(99, 102, 241, 0.3);
+}
+.light-mode .lp-feature-title {
+    color: #0F172A;
+}
+.light-mode .lp-feature-desc {
+    color: rgba(15, 23, 42, 0.6);
+}
+.light-mode .lp-feature-badge {
+    background: rgba(99, 102, 241, 0.08);
+    color: #6366F1;
+    border-color: rgba(99, 102, 241, 0.2);
+}
+.light-mode .lp-feature-trigger {
+    color: rgba(15, 23, 42, 0.5);
+}
+
+/* ── Platform badges ── */
+.light-mode .lp-platform-item {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-platform-name {
+    color: rgba(15, 23, 42, 0.65);
+}
+
+/* ── Testimonials ── */
+.light-mode .lp-testimonial-card {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-testimonial-text {
+    color: rgba(15, 23, 42, 0.75);
+}
+.light-mode .lp-testimonial-name {
+    color: #0F172A;
+}
+.light-mode .lp-testimonial-role {
+    color: rgba(15, 23, 42, 0.5);
+}
+
+/* ── FAQ ── */
+.light-mode .lp-faq-item {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-faq-q {
+    color: #0F172A;
+}
+.light-mode .lp-faq-a {
+    color: rgba(15, 23, 42, 0.65);
+}
+.light-mode .lp-faq-icon {
+    color: rgba(15, 23, 42, 0.5);
+}
+
+/* ── CTA / Final Section ── */
+.light-mode .lp-cta-section {
+    background: rgba(99, 102, 241, 0.04);
+    border-color: rgba(99, 102, 241, 0.15);
+}
+
+/* ── Footer ── */
+.light-mode .lp-footer {
+    background: #F1F5F9;
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-footer-copy {
+    color: rgba(15, 23, 42, 0.5);
+}
+.light-mode .lp-footer a {
+    color: rgba(15, 23, 42, 0.55);
+}
+.light-mode .lp-footer a:hover {
+    color: #6366F1;
+}
+
+/* ── Guide section ── */
+.light-mode .lp-guide-card {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+.light-mode .lp-guide-step-title {
+    color: #0F172A;
+}
+.light-mode .lp-guide-step-desc {
+    color: rgba(15, 23, 42, 0.6);
+}
+
+/* ── Mobile nav menu overlay ── */
+.light-mode .lp-nav-links.open {
+    background: rgba(248, 250, 252, 0.98);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* ── Theme popup ── */
 .light-mode .lp-theme-popup {
     background: #FFFFFF;
-    border-color: rgba(0,0,0,0.08);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.12);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
 }
 .light-mode .lp-theme-popup-title { color: #0F172A; }
 .light-mode .lp-theme-option {
-    border-color: rgba(0,0,0,0.1);
-    background: rgba(0,0,0,0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.02);
     color: #334155;
 }
 .light-mode .lp-theme-option.active {
-    background: rgba(99,102,241,0.08);
+    background: rgba(99, 102, 241, 0.08);
     border-color: #6366F1;
     color: #1E293B;
 }
+
+/* ── Theme toggle ── */
 .light-mode .lp-theme-toggle {
-    background: rgba(0,0,0,0.06);
-    border-color: rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.1);
     color: #334155;
 }
 .light-mode .lp-theme-toggle:hover {
-    background: rgba(99,102,241,0.1);
+    background: rgba(99, 102, 241, 0.1);
     color: #6366F1;
 }
+
