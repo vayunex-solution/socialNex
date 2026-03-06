@@ -524,7 +524,10 @@ function Calendar() {
                                             {selectedDayData.published.map((p, i) => (
                                                 <div key={`p-${i}`} className={`cal-detail-item ${p.status === 'success' ? 'status-published' : 'status-failed'}`}>
                                                     <div className="cal-detail-meta">
-                                                        <span>{PLATFORM_ICONS[p.platform]} {p.platform}</span>
+                                                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                            <PlatformIcon platform={p.platform} /> 
+                                                            <span style={{ textTransform: 'capitalize' }}>{p.platform}</span>
+                                                        </span>
                                                         <span className={`cal-detail-status badge-${p.status}`}>{p.status}</span>
                                                     </div>
                                                     <p>{p.content?.substring(0, 80)}{p.content?.length > 80 ? '...' : ''}</p>
