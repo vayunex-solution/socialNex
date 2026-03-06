@@ -13,6 +13,7 @@ function CreatePost() {
     const [images, setImages] = useState([])
     const [loading, setLoading] = useState(false)
     const [loadingAccounts, setLoadingAccounts] = useState(true)
+    const [result, setResult] = useState(null)
     const [error, setError] = useState('')
     const [discordBotName, setDiscordBotName] = useState('SocialNex')
     const [youtubeTitle, setYoutubeTitle] = useState('')
