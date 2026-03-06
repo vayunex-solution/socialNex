@@ -14,6 +14,7 @@ const mediaService = require('../services/mediaService');
 const { query } = require('../config/database');
 const { logger } = require('../utils/logger');
 const crypto = require('crypto');
+const fs = require('fs');
 
 
 /**
@@ -427,15 +428,22 @@ const publishPost = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Select at least one platform.');
     }
 
-    // Get uploaded images
-    const images = (req.files || []).map(file => ({
-        data: file.buffer,
-        mimeType: file.mimetype,
-        alt: '',
-        size: file.size
-    }));
+    // Get uploaded images — now from disk (file.path) instead of memory (file.buffer)
+    const uploadedFilePaths = []; // Track for cleanup after publish
+    const images = (req.files || []).map(file => {
+        const filePath = file.path;
+        uploadedFilePaths.push(filePath);
+        return {
+            data: fs.readFileSync(filePath), // Read buffer from disk
+            mimeType: file.mimetype,
+            alt: '',
+            size: file.size,
+            originalname: file.originalname,
+            filePath: filePath // Keep path for cleanup
+        };
+    });
 
-    logger.info(`Publish: ${images.length} images received, ${accountIds.length} accounts selected, text length: ${text.length}`);
+    logger.info(`Publish: ${images.length} media files received (disk), ${accountIds.length} accounts selected, text length: ${text.length}`);
 
     // Fetch selected accounts
     const placeholders = accountIds.map(() => '?').join(',');
@@ -615,6 +623,14 @@ const publishPost = asyncHandler(async (req, res) => {
 
     const allSuccess = results.every(r => r.success);
     const anySuccess = results.some(r => r.success);
+
+    // Cleanup temp upload files after all platforms are done
+    if (uploadedFilePaths.length > 0) {
+        // Instagram uses mediaService which saves its own copies + schedules its own cleanup
+        // For all other platform temp files, clean up now
+        mediaService.scheduleCleanup(uploadedFilePaths, 2 * 60 * 1000); // 2 min delay (safety margin)
+        logger.info(`Scheduled cleanup of ${uploadedFilePaths.length} temp file(s)`);
+    }
 
     res.json({
         success: anySuccess,

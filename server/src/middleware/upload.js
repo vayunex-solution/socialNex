@@ -1,15 +1,35 @@
 /**
  * File Upload Middleware
- * Handles image uploads using multer with memory storage
+ * Handles image + video uploads using multer with DISK storage
+ * Files saved to tmp/uploads/ and auto-cleaned by mediaCleanup job (24hr)
  */
 
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
 
-// Use memory storage - files stored as Buffer (no disk writes)
-const storage = multer.memoryStorage();
+// Upload directory — same as mediaService uses
+const UPLOAD_DIR = path.join(__dirname, '../../tmp/uploads');
 
-// File filter - allow images and videos
+// Ensure directory exists
+if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
+
+// Disk storage — files go to tmp/uploads/ with unique names
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, UPLOAD_DIR);
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname) || '.bin';
+        const uniqueName = `${Date.now()}_${crypto.randomBytes(8).toString('hex')}${ext}`;
+        cb(null, uniqueName);
+    }
+});
+
+// File filter — allow images and videos
 const fileFilter = (req, file, cb) => {
     const allowedTypes = [
         'image/jpeg', 'image/png', 'image/gif', 'image/webp',

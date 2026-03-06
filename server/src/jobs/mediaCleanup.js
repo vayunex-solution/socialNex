@@ -15,6 +15,7 @@ const { logger } = require('../utils/logger');
 const UPLOAD_DIRS = [
     path.resolve(__dirname, '../../uploads/videos'),
     path.resolve(__dirname, '../../uploads'),
+    path.resolve(__dirname, '../../tmp/uploads'),
 ];
 
 const MAX_AGE_HOURS = 24; // Delete files older than 24 hours
