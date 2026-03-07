@@ -191,14 +191,10 @@ class FacebookService {
         // 5. Fetch Page Avatar
         let pageAvatar = null;
         try {
-            const avatarRes = await axios.get(`${FB_GRAPH_URL}/${pageId}/picture`, {
-                params: { redirect: 0, type: 'normal', access_token: pageAccessToken }
-            });
-            if (avatarRes.data && avatarRes.data.data && avatarRes.data.data.url) {
-                pageAvatar = avatarRes.data.data.url;
-            }
+            // Instead of storing the expiring CDN URL, store the permanent Graph API endpoint
+            pageAvatar = `${FB_GRAPH_URL}/${pageId}/picture?type=normal&access_token=${pageAccessToken}`;
         } catch (err) {
-            logger.warn(`Could not fetch Facebook page avatar: ${err.message}`);
+            logger.warn(`Could not set Facebook page avatar: ${err.message}`);
         }
 
         const encryptedToken = encrypt(pageAccessToken);
@@ -460,7 +456,8 @@ class FacebookService {
 
         const igProfile = igProfileRes.data;
         const igUsername = igProfile.username || igProfile.name || igAccountId;
-        const igAvatar = igProfile.profile_picture_url || pageAvatar;
+        // Use Graph API proxy instead of expiring CDN URL
+        const igAvatar = `${FB_GRAPH_URL}/${igAccountId}/picture?type=normal&access_token=${pageAccessToken}`;
         const encryptedToken = encrypt(pageAccessToken);
 
         // Check if this Instagram account already exists
