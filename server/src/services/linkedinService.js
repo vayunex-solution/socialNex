@@ -187,7 +187,8 @@ class LinkedInService {
         let shareMediaCategory = 'NONE';
 
         if (images && images.length > 0) {
-            shareMediaCategory = 'IMAGE';
+            const isFirstItemVideo = images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/');
+            shareMediaCategory = isFirstItemVideo ? 'VIDEO' : 'IMAGE';
 
             for (const img of images) {
                 let registerOutput;
@@ -198,9 +199,12 @@ class LinkedInService {
                         throw new Error(`Invalid account object: ${JSON.stringify(account)}`);
                     }
 
+                    const isVideo = img.mimeType?.startsWith('video/') || img.mimetype?.startsWith('video/');
+                    const recipe = isVideo ? 'urn:li:digitalmediaRecipe:feedshare-video' : 'urn:li:digitalmediaRecipe:feedshare-image';
+
                     const registerBody = {
                         registerUploadRequest: {
-                            recipes: ['urn:li:digitalmediaRecipe:feedshare-image'],
+                            recipes: [recipe],
                             owner: `urn:li:person:${account.account_id}`,
                             serviceRelationships: [
                                 {

@@ -189,40 +189,58 @@ class TelegramService {
     }
 
     /**
- * Send a photo with caption
- * @param {number} accountId 
- * @param {number} userId 
- * @param {Buffer|string} photo - Buffer from multer upload or URL string
- * @param {string} caption 
- */
-    async sendPhoto(accountId, userId, photo, caption = '') {
+     * Send a photo or video with caption
+     * @param {number} accountId 
+     * @param {number} userId 
+     * @param {Buffer|string} media - Buffer from multer upload or URL string
+     * @param {string} caption 
+     * @param {string} mimeType - Media mime type (e.g. 'video/mp4', 'image/jpeg')
+     */
+    async sendMedia(accountId, userId, media, caption = '', mimeType = 'image/jpeg') {
         const account = await this._getAccount(accountId, userId);
         const botToken = decrypt(account.access_token);
         const bot = new TelegramBot(botToken, { polling: false });
 
         try {
             let result;
+            const isVideo = mimeType.startsWith('video/');
 
-            if (Buffer.isBuffer(photo)) {
+            if (Buffer.isBuffer(media)) {
                 // Send Buffer as a stream upload
-                result = await bot.sendPhoto(account.account_id, photo, {
-                    caption,
-                    parse_mode: 'HTML'
-                }, {
-                    filename: 'image.jpg',
-                    contentType: 'image/jpeg'
-                });
+                const fileOptions = {
+                    filename: isVideo ? 'video.mp4' : 'image.jpg',
+                    contentType: mimeType
+                };
+
+                if (isVideo) {
+                    result = await bot.sendVideo(account.account_id, media, {
+                        caption,
+                        parse_mode: 'HTML'
+                    }, fileOptions);
+                } else {
+                    result = await bot.sendPhoto(account.account_id, media, {
+                        caption,
+                        parse_mode: 'HTML'
+                    }, fileOptions);
+                }
             } else {
                 // Send URL directly
-                result = await bot.sendPhoto(account.account_id, photo, {
-                    caption,
-                    parse_mode: 'HTML'
-                });
+                if (isVideo) {
+                    result = await bot.sendVideo(account.account_id, media, {
+                        caption,
+                        parse_mode: 'HTML'
+                    });
+                } else {
+                    result = await bot.sendPhoto(account.account_id, media, {
+                        caption,
+                        parse_mode: 'HTML'
+                    });
+                }
             }
 
             return { messageId: result.message_id, success: true };
         } catch (error) {
-            throw new Error(`Failed to send photo: ${error.message}`);
+            throw new Error(`Failed to send Telegram media: ${error.message}`);
         }
     }
     /**

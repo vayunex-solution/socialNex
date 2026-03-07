@@ -476,9 +476,9 @@ const publishPost = asyncHandler(async (req, res) => {
 
             if (account.platform === 'telegram') {
                 if (images.length > 0) {
-                    // Send first image with caption
-                    postResult = await telegramService.sendPhoto(
-                        account.id, userId, images[0].data, text.trim()
+                    // Send first image or video with caption
+                    postResult = await telegramService.sendMedia(
+                        account.id, userId, images[0].data, text.trim(), images[0].mimeType || images[0].mimetype
                     );
                 } else {
                     postResult = await telegramService.sendMessage(
@@ -486,6 +486,11 @@ const publishPost = asyncHandler(async (req, res) => {
                     );
                 }
             } else if (account.platform === 'bluesky') {
+                const isVideo = images.length > 0 && (images[0].mimeType?.startsWith('video/') || images[0].mimetype?.startsWith('video/'));
+                if (isVideo) {
+                    throw new Error('Bluesky currently only supports photo uploads.');
+                }
+                
                 // Bluesky handles images via uploadBlob internally
                 const blueskyText = text.trim().length > 300
                     ? text.trim().substring(0, 297) + '...'
@@ -494,9 +499,12 @@ const publishPost = asyncHandler(async (req, res) => {
                     account.id, userId, blueskyText, images
                 );
             } else if (account.platform === 'discord') {
-                const discordOpts = { username: discordBotName || 'SocialNex' };
+                const discordOpts = {
+                    username: discordBotName || 'SocialNex',
+                    mimeType: images[0]?.mimeType || images[0]?.mimetype
+                };
                 if (images.length > 0) {
-                    postResult = await discordService.sendImage(
+                    postResult = await discordService.sendMedia(
                         account.id, userId, images[0].data, text.trim(), discordOpts
                     );
                 } else {
@@ -515,7 +523,7 @@ const publishPost = asyncHandler(async (req, res) => {
                 try {
                     const postTypesStr = req.body.postTypes;
                     let postTypes = ['post'];
-                    try { if (postTypesStr) postTypes = JSON.parse(postTypesStr) } catch(e){}
+                    try { if (postTypesStr) postTypes = JSON.parse(postTypesStr) } catch (e) { }
 
                     let finalResults = [];
                     let publicUrls = [];
@@ -556,11 +564,11 @@ const publishPost = asyncHandler(async (req, res) => {
                         finalResults.push({ type: postType, data: result });
                     }
 
-                    results.push({ 
-                        platform: account.platform, 
-                        name: account.account_name, 
-                        success: true, 
-                        data: finalResults.length === 1 ? finalResults[0].data : finalResults 
+                    results.push({
+                        platform: account.platform,
+                        name: account.account_name,
+                        success: true,
+                        data: finalResults.length === 1 ? finalResults[0].data : finalResults
                     });
                 } catch (err) {
                     results.push({ platform: account.platform, name: account.account_name, success: false, error: err.message });
@@ -591,7 +599,7 @@ const publishPost = asyncHandler(async (req, res) => {
                         categoryId: '22',
                         thumbnailPath: null
                     });
-                    
+
                     results.push({ platform: 'youtube', name: account.account_name, success: true, data: result });
                 } catch (err) {
                     results.push({ platform: 'youtube', name: account.account_name, success: false, error: err.message });

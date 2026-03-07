@@ -64,12 +64,20 @@ class InstagramService {
             }
 
             if (mediaUrls.length === 1) {
-                // Single image post
-                const containerId = await this._createMediaContainer(igUserId, accessToken, {
-                    image_url: mediaUrls[0],
+                const url = mediaUrls[0];
+                const isVideo = url.match(/\.(mp4|mov|webm)$/i);
+                
+                const params = isVideo ? {
+                    video_url: url,
+                    media_type: 'VIDEO',
                     caption: caption
-                });
-                await this._waitForProcessing(igUserId, accessToken, containerId);
+                } : {
+                    image_url: url,
+                    caption: caption
+                };
+
+                const containerId = await this._createMediaContainer(igUserId, accessToken, params);
+                await this._waitForProcessing(igUserId, accessToken, containerId, isVideo ? 60 : 30);
                 const result = await this._publishContainer(igUserId, accessToken, containerId);
                 
                 logger.info(`Instagram post published for user ${userId}, post: ${result.id}`);
@@ -79,11 +87,19 @@ class InstagramService {
             // Carousel post (multiple images)
             const childContainerIds = [];
             for (const url of mediaUrls.slice(0, 10)) { // Max 10 items
-                const childId = await this._createMediaContainer(igUserId, accessToken, {
+                const isVideo = url.match(/\.(mp4|mov|webm)$/i);
+                
+                const params = isVideo ? {
+                    video_url: url,
+                    media_type: 'VIDEO',
+                    is_carousel_item: true
+                } : {
                     image_url: url,
                     is_carousel_item: true
-                });
-                await this._waitForProcessing(igUserId, accessToken, childId);
+                };
+
+                const childId = await this._createMediaContainer(igUserId, accessToken, params);
+                await this._waitForProcessing(igUserId, accessToken, childId, isVideo ? 60 : 30);
                 childContainerIds.push(childId);
             }
 

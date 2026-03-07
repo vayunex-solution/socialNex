@@ -201,9 +201,9 @@ class DiscordService {
     }
 
     /**
-     * Send image via webhook using multipart/form-data
+     * Send media via webhook using multipart/form-data
      */
-    async sendImage(accountId, userId, imageBuffer, caption = '', options = {}) {
+    async sendMedia(accountId, userId, mediaBuffer, caption = '', options = {}) {
         const account = await this._getAccount(accountId, userId);
         const webhookUrl = decrypt(account.access_token);
 
@@ -211,9 +211,14 @@ class DiscordService {
             // Use built-in FormData (Node 18+)
             const formData = new FormData();
 
+            const mimeType = options.mimeType || 'image/png';
+            const isVideo = mimeType.startsWith('video/');
+            const ext = isVideo ? 'mp4' : (mimeType.split('/')[1] || 'png');
+            const filename = isVideo ? `video.${ext}` : `image.${ext}`;
+
             // Create a Blob from the buffer
-            const blob = new Blob([imageBuffer], { type: 'image/png' });
-            formData.append('file', blob, 'image.png');
+            const blob = new Blob([mediaBuffer], { type: mimeType });
+            formData.append('file', blob, filename);
 
             if (caption) {
                 formData.append('payload_json', JSON.stringify({
@@ -233,7 +238,7 @@ class DiscordService {
 
             return { success: true };
         } catch (error) {
-            throw new Error(`Failed to send image: ${error.message}`);
+            throw new Error(`Failed to send Discord media: ${error.message}`);
         }
     }
 

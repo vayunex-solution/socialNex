@@ -8,6 +8,7 @@ const { query } = require('../config/database');
 const crypto = require('crypto');
 const axios = require('axios');
 const FormData = require('form-data');
+const fs = require('fs');
 
 const FB_GRAPH_URL = 'https://graph.facebook.com/v20.0';
 
@@ -151,7 +152,7 @@ class FacebookService {
                     params: { access_token: longLivedToken }
                 });
                 console.error(`[FB DEBUG] Businesses: ${JSON.stringify(bizRes.data)}`);
-                
+
                 if (bizRes.data.data && bizRes.data.data.length > 0) {
                     for (const biz of bizRes.data.data) {
                         const bizPagesRes = await axios.get(`${FB_GRAPH_URL}/${biz.id}/owned_pages`, {
@@ -269,27 +270,27 @@ class FacebookService {
 
         try {
             let response;
-            
+
             // Post Type: REEL
             if (postType === 'reel') {
                 if (!publicUrls || publicUrls.length === 0) {
                     throw new Error('Reels require a video URL.');
                 }
-                
+
                 // Step 1: Initialize upload
                 const initRes = await axios.post(`${FB_GRAPH_URL}/${pageId}/video_reels?access_token=${accessToken}`, {
                     upload_phase: 'start'
                 });
-                
+
                 const videoId = initRes.data.video_id;
-                
+
                 // Step 2: Upload video using public URL
                 await axios.post(`${FB_GRAPH_URL}/${pageId}/video_reels?access_token=${accessToken}`, {
                     upload_phase: 'transfer',
                     video_id: videoId,
                     file_url: publicUrls[0]
                 });
-                
+
                 // Step 3: Publish Reel
                 response = await axios.post(`${FB_GRAPH_URL}/${pageId}/video_reels?access_token=${accessToken}`, {
                     upload_phase: 'finish',
@@ -298,40 +299,45 @@ class FacebookService {
                     description: text || ''
                 });
 
+                // Wait for Facebook to process the reel, otherwise it can silently fail on their end
+                await this._waitForReelProcessing(videoId, accessToken);
+
                 logger.info(`Facebook Reel published by user ${userId} on page ${pageId}. Reel ID: ${videoId}`);
                 return { postId: videoId, success: true };
             }
-            
+
             // Post Type: STORY
             if (postType === 'story') {
                 if (!publicUrls || publicUrls.length === 0) {
                     throw new Error('Stories require a media URL.');
                 }
-                
+
                 const isVideo = publicUrls[0].match(/\.(mp4|mov|webm)$/i);
-                
+
                 // Single step publish for Stories via photo or video URL
                 const endpoint = isVideo ? `${FB_GRAPH_URL}/${pageId}/video_stories` : `${FB_GRAPH_URL}/${pageId}/photo_stories`;
                 const payload = isVideo ? { video_url: publicUrls[0] } : { photo_url: publicUrls[0] };
-                
+
                 response = await axios.post(`${endpoint}?access_token=${accessToken}`, payload);
-                
+
                 logger.info(`Facebook Story published by user ${userId} on page ${pageId}. Story ID: ${response.data.id}`);
                 return { postId: response.data.id, success: true };
             }
 
             // Post Type: STANDARD POST
-            // If images exist, use the /photos endpoint for the first image
             if (images && images.length > 0) {
                 const img = images[0];
+                const isVideo = img.mimeType?.startsWith('video/') || img.mimetype?.startsWith('video/');
+                const endpoint = isVideo ? `${FB_GRAPH_URL}/${pageId}/videos` : `${FB_GRAPH_URL}/${pageId}/photos`;
+
                 const formData = new FormData();
-                formData.append('message', text || '');
+                formData.append(isVideo ? 'description' : 'message', text || '');
                 formData.append('source', img.data, {
-                    filename: 'upload.jpg',
-                    contentType: img.mimeType || 'image/jpeg'
+                    filename: isVideo ? 'upload.mp4' : 'upload.jpg',
+                    contentType: img.mimeType || (isVideo ? 'video/mp4' : 'image/jpeg')
                 });
 
-                response = await axios.post(`${FB_GRAPH_URL}/${pageId}/photos?access_token=${accessToken}`, formData, {
+                response = await axios.post(`${endpoint}?access_token=${accessToken}`, formData, {
                     headers: formData.getHeaders()
                 });
             } else {
@@ -382,6 +388,46 @@ class FacebookService {
             throw new Error('Facebook account not found or inactive');
         }
         return accounts[0];
+    }
+
+    /**
+     * Internal: Polling for Facebook Video Processing
+     */
+    async _waitForReelProcessing(videoId, accessToken, maxWaitSeconds = 60) {
+        const startTime = Date.now();
+        const pollInterval = 3000;
+
+        while ((Date.now() - startTime) < maxWaitSeconds * 1000) {
+            try {
+                // Check video status
+                const res = await axios.get(`${FB_GRAPH_URL}/${videoId}?fields=status&access_token=${accessToken}`);
+                const statusObj = res.data?.status;
+
+                if (!statusObj) {
+                    await new Promise(resolve => setTimeout(resolve, pollInterval));
+                    continue;
+                }
+
+                const videoStatus = statusObj.video_status;
+                const processingPhase = statusObj.processing_phase?.status;
+
+                // 'ready' means processing is complete
+                if (videoStatus === 'ready' || processingPhase === 'complete') {
+                    return true;
+                }
+
+                if (videoStatus === 'error' || processingPhase === 'error') {
+                    throw new Error('Facebook media processing failed on their servers.');
+                }
+            } catch (err) {
+                if (err.response && err.response.data && err.response.data.error) {
+                    logger.warn(`Polling FB Reel status error: ${err.response.data.error.message}`);
+                }
+            }
+            await new Promise(resolve => setTimeout(resolve, pollInterval));
+        }
+
+        throw new Error('Facebook Reel processing timed out. Video may be too large or invalid format.');
     }
 
     /**
